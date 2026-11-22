@@ -10,12 +10,12 @@ O **DarkFactory** é uma esteira autônoma industrial de produção de document�
 
 Sob a direção estética e estrutural do showrunner autoral **Christopher Nolan** (`nolan-director.md`), o sistema converte fatos históricos reais desclassificados em thrillers psicológicos não-lineares com qualidade de produção IMAX 70mm, pressão acústica contínua Zimmer/Göransson e conformidade técnica para algoritmos de recomendação e monetização.
 
-### As 5 Fases da Esteira Documental:
-1. **Fase 1: Pesquisa Histórica & Verificação de Fatos** — Mineração de fontes de domínio público, relatórios desclassificados e arquivos desclassificados via `research_engine.py`.
-2. **Fase 2: Roteirização Não-Linear & Storyboard Nolan** — Construção em 5 Atos com fios temporais entrelaçados (Crosscutting) e formulação de prompts Dual-Shot (Shot A Drama + Shot B Macro).
-3. **Fase 3: Engenharia Vocal & Sound Design Zimmer** — Narração com cadência cinematográfica (CosyVoice 3 com fallback Kokoro-82M) e mixagem de pressão acústica (Ticking Clocks, Shepard Tones, sub-bass Braams) calibrada em **-14 LUFS (±0.5)** e **-1.0 dBTP**.
-4. **Fase 4: Fábrica de Vídeo T2V Cinematográfica** — Geração de takes visuais no RunningHub ComfyUI / Wan 2.2 / MiniMax H3 com granulação Kodak Vision3 500T e quarentena automática de takes defeituosos em `data/quarantine/`.
-5. **Fase 5: Montagem Final, Foley & Exportação** — Concatenação inteligente orientada a beats, sincronização de legendas dinâmicas SRT e exportação final em `data/final/`.
+### As 5 Fases da Esteira Documental (Always-On Golden Standards):
+1. **Fase 1: Pesquisa Histórica & Verificação de Fatos** — Mineração de fontes de domínio público, relatórios desclassificados e arquivos da Wikimedia/NASA via `public_domain_research.py` e `research_engine.py`.
+2. **Fase 2: Roteirização Não-Linear & Storyboard Nolan** — Construção em 5 Atos com fios temporais entrelaçados (Crosscutting), formulação de prompts Dual-Shot (Shot A Drama + Shot B Macro) e Story Audit Walter Murch/MrBeast.
+3. **Fase 3: Engenharia Vocal & Sound Design Zimmer (ALWAYS ON)** — Narração obrigatória via **CosyVoice 3** com cadência cinematográfica, e mixagem de pressão acústica (Shepard Tones, sub-bass Braams, biblioteca curada de 1.220 SFX) calibrada em **-14 LUFS (±0.5)** e **-1.0 dBTP**.
+4. **Fase 4: Fábrica de Vídeo Dual-Shot & Motion Cinetic (ALWAYS ON)** — Takes visuais no **Google Flow** (Veo 3.1 & Omni Flash) e motion graphics investigativo padrão Netflix/BBC no motor **Cinetic** com fotos 4K upscaladas pelo **SeedVR 2.5**.
+5. **Fase 5: Montagem Final, Foley & Exportação** — Concatenação inteligente orientada a beats, sincronização de legendas dinâmicas SRT e exportação final em `data/output/` e `data/final/`.
 6. **Módulo Transversal: Cinema Dashboard Web SPA** — Servidor FastAPI (`http://localhost:8502`) para visualização de roteiros, audição de stems e monitoramento em tempo real da produção.
 
 ---
