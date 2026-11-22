@@ -152,3 +152,25 @@ def test_argon_archetype_netflix_osint_stage():
     assert "MOLNIYA-1" in html
     assert "COSMOS-1374" in html
     assert "scanline" in html.lower() or "grid" in html.lower()
+
+
+def test_argon_render_preview_playwright(tmp_path):
+    """Verify Playwright Chromium can render an Argon scene to HTML and PNG preview."""
+    engine = ArgonMotionEngine(output_dir=tmp_path, broll_dir=tmp_path)
+    config = ArgonDocumentaryConfig(
+        scene_id=1,
+        archetype=ArgonMotionArchetype.RADAR_TELEMETRY,
+        title="MISSILE ALERT",
+        subtitle="EARLY WARNING GLITCH 1983",
+        narrative_thesis="Serpukhov-15 early-warning radar registers anomalous launch signatures.",
+        telemetry_code="SERPUKHOV-15 // OKO-4",
+        metrics={"RADAR": "+4.82σ", "COUNTDOWN": "00:15:23 MSK"},
+        duration_sec=3.0,
+        fps=30,
+    )
+    result = engine.render_scene_video(config=config, preview_only=True)
+    assert result.html_path.is_file()
+    assert result.preview_image_path is not None
+    assert result.preview_image_path.is_file()
+    assert result.rendered_frames >= 1
+

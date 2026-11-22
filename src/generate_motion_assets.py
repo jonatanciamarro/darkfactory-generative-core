@@ -77,12 +77,14 @@ class MotionAssetPipeline:
         dry_run: bool = False,
         force: bool = False,
         enable_cinetic: bool = True,
+        enable_argon: bool = True,
     ) -> None:
         self.output_dir = Path(output_dir).resolve() if output_dir else MOTION_DIR.resolve()
         self.broll_dir = Path(broll_dir).resolve() if broll_dir else BROLL_DIR.resolve()
         self.dry_run = dry_run
         self.force = force
         self.enable_cinetic = enable_cinetic
+        self.enable_argon = enable_argon
 
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self.broll_dir.mkdir(parents=True, exist_ok=True)
@@ -329,6 +331,7 @@ class MotionAssetPipeline:
             "photos_4k_upscaled": 0,
             "overlays_rendered": 0,
             "cinetic_rendered": 0,
+            "argon_rendered": 0,
             "scenes_processed": len(scenes),
         }
 
@@ -443,13 +446,57 @@ class MotionAssetPipeline:
                     except Exception as exc:
                         logger.warning(f"Netflix investigative motion skipped for scene {s_id}: {exc}")
 
+            # 6. Gemini 4 Argon Swiss-Telemetry Motion Engine - ALWAYS ON
+            if self.enable_argon:
+                target_argon = self.output_dir / f"argon_scene_{s_id}.mp4"
+                if not target_argon.exists() or self.force:
+                    try:
+                        from src.video.argon_documentary_motion import (
+                            ArgonMotionEngine,
+                            ArgonDocumentaryConfig,
+                            ArgonMotionArchetype,
+                        )
+                        argon_engine = ArgonMotionEngine(
+                            output_dir=self.output_dir,
+                            broll_dir=self.broll_dir,
+                        )
+                        arch_map = [
+                            ArgonMotionArchetype.RADAR_TELEMETRY,
+                            ArgonMotionArchetype.ZSPACE_BUNKER_PARALLAX,
+                            ArgonMotionArchetype.CLASSIFIED_DOSSIER_INVERSION,
+                            ArgonMotionArchetype.NETFLIX_OSINT_STAGE,
+                        ]
+                        arch = arch_map[s_id % 4]
+                        argon_cfg = ArgonDocumentaryConfig(
+                            scene_id=s_id,
+                            archetype=arch,
+                            title=s.get("title") or s.get("timestamp_marker") or f"SCENE {s_id}",
+                            subtitle=s.get("subtitle") or "SERPUKHOV-15 INCIDENT 1983",
+                            narrative_thesis=s.get("narration_pt", "")[:120] if s.get("narration_pt") else "Cold War Early Warning Incident.",
+                            telemetry_code=f"SERPUKHOV-15 // ACT {((s_id-1)//8)+1}",
+                            metrics={"DEFCON": "1", "CONFIDENCE": "99.8%", "RADAR": "+4.82σ"},
+                            archival_image_path=str(self.broll_dir / f"scene_{s_id}.jpg"),
+                            duration_sec=dur,
+                            fps=30,
+                        )
+                        a_res = argon_engine.render_scene_video(argon_cfg, output_path=target_argon, preview_only=self.dry_run)
+                        if a_res.video_path.is_file():
+                            results["argon_rendered"] += 1
+                            # Mirror to broll for video assembler
+                            broll_target = self.broll_dir / f"scene_{s_id}.mp4"
+                            if not broll_target.exists() or self.force:
+                                shutil.copy2(a_res.video_path, broll_target)
+                    except Exception as exc:
+                        logger.warning(f"Argon motion skipped for scene {s_id}: {exc}")
+
         logger.info(
             f"✅ Motion Asset Synthesis complete: "
             f"{results['maps_rendered']} maps, "
             f"{results['hyperframes_rendered']} blueprints, "
             f"{results['photos_4k_upscaled']} 4K stills, "
             f"{results['overlays_rendered']} overlays, "
-            f"{results['cinetic_rendered']} cinetic motion clips."
+            f"{results['cinetic_rendered']} cinetic motion clips, "
+            f"{results['argon_rendered']} argon Swiss-telemetry clips."
         )
         return results
 
