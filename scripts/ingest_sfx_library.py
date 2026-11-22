@@ -36,9 +36,26 @@ if str(BASE_DIR) not in sys.path:
 DEFAULT_TARGET_DIR = BASE_DIR / "data" / "sfx"
 
 DEFAULT_SOURCES = [
+    Path.home() / "Downloads" / "1000+UR.FASTEDITOR SFX.zip",
+    Path.home() / "Downloads" / "SOUND EFFECTS-20261122T060016Z-1-001.zip",
+    Path(r"C:\Users\Administrator\Downloads\1000+UR.FASTEDITOR SFX.zip"),
+    Path(r"C:\Users\Administrator\Downloads\SOUND EFFECTS-20261122T060016Z-1-001.zip"),
     Path(r"C:\Users\WDAGUtilityAccount\Downloads\1000+UR.FASTEDITOR SFX.zip"),
     Path(r"C:\Users\WDAGUtilityAccount\Downloads\SOUND EFFECTS-20261122T060016Z-1-001.zip"),
 ]
+
+
+def resolve_existing_sources(specified_sources: Optional[List[Path]] = None) -> List[Path]:
+    """Resolve and deduplicate existing source zip archives."""
+    if specified_sources:
+        return [p for p in specified_sources if p.is_file()]
+
+    found_by_name: dict[str, Path] = {}
+    for candidate in DEFAULT_SOURCES:
+        if candidate.is_file() and candidate.name not in found_by_name:
+            found_by_name[candidate.name] = candidate
+
+    return list(found_by_name.values())
 
 
 def _sanitize_path_segment(seg: str) -> str:
@@ -128,7 +145,10 @@ def ingest_sfx_libraries(
 ) -> dict:
     """End-to-end ingestion of sound effect zip libraries into target_dir."""
     target = target_dir or DEFAULT_TARGET_DIR
-    source_list = sources or DEFAULT_SOURCES
+    source_list = resolve_existing_sources(sources)
+
+    if not source_list:
+        logger.warning("No SFX zip archives found in default download locations or specified sources.")
 
     total_extracted = 0
     for src in source_list:
@@ -163,9 +183,10 @@ def ingest_sfx_libraries(
 def main() -> int:
     parser = argparse.ArgumentParser(description="Ingest YouTube & Cinematic SFX libraries into DarkFactory.")
     parser.add_argument("--target", type=Path, default=DEFAULT_TARGET_DIR, help="Destination directory for SFX")
+    parser.add_argument("--force", action="store_true", help="Force re-extraction even if target directory is populated")
     args = parser.parse_args()
 
-    res = ingest_sfx_libraries(target_dir=args.target)
+    res = ingest_sfx_libraries(target_dir=args.target, force_reextract=args.force)
     print(f"Status: SUCCESS | Total SFX: {res['catalog_total']} | Categories: {list(res['categories'].keys())}")
     return 0
 
