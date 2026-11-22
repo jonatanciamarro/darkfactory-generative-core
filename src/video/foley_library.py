@@ -183,101 +183,27 @@ class FoleyLibrary:
         sample_rate: int = 44100,
         duration_sec: Optional[float] = None,
     ) -> np.ndarray:
-        """Synthesize or load mono float32 waveform for a cataloged foley sound."""
+        """Synthesize or load mono float32 waveform using the Hybrid Studio & Neural Engine."""
         raw_key = (sfx_name or "whoosh_subtle").strip().lower()
-        key = _slugify(raw_key)
-
-        # 1. Try resolving real audio file via SFXManager or local custom dir
-        audio_path = self.sfx_manager.get_audio_path(key)
-        if not audio_path:
-            # Try searching matching item by name or tags
-            match = self.sfx_manager.find_best_match(raw_key)
-            if match:
-                audio_path = self.sfx_manager.get_audio_path(match)
-
-        # Direct file fallback in custom_sfx_dir
-        if not audio_path or not audio_path.is_file():
-            for cand_ext in (".wav", ".mp3", ".flac"):
-                cand = self.custom_sfx_dir / f"{key}{cand_ext}"
-                if cand.is_file():
-                    audio_path = cand
-                    break
-
-        if audio_path and audio_path.is_file():
+        req = FoleyCueRequest(
+            cue_id=f"lib_{_slugify(raw_key)}",
+            semantic_prompt=raw_key,
+            target_duration_sec=duration_sec,
+            acoustic_space=AcousticSpace.BUNKER_CONCRETE,
+            allow_neural_fallback=True,
+        )
+        res = self.hybrid_engine.resolve_cue(req)
+        if res.success and res.audio_path and Path(res.audio_path).is_file():
             try:
-                pcm, _sr = decode_audio_pcm_mono(audio_path, target_sr=sample_rate)
+                pcm, _ = decode_audio_pcm_mono(Path(res.audio_path), target_sr=sample_rate)
                 if len(pcm) > 0:
-                    if duration_sec and duration_sec > 0:
-                        max_samples = int(duration_sec * sample_rate)
-                        if len(pcm) > max_samples:
-                            pcm = pcm[:max_samples]
                     return pcm.astype(np.float32)
             except Exception as exc:
-                logger.warning(f"Failed decoding audio {audio_path}: {exc}. Using fallback...")
+                logger.warning(f"Failed decoding hybrid foley result {res.audio_path}: {exc}")
 
-        # 2. Procedural synthesis fallback
-        if key not in CC0_SFX_CATALOG:
-            # Map common semantic names to built-ins
-            if any(tok in key for tok in ("whoosh", "swoosh", "swish", "transition", "wipe")):
-                key = "whoosh_subtle"
-            elif any(tok in key for tok in ("paper", "dossier", "stamp", "slam", "impact", "hit")):
-                key = "stamp_slam"
-            elif any(tok in key for tok in ("radar", "ping", "sonar")):
-                key = "radar_ping"
-            elif any(tok in key for tok in ("teletype", "tech", "click", "hud", "button", "cipher")):
-                key = "teletype_burst"
-            elif any(tok in key for tok in ("riser", "tension", "sub", "drop", "drone", "horn")):
-                key = "sub_riser"
-            elif any(tok in key for tok in ("glitch", "static")):
-                key = "teletype_burst"
-            else:
-                raise ValueError(f"Unknown SFX '{sfx_name}'. Available: {sorted(list(CC0_SFX_CATALOG.keys()))}")
-
-        dur = max(0.1, float(duration_sec or CC0_SFX_CATALOG[key]["default_duration_sec"]))
-        n = int(round(dur * sample_rate))
-        t = np.linspace(0.0, dur, n, endpoint=False, dtype=np.float32)
-        rng = np.random.default_rng(42)
-        noise = rng.normal(0.0, 1.0, size=n).astype(np.float32)
-
-        if key == "stamp_slam":
-            # Low percussive impact + paper slap decay
-            env = np.exp(-t * 18.0)
-            freq_sweep = 145.0 * np.exp(-t * 22.0) + 52.0
-            phase = np.cumsum(2.0 * math.pi * freq_sweep / sample_rate)
-            body = np.sin(phase) * env
-            transient = noise * np.exp(-t * 55.0) * 0.45
-            sig = 0.85 * body + transient
-        elif key == "radar_ping":
-            # High resonant sonar ping with dual harmonic tail
-            env = np.minimum(1.0, t / 0.008) * np.exp(-t * 5.2)
-            sig = (0.75 * np.sin(2.0 * math.pi * 1320.0 * t) + 0.25 * np.sin(2.0 * math.pi * 2640.0 * t)) * env
-        elif key == "teletype_burst":
-            # Rhythmic crisp mechanical impulses every ~48ms
-            sig = np.zeros(n, dtype=np.float32)
-            step = max(1, int(0.048 * sample_rate))
-            click_len = max(16, int(0.012 * sample_rate))
-            for pos in range(0, n - click_len, step):
-                decay = np.exp(-np.linspace(0, 1, click_len, dtype=np.float32) * 8.0)
-                tone = np.sin(2.0 * math.pi * 1850.0 * np.arange(click_len) / sample_rate)
-                sig[pos : pos + click_len] += (0.55 * tone + 0.45 * noise[pos : pos + click_len]) * decay
-        elif key == "sub_riser":
-            # Smooth sub-bass riser swell + airy breath
-            env = np.power(np.clip(t / dur, 0.0, 1.0), 1.8) * np.exp(-np.maximum(0.0, t - dur * 0.92) * 30.0)
-            freq = 38.0 + (88.0 - 38.0) * (t / dur) ** 1.5
-            phase = np.cumsum(2.0 * math.pi * freq / sample_rate)
-            sig = (0.85 * np.sin(phase) + 0.20 * noise) * env
-        else:
-            # whoosh_subtle: smooth bell-envelope filtered air sweep
-            win = np.sin(math.pi * t / dur) ** 2
-            # Simple rolling average low-pass on noise
-            kernel = np.ones(11, dtype=np.float32) / 11.0
-            filtered = np.convolve(noise, kernel, mode="same")
-            sig = filtered * win * 1.4
-
-        peak = float(np.max(np.abs(sig))) if len(sig) else 0.0
-        if peak > 1e-5:
-            sig = (sig / peak) * 0.85
-        return sig.astype(np.float32)
+        # Direct neural synthesis fallback with organic noise shaping (never raw sines)
+        pcm_synth = self.hybrid_engine._synthesize_neural_sound(req)
+        return pcm_synth.astype(np.float32)
 
     @staticmethod
     def build_cues_from_triggers(
