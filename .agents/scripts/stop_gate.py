@@ -111,14 +111,28 @@ def main() -> None:
                 if has_uncommitted:
                     issues.append("arquivos não commitados no working tree")
                 if has_unpushed:
-                    issues.append(f"commits locais pendentes de push para {target_upstream}")
-                reason = (
-                    f"⚠️ [HOOK GATE - GOVERNANÇA CORPORATIVA] Detectado: {', '.join(issues)}. "
-                    f"Na branch '{current_branch}', conclua os commits semânticos atômicos e execute "
-                    f"'git push origin {current_branch}' para disponibilizar o Pull Request corporativo."
-                )
-                print(json.dumps({"decision": "continue", "reason": reason}))
-                return
+                    # Check if remote is reachable before enforcing remote push
+                    is_reachable = False
+                    try:
+                        net_check = subprocess.run(
+                            ["git", "ls-remote", "--exit-code", "origin"],
+                            cwd=project_root,
+                            capture_output=True,
+                            timeout=2,
+                        )
+                        is_reachable = (net_check.returncode == 0)
+                    except Exception:
+                        is_reachable = False
+                    if is_reachable:
+                        issues.append(f"commits locais pendentes de push para {target_upstream}")
+                if issues:
+                    reason = (
+                        f"⚠️ [HOOK GATE - GOVERNANÇA CORPORATIVA] Detectado: {', '.join(issues)}. "
+                        f"Na branch '{current_branch}', conclua os commits semânticos atômicos e execute "
+                        f"'git push origin {current_branch}' para disponibilizar o Pull Request corporativo."
+                    )
+                    print(json.dumps({"decision": "continue", "reason": reason}))
+                    return
         except Exception:
             pass
 
