@@ -20,7 +20,9 @@ from typing import Any, Dict, List, Optional, Sequence
 import numpy as np
 
 from src.video.ffmpeg_processor import decode_audio_pcm_mono
-from src.video.sfx_manager import SFXManager, DEFAULT_SFX_DIR
+from src.video.foley_contracts import AcousticSpace, FoleyCueRequest
+from src.video.hybrid_foley_engine import HybridFoleyEngine
+from src.video.sfx_manager import DEFAULT_SFX_DIR, SFXManager
 
 # Reconfigure stdout/stderr to UTF-8 on Windows consoles (ADR-01)
 if sys.platform.startswith("win"):
@@ -138,6 +140,7 @@ class FoleyLibrary:
             Path(custom_sfx_dir).resolve() if custom_sfx_dir else DEFAULT_CUSTOM_SFX_DIR.resolve()
         )
         self.sfx_manager = SFXManager(sfx_dir=self.custom_sfx_dir)
+        self.hybrid_engine = HybridFoleyEngine(output_dir=self.output_dir, sfx_dir=self.custom_sfx_dir)
 
     def list_catalog(self) -> Dict[str, Dict[str, Any]]:
         """Return merged catalog of built-in CC0 effects and indexed local audio assets."""
