@@ -211,12 +211,23 @@ def create_procedural_foley_stem(output_wav: Path, duration: float = 40.0, scrip
 
                 # 3. Mapas táticos e telemetria de radar
                 visual_style = sc.get("visual_style_type", "")
-                if visual_style == "TACTICAL_MAP_MOTION" or "radar" in sc.get("audio_text", "").lower():
+                audio_text = sc.get("audio_text", "").lower()
+                if visual_style == "TACTICAL_MAP_MOTION" or "radar" in audio_text:
                     cues.append(FoleyCue("radar_ping", timestamp_sec=round(cur_time + 2.0, 2), gain_db=-9.0))
 
-                # 4. Pausa dramática do Christopher Nolan (Silence drop e sub-riser)
-                if "(pausa" in sc.get("audio_text", "").lower():
+                # 4. Falhas técnicas, glitch analógico e interferência de sinal
+                if "glitch" in visual_style.lower() or "glitch" in audio_text or "interferência" in audio_text:
+                    cues.append(FoleyCue("glitch_transition", timestamp_sec=round(cur_time + 0.8, 2), gain_db=-10.0))
+
+                # 5. Fotos históricas de arquivo e obturador de câmera
+                if "foto" in audio_text or "arquivo" in audio_text or "fotografia" in audio_text:
+                    cues.append(FoleyCue("camera_shutter", timestamp_sec=round(cur_time + 1.5, 2), gain_db=-8.0))
+
+                # 6. Pausa dramática do Christopher Nolan (Silence drop e sub-riser)
+                if "(pausa" in audio_text:
                     cues.append(FoleyCue("sub_riser", timestamp_sec=round(cur_time + min(dur - 2.0, 3.5), 2), gain_db=-11.0))
+                elif "impact" in audio_text or "míssil" in audio_text or "detonação" in audio_text:
+                    cues.append(FoleyCue("sub_drop", timestamp_sec=round(cur_time + 1.0, 2), gain_db=-8.0))
 
                 cur_time += dur
 

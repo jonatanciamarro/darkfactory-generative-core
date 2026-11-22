@@ -1050,6 +1050,53 @@ async def build_foley_track_endpoint(req: FoleyTrackRequest):
     return FoleyTrackResponse(**res.to_dict())
 
 
+@router.get("/api/sfx/catalog")
+async def get_sfx_catalog_endpoint():
+    """Retorna o inventário completo de efeitos sonoros YouTube & Cinematic."""
+    from src.video.sfx_manager import SFXManager
+
+    manager = SFXManager()
+    catalog = manager.load_catalog()
+    return {
+        "total_count": catalog.total_count,
+        "categories": catalog.categories,
+        "items": [item.model_dump() for item in catalog.items[:100]],
+    }
+
+
+@router.get("/api/sfx/search")
+async def search_sfx_endpoint(
+    q: Optional[str] = None,
+    category: Optional[str] = None,
+    limit: int = 50,
+):
+    """Busca efeitos sonoros por palavra-chave ou categoria."""
+    from src.video.sfx_manager import SFXManager
+
+    manager = SFXManager()
+    results = manager.search(query=q, category=category, limit=min(limit, 100))
+    return {
+        "query": q,
+        "category": category,
+        "count": len(results),
+        "results": [item.model_dump() for item in results],
+    }
+
+
+@router.get("/api/sfx/preview/{sfx_id}")
+async def preview_sfx_endpoint(sfx_id: str):
+    """Serve arquivo de áudio de efeito sonoro para audição no Cinema Dashboard."""
+    from src.video.sfx_manager import SFXManager
+
+    manager = SFXManager()
+    audio_path = manager.get_audio_path(sfx_id)
+    if not audio_path or not audio_path.is_file():
+        raise HTTPException(status_code=404, detail=f"SFX not found: {sfx_id}")
+
+    media_type = "audio/wav" if audio_path.suffix.lower() == ".wav" else "audio/mpeg"
+    return FileResponse(path=str(audio_path), media_type=media_type, filename=audio_path.name)
+
+
 @router.post("/api/v1/video/reverse-engineer", response_model=VideoReverseResponse)
 async def reverse_engineer_video_endpoint(req: VideoReverseRequest):
     """Engenharia reversa multimodal de clipe existente para prompts MiniMax H3 / Veo 2."""

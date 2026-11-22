@@ -20,6 +20,7 @@ from typing import Any, Dict, List, Optional, Sequence
 import numpy as np
 
 from src.video.ffmpeg_processor import decode_audio_pcm_mono
+from src.video.sfx_manager import SFXManager, DEFAULT_SFX_DIR
 
 # Reconfigure stdout/stderr to UTF-8 on Windows consoles (ADR-01)
 if sys.platform.startswith("win"):
@@ -33,7 +34,7 @@ logger = logging.getLogger("darkfactory.video.foley_library")
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 DEFAULT_FOLEY_DIR = BASE_DIR / "data" / "final" / "audio" / "foley_stems"
-DEFAULT_CUSTOM_SFX_DIR = BASE_DIR / "data" / "raw" / "sfx_cc0"
+DEFAULT_CUSTOM_SFX_DIR = DEFAULT_SFX_DIR if DEFAULT_SFX_DIR.is_dir() else BASE_DIR / "data" / "raw" / "sfx_cc0"
 
 CC0_SFX_CATALOG: Dict[str, Dict[str, Any]] = {
     "whoosh_subtle": {
@@ -125,7 +126,7 @@ def _atomic_write_stereo_wav(path: Path, stereo_samples: np.ndarray, sample_rate
 
 
 class FoleyLibrary:
-    """Offline CC0-1.0 foley SFX catalog and timeline stem synthesizer."""
+    """Offline CC0-1.0 and YouTube/Cinematic SFX catalog and timeline stem synthesizer."""
 
     def __init__(
         self,
@@ -136,20 +137,40 @@ class FoleyLibrary:
         self.custom_sfx_dir = (
             Path(custom_sfx_dir).resolve() if custom_sfx_dir else DEFAULT_CUSTOM_SFX_DIR.resolve()
         )
+        self.sfx_manager = SFXManager(sfx_dir=self.custom_sfx_dir)
 
     def list_catalog(self) -> Dict[str, Dict[str, Any]]:
-        """Return merged catalog of built-in CC0 effects and optional local CC0 WAVs."""
+        """Return merged catalog of built-in CC0 effects and indexed local audio assets."""
         catalog = {k: dict(v) for k, v in CC0_SFX_CATALOG.items()}
+        try:
+            sfx_cat = self.sfx_manager.load_catalog()
+            for item in sfx_cat.items:
+                cat_entry = {
+                    "category": item.category,
+                    "subcategory": item.subcategory,
+                    "license": "Custom/CC0",
+                    "default_duration_sec": item.duration_sec or 0.5,
+                    "description": f"{item.name} ({item.origin_pack})",
+                    "local_path": item.absolute_path,
+                }
+                catalog[item.id] = cat_entry
+                stem_key = _slugify(item.name)
+                if stem_key not in catalog:
+                    catalog[stem_key] = cat_entry
+        except Exception as exc:
+            logger.debug(f"SFXManager catalog listing fallback: {exc}")
+
+        # Also support legacy direct globbing of custom_sfx_dir
         if self.custom_sfx_dir.is_dir():
-            for wav_file in sorted(self.custom_sfx_dir.glob("*.wav")):
-                stem = wav_file.stem.lower()
+            for audio_file in sorted(list(self.custom_sfx_dir.glob("*.wav")) + list(self.custom_sfx_dir.glob("*.mp3"))):
+                stem = audio_file.stem.lower()
                 if stem not in catalog:
                     catalog[stem] = {
                         "category": "custom_local",
-                        "license": "CC0-1.0",
+                        "license": "Custom/CC0",
                         "default_duration_sec": 0.5,
-                        "description": f"Local CC0 asset: {wav_file.name}",
-                        "local_path": wav_file.as_posix(),
+                        "description": f"Local asset: {audio_file.name}",
+                        "local_path": audio_file.as_posix(),
                     }
         return catalog
 
@@ -160,15 +181,54 @@ class FoleyLibrary:
         duration_sec: Optional[float] = None,
     ) -> np.ndarray:
         """Synthesize or load mono float32 waveform for a cataloged foley sound."""
-        key = (sfx_name or "whoosh_subtle").strip().lower()
-        custom_file = self.custom_sfx_dir / f"{key}.wav"
-        if custom_file.is_file():
-            pcm, _sr = decode_audio_pcm_mono(custom_file, target_sr=sample_rate)
-            if len(pcm) > 0:
-                return pcm
+        raw_key = (sfx_name or "whoosh_subtle").strip().lower()
+        key = _slugify(raw_key)
 
+        # 1. Try resolving real audio file via SFXManager or local custom dir
+        audio_path = self.sfx_manager.get_audio_path(key)
+        if not audio_path:
+            # Try searching matching item by name or tags
+            match = self.sfx_manager.find_best_match(raw_key)
+            if match:
+                audio_path = self.sfx_manager.get_audio_path(match)
+
+        # Direct file fallback in custom_sfx_dir
+        if not audio_path or not audio_path.is_file():
+            for cand_ext in (".wav", ".mp3", ".flac"):
+                cand = self.custom_sfx_dir / f"{key}{cand_ext}"
+                if cand.is_file():
+                    audio_path = cand
+                    break
+
+        if audio_path and audio_path.is_file():
+            try:
+                pcm, _sr = decode_audio_pcm_mono(audio_path, target_sr=sample_rate)
+                if len(pcm) > 0:
+                    if duration_sec and duration_sec > 0:
+                        max_samples = int(duration_sec * sample_rate)
+                        if len(pcm) > max_samples:
+                            pcm = pcm[:max_samples]
+                    return pcm.astype(np.float32)
+            except Exception as exc:
+                logger.warning(f"Failed decoding audio {audio_path}: {exc}. Using fallback...")
+
+        # 2. Procedural synthesis fallback
         if key not in CC0_SFX_CATALOG:
-            raise ValueError(f"Unknown CC0 SFX '{sfx_name}'. Available: {sorted(CC0_SFX_CATALOG)}")
+            # Map common semantic names to built-ins
+            if any(tok in key for tok in ("whoosh", "swoosh", "swish", "transition", "wipe")):
+                key = "whoosh_subtle"
+            elif any(tok in key for tok in ("paper", "dossier", "stamp", "slam", "impact", "hit")):
+                key = "stamp_slam"
+            elif any(tok in key for tok in ("radar", "ping", "sonar")):
+                key = "radar_ping"
+            elif any(tok in key for tok in ("teletype", "tech", "click", "hud", "button", "cipher")):
+                key = "teletype_burst"
+            elif any(tok in key for tok in ("riser", "tension", "sub", "drop", "drone", "horn")):
+                key = "sub_riser"
+            elif any(tok in key for tok in ("glitch", "static")):
+                key = "teletype_burst"
+            else:
+                raise ValueError(f"Unknown SFX '{sfx_name}'. Available: {sorted(list(CC0_SFX_CATALOG.keys()))}")
 
         dur = max(0.1, float(duration_sec or CC0_SFX_CATALOG[key]["default_duration_sec"]))
         n = int(round(dur * sample_rate))
@@ -221,21 +281,29 @@ class FoleyLibrary:
         trigger_events: Sequence[Dict[str, Any]],
         default_sfx: str = "stamp_slam",
     ) -> List[FoleyCue]:
-        """Convert spoken keyword triggers or markers into appropriate CC0 foley cues."""
+        """Convert spoken keyword triggers or markers into appropriate CC0 / Cinematic foley cues."""
         cues: List[FoleyCue] = []
         for idx, ev in enumerate(trigger_events):
             kw = str(ev.get("keyword") or ev.get("sfx_name") or "").lower()
             ts = float(ev.get("timestamp_sec") or 0.0)
             sfx = default_sfx
-            if any(tok in kw for tok in ("radar", "missile", "sonar", "ping", "orbit", "satellit")):
+            if any(tok in kw for tok in ("glitch", "static", "tape", "distortion", "noise", "error")):
+                sfx = "glitch_transition"
+            elif any(tok in kw for tok in ("sub", "drop", "bass", "boom", "braam")):
+                sfx = "sub_drop"
+            elif any(tok in kw for tok in ("horn", "brass", "inception")):
+                sfx = "dramatic_horn"
+            elif any(tok in kw for tok in ("camera", "shutter", "snapshot", "photo", "flash")):
+                sfx = "camera_shutter"
+            elif any(tok in kw for tok in ("radar", "missile", "sonar", "ping", "orbit", "satellit")):
                 sfx = "radar_ping"
-            elif any(tok in kw for tok in ("declassified", "classified", "secret", "top secret", "stamp")):
+            elif any(tok in kw for tok in ("declassified", "classified", "secret", "top secret", "stamp", "dossier", "paper")):
                 sfx = "stamp_slam"
-            elif any(tok in kw for tok in ("date", "1983", "teletype", "intercept", "cipher", "file")):
+            elif any(tok in kw for tok in ("date", "1983", "teletype", "intercept", "cipher", "file", "hud", "button", "click")):
                 sfx = "teletype_burst"
-            elif any(tok in kw for tok in ("tension", "countdown", "alert", "riser")):
+            elif any(tok in kw for tok in ("tension", "countdown", "alert", "riser", "drone")):
                 sfx = "sub_riser"
-            elif any(tok in kw for tok in ("transition", "whoosh", "cut")):
+            elif any(tok in kw for tok in ("transition", "whoosh", "swoosh", "swish", "cut")):
                 sfx = "whoosh_subtle"
             pan = -0.15 if idx % 2 == 0 else 0.15
             cues.append(FoleyCue(sfx_name=sfx, timestamp_sec=max(0.0, ts), gain_db=-6.0, pan=pan))

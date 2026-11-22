@@ -44,6 +44,14 @@ data/audio/*.raw
 data/audio/raw/
 data/models/
 data/staging/
+data/sfx/**/*.wav
+data/sfx/**/*.mp3
+data/sfx/**/*.flac
+data/sfx/**/*.ogg
+data/sfx/**/*.mp4
+data/sfx/**/*.txt
+!data/sfx/sfx_manifest.json
+!data/sfx/.gitkeep
 
 # Local Quarantine & Transient Renders
 data/quarantine/
