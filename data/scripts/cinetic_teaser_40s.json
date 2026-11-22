@@ -1,0 +1,229 @@
+{
+  "project_id": "1983_soviet_nuclear_glitch_teaser_40s",
+  "title": "The 1983 Soviet Glitch: 40-Second Cinematic Teaser",
+  "total_duration_sec": 40.0,
+  "style": "cinetic_noir_investigative",
+  "director": "Christopher Nolan (DarkFactory Authorial Showrunner)",
+  "aesthetic_standards": {
+    "center_band_rule": "35-65% frame height kinetic text (Cinetic Standard #1)",
+    "palette": {
+      "bg_ink": "#0D0B0A",
+      "card_bg": "#141211",
+      "border_dark": "#262220",
+      "text_primary": "#F2EFEF",
+      "text_muted": "#A3A3A3",
+      "accent_red": "#DC2626",
+      "stamp_red": "#EF4444"
+    },
+    "visual_grading": "kodak_2383_cold_war_noir",
+    "audio_spec": {
+      "target_lufs": -14.0,
+      "true_peak_dbtp": -1.0,
+      "stems": ["voiceover", "zimmer_tension", "foley_sfx", "braams"]
+    }
+  },
+  "scenes": [
+    {
+      "scene_id": 1,
+      "title": "The Alarm",
+      "duration_sec": 7.5,
+      "time_range": "0.0s - 7.5s",
+      "headline": "FIVE INCOMING NUCLEAR MISSILES",
+      "accent_word": "NUCLEAR",
+      "stamp_text": "TOP SECRET // DECLASSIFIED",
+      "telemetry": "SERPUKHOV-15 // 54°54'57\"N 37°24'42\"E // AZ 014.2°",
+      "dossier_code": "SERPUKHOV-15-83",
+      "timecode": "00:15:23 MSK",
+      "voiceover_text": "At 00:15 Moscow time, emergency sirens split Serpukhov-15. Five American nuclear warheads were reported ascending toward the Soviet Union.",
+      "cosyvoice_instruct": "Controlled urgency and mounting dread, deep authoritative baritone documentary tone, crisp articulation.",
+      "broll_image": "data/broll/scene_1.jpg",
+      "base_image": "data/broll/scene_1.jpg",
+      "visual_style": "INVESTIGATIVE_KEN_BURNS",
+      "ken_burns_motion": {
+        "zoom_start": 1.0,
+        "zoom_end": 1.15,
+        "pan": "center_to_top_right",
+        "easing": "cubic_in_out"
+      },
+      "sfx_cues": {
+        "whoosh": "whoosh_heavy",
+        "stamp_slam": "classified_stamp_slam",
+        "radar": "radar_pulse_sweep",
+        "klaxon": "soviet_bunker_klaxon_alarm",
+        "sub_riser": "sub_riser_55hz_dread"
+      },
+      "sfx": [
+        "whoosh_heavy",
+        "klaxon_alarm",
+        "stamp_slam",
+        "radar_pulse_sweep",
+        "sub_riser_55hz_dread"
+      ],
+      "nolan_direction": {
+        "shot_a_drama": "Stanislav Petrov frozen under flashing red beacon, chiaroscuro lighting on sweat-drenched brow",
+        "shot_b_macro": "Macro CRT radar sweep revealing five trajectory spikes blinking in Cyrillic phosphorus"
+      }
+    },
+    {
+      "scene_id": 2,
+      "title": "The Satellites",
+      "duration_sec": 7.5,
+      "time_range": "7.5s - 15.0s",
+      "headline": "SOVIET OKO SATELLITE WARNING",
+      "accent_word": "WARNING",
+      "stamp_text": "TOP SECRET // DECLASSIFIED",
+      "telemetry": "COSMOS-1374 // MOLNIYA ORBIT // 63.4° INCL",
+      "dossier_code": "SERPUKHOV-15-83",
+      "timecode": "00:15:31 MSK",
+      "voiceover_text": "In high orbit, Soviet Oko satellites confirmed the infrared launches. The central computer classified the attack with maximum certainty.",
+      "cosyvoice_instruct": "Cold mechanical precision, chilling documentary baritone, emphasizing technological infallibility.",
+      "broll_image": "data/broll/scene_2.jpg",
+      "base_image": "data/broll/scene_2.jpg",
+      "visual_style": "INVESTIGATIVE_KEN_BURNS",
+      "ken_burns_motion": {
+        "zoom_start": 1.15,
+        "zoom_end": 1.02,
+        "pan": "bottom_left_to_center",
+        "easing": "cubic_in_out"
+      },
+      "sfx_cues": {
+        "whoosh": "cold_orbital_whoosh",
+        "stamp_slam": "classified_stamp_slam",
+        "radar": "telemetry_beeps_oko",
+        "klaxon": "muffled_alarm_drone",
+        "sub_riser": "shepard_tone_riser_ascending"
+      },
+      "sfx": [
+        "whoosh_radar",
+        "radar_ping",
+        "stamp_slam",
+        "shepard_tone_riser_ascending"
+      ],
+      "nolan_direction": {
+        "shot_a_drama": "Silhouetted satellite telemetry tech staring at phosphor displays reflecting in eyeglasses",
+        "shot_b_macro": "Orbital optical lens aperture catching blinding sunlight reflection above cloud decks"
+      }
+    },
+    {
+      "scene_id": 3,
+      "title": "The Protocol",
+      "duration_sec": 8.5,
+      "time_range": "15.0s - 23.5s",
+      "headline": "PROTOCOL ORDERS IMMEDIATE RETALIATION",
+      "accent_word": "RETALIATION",
+      "stamp_text": "TOP SECRET // DECLASSIFIED",
+      "telemetry": "STRATEGIC ROCKET FORCES // RETALIATION READY // T-MINUS 20:00",
+      "dossier_code": "SERPUKHOV-15-83",
+      "timecode": "00:15:39 MSK",
+      "voiceover_text": "Military protocol demanded an immediate full-scale counterstrike. Soviet nuclear silos stood unlocked and armed for total retaliation.",
+      "cosyvoice_instruct": "Grim, somber weight, tragic historical gravitas, heavy cadence.",
+      "broll_image": "data/broll/scene_3.jpg",
+      "base_image": "data/broll/scene_3.jpg",
+      "visual_style": "INVESTIGATIVE_KEN_BURNS",
+      "ken_burns_motion": {
+        "zoom_start": 1.0,
+        "zoom_end": 1.20,
+        "pan": "center_to_bottom",
+        "easing": "cubic_in_out"
+      },
+      "sfx_cues": {
+        "whoosh": "tension_snap_whoosh",
+        "stamp_slam": "protocol_stamp_slam",
+        "radar": "countdown_click_pulse",
+        "klaxon": "distorted_klaxon_echo",
+        "sub_riser": "heavy_braam_sub_impact"
+      },
+      "sfx": [
+        "whoosh_subtle",
+        "teletype_burst",
+        "sub_riser",
+        "stamp_slam",
+        "heavy_braam_sub_impact"
+      ],
+      "nolan_direction": {
+        "shot_a_drama": "Heavy black Bakelite telephone receiver trembling in duty officer hand",
+        "shot_b_macro": "Industrial toggle switches clicking into launch posture under harsh desk lamp"
+      }
+    },
+    {
+      "scene_id": 4,
+      "title": "The Human Choice",
+      "duration_sec": 9.0,
+      "time_range": "23.5s - 32.5s",
+      "headline": "ONE OFFICER CALLS A GLITCH",
+      "accent_word": "GLITCH",
+      "stamp_text": "TOP SECRET // DECLASSIFIED",
+      "telemetry": "BUNKER COMMAND CONSOLE // OVERRIDE LOG // FALSE ALARM",
+      "dossier_code": "SERPUKHOV-15-83",
+      "timecode": "00:15:48 MSK",
+      "voiceover_text": "Instead of authorizing armageddon, duty officer Stanislav Petrov trusted human instinct over flawed machines. He called it a glitch.",
+      "cosyvoice_instruct": "Intense suspense turning to calm defiance, deliberate pauses, revelation delivered with profound philosophical mystery.",
+      "broll_image": "data/broll/scene_4.jpg",
+      "base_image": "data/broll/scene_4.jpg",
+      "visual_style": "INVESTIGATIVE_KEN_BURNS",
+      "ken_burns_motion": {
+        "zoom_start": 1.20,
+        "zoom_end": 1.05,
+        "pan": "right_to_center",
+        "easing": "cubic_in_out"
+      },
+      "sfx_cues": {
+        "whoosh": "atmospheric_drift_whoosh",
+        "stamp_slam": "classified_stamp_slam",
+        "radar": "oscilloscope_hum",
+        "klaxon": "silenced_alarm_drop",
+        "sub_riser": "sub_drop_suspense_pause"
+      },
+      "sfx": [
+        "whoosh_heavy",
+        "switch_toggle",
+        "stamp_slam",
+        "sub_drop_suspense_pause"
+      ],
+      "nolan_direction": {
+        "shot_a_drama": "Close-up of Petrov inhaling cigarette smoke, eyes fixed on the blank confirmation board",
+        "shot_b_macro": "Extreme macro of finger lingering 5 millimeters above the heavy red authorization button"
+      }
+    },
+    {
+      "scene_id": 5,
+      "title": "The Climax & Lockup",
+      "duration_sec": 7.5,
+      "time_range": "32.5s - 40.0s",
+      "headline": "TWENTY MINUTES TO MIDNIGHT",
+      "accent_word": "MIDNIGHT",
+      "stamp_text": "TOP SECRET // DECLASSIFIED",
+      "telemetry": "EARTH IMPACT CLOCK // 00:00:00 // SURVIVAL CONFIRMED",
+      "dossier_code": "SERPUKHOV-15-83",
+      "timecode": "00:15:58 MSK",
+      "voiceover_text": "Twenty minutes decided the survival of human civilization. The untold classified story of the glitch that saved the world.",
+      "cosyvoice_instruct": "Cinematic climax resolution, powerful resonant documentary tone, unforgettable final statement.",
+      "broll_image": "data/broll/scene_5.jpg",
+      "base_image": "data/broll/scene_5.jpg",
+      "visual_style": "INVESTIGATIVE_KEN_BURNS",
+      "ken_burns_motion": {
+        "zoom_start": 1.05,
+        "zoom_end": 1.18,
+        "pan": "center_to_lockup",
+        "easing": "cubic_in_out"
+      },
+      "sfx_cues": {
+        "whoosh": "climactic_anamorphic_whoosh",
+        "stamp_slam": "final_dossier_slam",
+        "radar": "heartbeat_terminal_ping",
+        "klaxon": "distant_fading_siren",
+        "sub_riser": "braam_crescendo_resolution"
+      },
+      "sfx": [
+        "whoosh_dramatic",
+        "sub_braam",
+        "stamp_slam",
+        "braam_crescendo_resolution"
+      ],
+      "nolan_direction": {
+        "shot_a_drama": "Petrov slumped back into leather chair as radar clears to zero targets, dawn light creeping in",
+        "shot_b_macro": "Dossier folder snapping shut with crimson stamp: TOP SECRET // DECLASSIFIED"
+      }
+    }
+  ]
+}
