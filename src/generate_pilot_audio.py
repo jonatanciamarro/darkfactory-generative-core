@@ -225,7 +225,8 @@ def run_pipeline(
             if preferred_engine == "kokoro":
                 target_engine = ENGINE_KOKORO_LOCAL
             elif preferred_engine == "cosyvoice":
-                target_engine = None  # Attempt CosyVoice Tier 1 first, fallback to Kokoro
+                target_engine = ENGINE_COSYVOICE
+                voice = "cosyvoice_instruct"
     except Exception as e:
         print(f"Voice router lock warning: {e}")
 

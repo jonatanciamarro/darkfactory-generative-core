@@ -76,11 +76,13 @@ class MotionAssetPipeline:
         broll_dir: Optional[Path | str] = None,
         dry_run: bool = False,
         force: bool = False,
+        enable_cinetic: bool = True,
     ) -> None:
         self.output_dir = Path(output_dir).resolve() if output_dir else MOTION_DIR.resolve()
         self.broll_dir = Path(broll_dir).resolve() if broll_dir else BROLL_DIR.resolve()
         self.dry_run = dry_run
         self.force = force
+        self.enable_cinetic = enable_cinetic
 
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self.broll_dir.mkdir(parents=True, exist_ok=True)
@@ -326,6 +328,7 @@ class MotionAssetPipeline:
             "hyperframes_rendered": 0,
             "photos_4k_upscaled": 0,
             "overlays_rendered": 0,
+            "cinetic_rendered": 0,
             "scenes_processed": len(scenes),
         }
 
@@ -368,12 +371,45 @@ class MotionAssetPipeline:
                 if ol_path and ol_path.is_file():
                     results["overlays_rendered"] += 1
 
+            # 5. Cinetic Investigative Motion (Netflix / BBC style) - ALWAYS ON
+            if self.enable_cinetic:
+                target_broll = self.broll_dir / f"scene_{s_id}.mp4"
+                if not target_broll.exists() or self.force:
+                    try:
+                        from src.video.cinetic_episode_motion import (
+                            CineticEpisodeMotionEngine,
+                            CineticSceneConfig,
+                            extract_kinetic_statement,
+                        )
+                        c_engine = CineticEpisodeMotionEngine(
+                            broll_dir=self.broll_dir,
+                            output_dir=self.output_dir,
+                            sfx_dir=DATA_DIR / "sfx",
+                        )
+                        audio_text = s.get("audio_text", "")
+                        headline, accent_word = extract_kinetic_statement(audio_text, scene_id=s_id)
+                        cfg = CineticSceneConfig(
+                            scene_id=s_id,
+                            headline=headline,
+                            accent_word=accent_word,
+                            stamp_text=s.get("stamp_text", "TOP SECRET // DECLASSIFIED"),
+                            telemetry=s.get("timestamp_marker", "SERPUKHOV-15 // 55°45'N 37°37'E"),
+                            duration_sec=dur,
+                        )
+                        c_engine.generate_hyperframes_html(cfg)
+                        c_path = c_engine.render_scene_motion_clip(cfg, mirror_to_broll=True)
+                        if c_path and c_path.is_file():
+                            results["cinetic_rendered"] += 1
+                    except Exception as exc:
+                        logger.warning(f"Cinetic motion skipped for scene {s_id}: {exc}")
+
         logger.info(
             f"✅ Motion Asset Synthesis complete: "
             f"{results['maps_rendered']} maps, "
             f"{results['hyperframes_rendered']} blueprints, "
             f"{results['photos_4k_upscaled']} 4K stills, "
-            f"{results['overlays_rendered']} overlays."
+            f"{results['overlays_rendered']} overlays, "
+            f"{results['cinetic_rendered']} cinetic motion clips."
         )
         return results
 
