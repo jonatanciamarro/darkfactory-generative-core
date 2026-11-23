@@ -6,6 +6,21 @@
 
 ---
 
+## 🏛️ REGRAS DE PRODUÇÃO INEGOCIÁVEIS (ALWAYS ON)
+
+1. **🎙️ Narração SEMPRE pelo CosyVoice (ALWAYS ON)**:
+   - A voz oficial do canal dark documental é **estritamente CosyVoice 3** (Instruct 2 / Narrator Lock).
+   - O modelo local Kokoro-82M ONNX é restrito unicamente a mock de testes ou contingência extrema de rede.
+
+2. **🌌 Google Flow ALWAYS ON**:
+   - Geração de takes visuais generativos Dual-Shot via **Google Flow** (Omni Flash Shot A Drama + Veo 3.1 Shot B Macro).
+   - Trilha sonora orquestral contínua Zimmer/Lyria via **Flow Music** masterizada a -14 LUFS.
+
+3. **🎬 Motion Cinemático Investigativo Netflix/BBC via Cinetic (ALWAYS ON)**:
+   - Todo módulo de motion graphics, mapas vetoriais, esquemas isométricos CAD e overlays táticos opera obrigatoriamente pelo motor **Cinetic** (HyperFrames/GSAP) com paleta investigativa `inkStage` (#0D0B0A, #DC2626, #F2EFEF) e fotos 4K upscaladas pelo **SeedVR 2.5**.
+
+---
+
 ## 🧭 O Ciclo Corporativo de 5 Fases (Padrão Mandatório)
 
 ### Fase 1: Alinhamento, Contratos & Escopo (🔴 Gate 1 de Confirmação)

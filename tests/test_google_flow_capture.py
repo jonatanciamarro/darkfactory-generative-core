@@ -100,6 +100,23 @@ class TestGoogleFlowContracts:
         assert "video" in joined
         assert "generation" in joined or "card" in joined or "node" in joined
 
+    def test_card_selectors_include_angular_web_components(self):
+        """MANDATÓRIO: get_card_selectors DEVE incluir Web Components reais do Google Flow Grid."""
+        selectors = get_card_selectors()
+        joined = " ".join(selectors).lower()
+        assert "flow-grid-tile-container" in joined, "Falta 'flow-grid-tile-container' nos seletores de card"
+        assert "flow-video-tile" in joined, "Falta 'flow-video-tile' nos seletores de card"
+        assert "flow-tile-container" in joined, "Falta 'flow-tile-container' nos seletores de card"
+        assert "thumbnail" in joined, "Falta seletor de miniatura 'img.thumbnail' nos seletores de card"
+
+    def test_studio_entrance_selectors_include_project_open(self):
+        """MANDATÓRIO: get_studio_entrance_selectors DEVE permitir abrir projetos existentes na landing page."""
+        from src.google_flow_bot import GoogleFlowBot
+        selectors = GoogleFlowBot.get_studio_entrance_selectors()
+        joined = " ".join(selectors).lower()
+        assert "abrir projeto" in joined, "Falta seletor para 'Abrir projeto' na lista de entrada do estúdio"
+        assert "novo projeto" in joined, "Falta seletor para 'Novo projeto'"
+
 
 class TestGoogleFlowCardCapturer:
     """Verifies Multi-Vector capture mechanics on mocked Playwright pages."""
@@ -269,5 +286,44 @@ class TestGoogleFlowCardCapturer:
         result = capturer.download_from_modal(mock_page, out_file, prefer_upscale=True)
         assert result.success is True
         assert "1080p" in result.method or "upscale" in result.method
+
+
+class TestGoogleFlowStudioSync:
+    """Verifies automated synchronization and download of existing clips from active Google Flow studio project."""
+
+    def test_sync_existing_clips_contract_and_execution(self, tmp_path):
+        from src.google_flow_bot import GoogleFlowBot, GoogleFlowTileMetadata, GoogleFlowSyncSummary
+
+        bot = GoogleFlowBot(broll_dir=tmp_path)
+        mock_page = MagicMock()
+
+        # Simula 2 tiles existentes na grade do estúdio
+        tile1 = MagicMock()
+        tile1.get_attribute.side_effect = lambda attr: "Soviet duty officer Serpukhov" if attr == "aria-label" else ""
+        tile2 = MagicMock()
+        tile2.get_attribute.side_effect = lambda attr: "Ballistic missile trajectory" if attr == "aria-label" else ""
+
+        mock_page.query_selector_all.return_value = [tile1, tile2]
+
+        with patch.object(bot.capturer, "download_from_modal") as mock_modal:
+            # Simula download bem-sucedido
+            def fake_download(page, out_file, prefer_upscale=True):
+                Path(out_file).write_bytes(b"DATA" * 20000)
+                return GoogleFlowCaptureResult(
+                    success=True,
+                    method="modal_1080p_upscale",
+                    video_path=Path(out_file),
+                    file_size_bytes=80000,
+                )
+
+            mock_modal.side_effect = fake_download
+
+            summary = bot.sync_existing_project_clips(mock_page, max_clips=2, prefer_upscale=True)
+
+            assert isinstance(summary, GoogleFlowSyncSummary)
+            assert summary.total_tiles_found == 2
+            assert len(summary.downloaded_clips) == 2
+            assert summary.success_rate == 100.0
+
 
 

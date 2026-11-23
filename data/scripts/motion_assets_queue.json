@@ -1,0 +1,846 @@
+{
+  "project_title": "The Classified Seconds That Almost Ended Humanity: 1983 Soviet nuclear false alarm incident",
+  "mode": "full",
+  "scenes": [
+    {
+      "scene_id": 1,
+      "visual_style_type": "HERO_AI_DUAL_SHOT",
+      "visual_pillar": "HERO_AI_VIDEO",
+      "estimated_duration_sec": 14.5,
+      "timestamp_marker": "12:15:00 AM | SERPUKHOV-15 BUNKER",
+      "audio_text": "At 12:15 AM on September 26, 1983, a red siren illuminated a top-secret Soviet bunker outside Moscow. The radar screens confirmed what every officer dreaded: five American nuclear warheads were already in the air.",
+      "overlay_recipe": {
+        "template": "tactical_hud",
+        "stamp_text": "DEFCON 2 // EARLY WARNING MISSILE RADAR",
+        "coordinates": "54°54'57\"N 37°24'42\"E",
+        "lower_third_data": {
+          "title": "SERPUKHOV-15 BUNKER",
+          "subtitle": "Soviet Early Warning Command Post // Moscow Oblast",
+          "coordinates": "54.9158° N, 37.4116° E",
+          "date_timestamp": "26 SEP 1983 - 00:15:00 UTC",
+          "classification": "TOP SECRET // LEVEL 1 SPECIAL PROTOCOL"
+        },
+        "kinetic_caption_style": "terminal_typewriter"
+      }
+    },
+    {
+      "scene_id": 2,
+      "visual_style_type": "TACTICAL_MAP_MOTION",
+      "visual_pillar": "TACTICAL_MAP",
+      "estimated_duration_sec": 16.0,
+      "timestamp_marker": "12:16:20 AM | FIRST TELEMETRY ACQUISITION",
+      "audio_text": "The mainframe classified the target as a single LGM-30 Minuteman intercontinental ballistic missile, launched from Malmstrom Air Force Base in Montana. (pausa: 2s) The automated computer probability score was flashing at ninety-nine percent confidence.",
+      "overlay_recipe": {
+        "template": "tactical_hud",
+        "stamp_text": "MISSILE WARNING CONFIRMED // TARGET ACQUIRED",
+        "coordinates": "47°30'00\"N 111°11'00\"W",
+        "lower_third_data": {
+          "title": "ICBM LAUNCH SITE: MALMSTROM AFB",
+          "subtitle": "Montana, USA // 341st Missile Wing Telemetry",
+          "coordinates": "47.5000° N, 111.1833° W",
+          "date_timestamp": "26 SEP 1983 - 00:16:20 UTC",
+          "classification": "CONFIDENTIAL SATELLITE TRACKING"
+        },
+        "kinetic_caption_style": "terminal_typewriter"
+      }
+    },
+    {
+      "scene_id": 3,
+      "visual_style_type": "PSYCHOLOGICAL_PROFILE",
+      "visual_pillar": "HERO_AI_VIDEO",
+      "estimated_duration_sec": 15.5,
+      "timestamp_marker": "12:17:45 AM | THE DUTY OFFICER PSYCHE",
+      "audio_text": "Lieutenant Colonel Stanislav Petrov was forty-four years old. He was not a career combat general; he was an analytical systems engineer who helped write the operational manual for the Oko satellite network. Behind him, one hundred and twenty officers stood waiting for his order to push the master button.",
+      "overlay_recipe": {
+        "template": "lower_third",
+        "stamp_text": "DOSSIER: LT. COL. STANISLAV YEVGRAFOVICH PETROV",
+        "coordinates": "54°54'57\"N 37°24'42\"E",
+        "lower_third_data": {
+          "title": "LT. COL. STANISLAV PETROV",
+          "subtitle": "Duty Officer // Soviet Air Defence Forces (V-PVO)",
+          "coordinates": "Bunker Serpukhov-15 // Moscow District",
+          "date_timestamp": "Born 1939 - Died 2017",
+          "classification": "PSYCHOLOGICAL PROFILE // CLEARED LEVEL 1"
+        },
+        "kinetic_caption_style": "editorial_karaoke"
+      }
+    },
+    {
+      "scene_id": 4,
+      "visual_style_type": "TACTICAL_MAP_MOTION",
+      "visual_pillar": "TACTICAL_MAP",
+      "estimated_duration_sec": 16.5,
+      "timestamp_marker": "12:19:10 AM | POLAR VECTOR CORRIDOR",
+      "audio_text": "The polar flight corridor over the Arctic Circle was the shortest trajectory between the American silos and Moscow. Flight time: twenty-six minutes. Ten had already evaporated in signal verification. Petrov had sixteen minutes left before nuclear detonation.",
+      "overlay_recipe": {
+        "template": "tactical_hud",
+        "stamp_text": "POLAR TRAJECTORY // ARCTIC CORRIDOR",
+        "coordinates": "85°00'00\"N 00°00'00\"E",
+        "lower_third_data": {
+          "title": "POLAR INTERCEPTION CORRIDOR",
+          "subtitle": "US-USSR Ballistic Arc // Flight Time: 26 Mins",
+          "coordinates": "Northern Latitude Vector // Arctic Route",
+          "date_timestamp": "ESTIMATED IMPACT: 12:41:00 AM",
+          "classification": "STRATEGIC ROCKET FORCES TELEMETRY"
+        },
+        "kinetic_caption_style": "terminal_typewriter"
+      }
+    },
+    {
+      "scene_id": 5,
+      "visual_style_type": "BUNKER_INTERCOM_DRAMA",
+      "visual_pillar": "HERO_AI_VIDEO",
+      "estimated_duration_sec": 15.0,
+      "timestamp_marker": "12:20:30 AM | BUNKER INTERCOM LOGS",
+      "audio_text": "Declassified bunker audio logs captured the shouting on the command deck. (voz distorcida: Comandante, o computador principal atingiu o nível mais alto de confirmação! Temos que transmitir o alerta agora!) (pausa: 2s) Petrov screamed back into the microphone: 'Sit down and shut up! We wait!'",
+      "overlay_recipe": {
+        "template": "declassified_dossier",
+        "stamp_text": "TOP SECRET // TRANSCRIPT EXCERPT // FILE 83-P",
+        "coordinates": "54°54'57\"N 37°24'42\"E",
+        "lower_third_data": {
+          "title": "AUDIO LOG TRANSCRIPT: 00:20:30 UTC",
+          "subtitle": "Internal Comm Line // Deck Officer to Petrov",
+          "coordinates": "Serpukhov-15 Subterranean Bunker",
+          "date_timestamp": "DECLASSIFIED MOSCOW MILITARY ARCHIVE",
+          "classification": "RECORDING LEVEL 5 // KGB SECURED"
+        },
+        "kinetic_caption_style": "hormozi_pop"
+      }
+    },
+    {
+      "scene_id": 6,
+      "visual_style_type": "ANATOMY_ISOMETRIC",
+      "visual_pillar": "CAD_BLUEPRINT",
+      "estimated_duration_sec": 17.0,
+      "timestamp_marker": "12:21:45 AM | ISOMETRIC ANATOMY // US-K OKO",
+      "audio_text": "In high elliptical Molniya orbit, thirty-six thousand kilometers above the Earth, sat Kosmos-1383. It was the pride of the Soviet Oko program. Its mission: stare into the dark silhouette of the American continent with chilled optical sensors tuned to detect the infrared flame of rocket boosters.",
+      "overlay_recipe": {
+        "template": "anatomy_mechanical",
+        "stamp_text": "SCHEMATIC // US-K OKO EARLY WARNING SATELLITE",
+        "coordinates": "ORBIT: 36,000 KM // MOLNIYA-1",
+        "lower_third_data": {
+          "title": "US-K 'OKO' SATELLITE (KOSMOS-1383)",
+          "subtitle": "Infrared Early Warning System // OKB-41 Design",
+          "coordinates": "Molniya Orbit: 600 x 39,000 km",
+          "date_timestamp": "Launched 28 Dec 1982",
+          "classification": "TOP SECRET TECHNICAL SCHEMATIC"
+        },
+        "kinetic_caption_style": "terminal_typewriter"
+      }
+    },
+    {
+      "scene_id": 7,
+      "visual_style_type": "HERO_AI_DUAL_SHOT",
+      "visual_pillar": "HERO_AI_VIDEO",
+      "estimated_duration_sec": 16.0,
+      "timestamp_marker": "12:23:00 AM | MULTIPLE WARHEAD ESCALATION",
+      "audio_text": "Then, the computer screamed again. (som: sirene estridente) A second missile was detected. Then a third. A fourth. A fifth. Five American Minuteman warheads. In less than twenty minutes, three hundred million people could cease to exist.",
+      "overlay_recipe": {
+        "template": "tactical_hud",
+        "stamp_text": "CRITICAL ALERT: 5 WARHEADS CONFIRMED IN FLIGHT",
+        "coordinates": "54°54'57\"N 37°24'42\"E",
+        "lower_third_data": {
+          "title": "ATTACK CONFIRMATION: 5 MISSILES",
+          "subtitle": "Target Trajectory: Moscow Metropolitan Area",
+          "coordinates": "Coordinates: 55.7558° N, 37.6173° E",
+          "date_timestamp": "ESTIMATED CASUALTIES: 300,000,000+",
+          "classification": "NUCLEAR RETALIATION CRITERIA MET"
+        },
+        "kinetic_caption_style": "hormozi_pop"
+      }
+    },
+    {
+      "scene_id": 8,
+      "visual_style_type": "DECLASSIFIED_DOSSIER",
+      "visual_pillar": "ARCHIVAL_STILL_KINETIC",
+      "estimated_duration_sec": 15.5,
+      "timestamp_marker": "12:24:15 AM | THE AUTOMATED RETALIATION PROTOCOL",
+      "audio_text": "Under standard Soviet military doctrine, Petrov had no discretionary power to decide. His mandatory protocol was binary: pick up the phone, verify computer integrity, and transmit the launch authorization to Yuri Andropov and the Soviet High Command. (pausa: 2s) The automated retaliation machine had been triggered.",
+      "overlay_recipe": {
+        "template": "declassified_dossier",
+        "stamp_text": "SOVIET MILITARY DOCTRINE // PROTOCOL 0083",
+        "coordinates": "54°54'57\"N 37°24'42\"E",
+        "lower_third_data": {
+          "title": "PROTOCOL NO. 0083-P",
+          "subtitle": "Strategic Rocket Forces Mandatory Launch Verification",
+          "coordinates": "Moscow General Staff Directive",
+          "date_timestamp": "ISSUED UNDER ORDER NO. 49-B",
+          "classification": "TOP SECRET // RETALIATION DOCTRINE"
+        },
+        "kinetic_caption_style": "terminal_typewriter"
+      }
+    },
+    {
+      "scene_id": 9,
+      "visual_style_type": "ARCHIVAL_KEN_BURNS",
+      "visual_pillar": "ARCHIVAL_STILL_KINETIC",
+      "estimated_duration_sec": 16.0,
+      "timestamp_marker": "SEPTEMBER 1, 1983 | THE SEA OF OKHOTSK",
+      "audio_text": "To understand why Petrov’s hands were shaking, one must step back twenty-five days. On September first, 1983, a Soviet Su-15 interceptor fired two air-to-air missiles into Korean Air Lines Flight 007, sending two hundred and sixty-nine civilians plunging into the freezing waters of the Sea of Okhotsk.",
+      "overlay_recipe": {
+        "template": "declassified_dossier",
+        "stamp_text": "KGB INCIDENT DOSSIER // KAL-007 INTERCEPTION",
+        "coordinates": "46°28'00\"N 141°17'00\"E",
+        "lower_third_data": {
+          "title": "KAL FLIGHT 007 DISASTER",
+          "subtitle": "Sea of Okhotsk // 269 Casualties",
+          "coordinates": "46.4667° N, 141.2833° E",
+          "date_timestamp": "01 SEP 1983 - 18:26:00 UTC",
+          "classification": "TOP SECRET MILITARY INVESTIGATION"
+        },
+        "kinetic_caption_style": "editorial_karaoke"
+      }
+    },
+    {
+      "scene_id": 10,
+      "visual_style_type": "ARCHIVAL_KEN_BURNS",
+      "visual_pillar": "ARCHIVAL_STILL_KINETIC",
+      "estimated_duration_sec": 15.5,
+      "timestamp_marker": "SEPTEMBER 8, 1983 | KREMLIN CLINICAL WARD",
+      "audio_text": "In Moscow, Soviet General Secretary Yuri Andropov was dying of kidney failure. Convinced that Ronald Reagan’s rhetoric of the 'Evil Empire' was the psychological preamble to a decapitating nuclear strike, the Kremlin placed its armed forces on hair-trigger alert.",
+      "overlay_recipe": {
+        "template": "lower_third",
+        "stamp_text": "KREMLIN CENTRAL CLINICAL HOSPITAL // TOP SECRET",
+        "coordinates": "55°45'06\"N 37°37'04\"E",
+        "lower_third_data": {
+          "title": "GENERAL SECRETARY YURI ANDROPOV",
+          "subtitle": "CPSU General Secretary & Former KGB Chairman",
+          "coordinates": "Moscow // Kuntsevo Hospital Ward",
+          "date_timestamp": "AUTUMN 1983 // DEFCON READINESS",
+          "classification": "POLITBURO CONFIDENTIAL REPORT"
+        },
+        "kinetic_caption_style": "editorial_karaoke"
+      }
+    },
+    {
+      "scene_id": 11,
+      "visual_style_type": "DECLASSIFIED_DOSSIER",
+      "visual_pillar": "ARCHIVAL_STILL_KINETIC",
+      "estimated_duration_sec": 16.5,
+      "timestamp_marker": "SEPTEMBER 15, 1983 | OPERATION RYAN TELEMETRY",
+      "audio_text": "Under KGB codename 'Operation RYAN'—Raketno-Yadernoe Napadenie—hundreds of Soviet operatives across Europe were tasked with counting blood donor drives, tracking moving government limousines, and watching for the first physical sign of an impending Western nuclear blitz.",
+      "overlay_recipe": {
+        "template": "declassified_dossier",
+        "stamp_text": "OPERATION RYAN // KGB SPECIAL DIRECTIVE",
+        "coordinates": "51°30'26\"N 00°07'39\"W",
+        "lower_third_data": {
+          "title": "OPERATION RYAN (РАЯН)",
+          "subtitle": "KGB First Chief Directorate // Nuclear Attack Early Warning",
+          "coordinates": "London, Washington, Bonn Residency",
+          "date_timestamp": "ACTIVE AUTUMN 1983",
+          "classification": "TOP SECRET // HIGHEST CLEARANCE"
+        },
+        "kinetic_caption_style": "terminal_typewriter"
+      }
+    },
+    {
+      "scene_id": 12,
+      "visual_style_type": "TACTICAL_MAP_MOTION",
+      "visual_pillar": "TACTICAL_MAP",
+      "estimated_duration_sec": 17.0,
+      "timestamp_marker": "SEPTEMBER 20, 1983 | THE PERSHING II THREAT",
+      "audio_text": "What terrified Moscow was not just the missiles, but the clock. The United States was deploying Pershing Two ballistic missiles to West Germany. From launch in Mutlangen to nuclear fire in central Moscow: just six minutes. Not enough time for human thought.",
+      "overlay_recipe": {
+        "template": "tactical_hud",
+        "stamp_text": "PERSHING II RANGE // 6-MINUTE FLIGHT WINDOW",
+        "coordinates": "48°50'00\"N 09°48'00\"E",
+        "lower_third_data": {
+          "title": "MGM-31C PERSHING II DEPLOYMENT",
+          "subtitle": "56th Field Artillery Brigade // Mutlangen, West Germany",
+          "coordinates": "Range: 1,770 km // Flight Time: 6 to 8 Mins",
+          "date_timestamp": "DEPLOYED AUTUMN 1983",
+          "classification": "NATO INTERMEDIATE NUCLEAR FORCES"
+        },
+        "kinetic_caption_style": "hormozi_pop"
+      }
+    },
+    {
+      "scene_id": 13,
+      "visual_style_type": "DECLASSIFIED_DOSSIER",
+      "visual_pillar": "ARCHIVAL_STILL_KINETIC",
+      "estimated_duration_sec": 15.0,
+      "timestamp_marker": "SEPTEMBER 23, 1983 | RED ARMY GENERAL STAFF CABLE",
+      "audio_text": "On September twenty-third, Soviet General Staff Cable Number Forty-Nine B reached Serpukhov-15. The order was unequivocal: any hesitation in the early-warning chain would be treated as treason against the Soviet motherland. The human officer was legally reduced to an electrical relay.",
+      "overlay_recipe": {
+        "template": "declassified_dossier",
+        "stamp_text": "MINISTRY OF DEFENCE DIRECTIVE // ORDER NO. 49-B",
+        "coordinates": "55°45'06\"N 37°37'04\"E",
+        "lower_third_data": {
+          "title": "GENERAL STAFF CABLE NO. 49-B",
+          "subtitle": "Subject: Uncompromising Adherence to Automated Early-Warning",
+          "coordinates": "Signed: Marshal Nikolai Ogarkov",
+          "date_timestamp": "23 SEP 1983 // EYES ONLY",
+          "classification": "TREASON PENALTY CLAUSE ACTIVE"
+        },
+        "kinetic_caption_style": "terminal_typewriter"
+      }
+    },
+    {
+      "scene_id": 14,
+      "visual_style_type": "PSYCHOLOGICAL_PROFILE",
+      "visual_pillar": "HERO_AI_VIDEO",
+      "estimated_duration_sec": 16.0,
+      "timestamp_marker": "SEPTEMBER 25, 1983 | THE ACCIDENTAL WATCH OFFICER",
+      "audio_text": "And then came the twist of fate. Petrov was not supposed to be in the bunker that night. His colleague had fallen ill with flu. Petrov volunteered to take the graveyard shift. Had the other officer been sitting in that chair, history would have ended before dawn.",
+      "overlay_recipe": {
+        "template": "lower_third",
+        "stamp_text": "DUTY ROSTER SUBSTITUTION // RECORD NO. 83-09-25",
+        "coordinates": "54°54'57\"N 37°24'42\"E",
+        "lower_third_data": {
+          "title": "DUTY OFFICER ROSTER LOG",
+          "subtitle": "Unscheduled Shift Replacement // Serpukhov-15",
+          "coordinates": "Scheduled: Maj. Generalov // Replaced by: Lt. Col. Petrov",
+          "date_timestamp": "25 SEP 1983 - 20:00:00 UTC",
+          "classification": "CONFIDENTIAL DUTY ASSIGNMENT"
+        },
+        "kinetic_caption_style": "editorial_karaoke"
+      }
+    },
+    {
+      "scene_id": 15,
+      "visual_style_type": "BUNKER_INTERCOM_DRAMA",
+      "visual_pillar": "HERO_AI_VIDEO",
+      "estimated_duration_sec": 15.5,
+      "timestamp_marker": "11:45:00 PM | SERPUKHOV-15 SUBTERRANEAN REALITY",
+      "audio_text": "Serpukhov-15 was buried fifty meters beneath a pine forest ninety miles south of Moscow. Blast doors four feet thick. Independent air filtration. Inside, the air smelled of stale Belomorkanal cigarettes, boiled cabbage, and the ozone tang of three hundred vacuum tubes baking in steel racks.",
+      "overlay_recipe": {
+        "template": "tactical_hud",
+        "stamp_text": "FACILITY: SERPUKHOV-15 // DEPTH: -50 METERS",
+        "coordinates": "54°54'57\"N 37°24'42\"E",
+        "lower_third_data": {
+          "title": "COMMAND BUNKER SERPUKHOV-15",
+          "subtitle": "Kashira Highway // Moscow Air Defence District",
+          "coordinates": "Subterranean Depth: -50 Meters // Hermetic Seal",
+          "date_timestamp": "ACTIVE WATCH: 25-26 SEP 1983",
+          "classification": "TOP SECRET MILITARY INSTALLATION"
+        },
+        "kinetic_caption_style": "terminal_typewriter"
+      }
+    },
+    {
+      "scene_id": 16,
+      "visual_style_type": "ANATOMY_ISOMETRIC",
+      "visual_pillar": "CAD_BLUEPRINT",
+      "estimated_duration_sec": 16.5,
+      "timestamp_marker": "12:05:00 AM | THE M-10 MAINFRAME ARCHITECTURE",
+      "audio_text": "The brain of the bunker was the M-10 computer. Developed by academician Mikhail Kartsev, it processed thirty million operations per second—a Soviet technological triumph. The Soviet leadership believed the machine was infallible. (pausa: 2s) That blind faith was the real doomsday weapon.",
+      "overlay_recipe": {
+        "template": "anatomy_mechanical",
+        "stamp_text": "SYSTEM ARCHITECTURE // M-10 SOVIET MILITARY SUPERCOMPUTER",
+        "coordinates": "DESIGNED BY: OKB M-10 // M.A. KARTSEV",
+        "lower_third_data": {
+          "title": "M-10 SUPERCOMPUTER SYSTEM",
+          "subtitle": "Processing Power: 30 MIPS // Vector Architecture",
+          "coordinates": "Bunker Serpukhov-15 Main Computing Hall",
+          "date_timestamp": "OPERATIONAL STATUS: NOMINAL",
+          "classification": "TOP SECRET SOVIET COMPUTING"
+        },
+        "kinetic_caption_style": "terminal_typewriter"
+      }
+    },
+    {
+      "scene_id": 17,
+      "visual_style_type": "HERO_AI_DUAL_SHOT",
+      "visual_pillar": "HERO_AI_VIDEO",
+      "estimated_duration_sec": 16.0,
+      "timestamp_marker": "12:25:30 AM | THE SECURE KREMLIN LINE",
+      "audio_text": "The crimson telephone on Petrov's desk began to screech. On the other end of the line was the duty officer at the General Staff headquarters in Moscow. (voz distorcida pelo rádio: 'Petrov! Qual é a sua avaliação? Os generais estão acordando o Politburo!') (pausa: 2s) Petrov felt his throat close up. In his right hand, the heavy Bakelite receiver weighed a thousand pounds.",
+      "overlay_recipe": {
+        "template": "tactical_hud",
+        "stamp_text": "KREMLIN HOTLINE ACTIVE // CALL RECORDING ON",
+        "coordinates": "55°45'06\"N 37°37'04\"E",
+        "lower_third_data": {
+          "title": "GENERAL STAFF SECURE HOTLINE",
+          "subtitle": "Kashira Trunk Line // Moscow Command Post to Serpukhov-15",
+          "coordinates": "55.7512° N, 37.6184° E",
+          "date_timestamp": "26 SEP 1983 - 00:25:30 UTC",
+          "classification": "DIRECT NUCLEAR LAUNCH TRUNK"
+        },
+        "kinetic_caption_style": "hormozi_pop"
+      }
+    },
+    {
+      "scene_id": 18,
+      "visual_style_type": "BUNKER_INTERCOM_DRAMA",
+      "visual_pillar": "HERO_AI_VIDEO",
+      "estimated_duration_sec": 15.0,
+      "timestamp_marker": "12:26:45 AM | THE PROVISIONAL COWARDICE",
+      "audio_text": "Petrov forced his vocal cords to work: 'I am transmitting a false alarm.' The line went dead silent. The general on the other end responded with disbelief: 'Are you certain, Lieutenant Colonel?' Petrov’s honest thought was terrifying: He wasn’t certain at all. He had a fifty-fifty chance of being wrong.",
+      "overlay_recipe": {
+        "template": "lower_third",
+        "stamp_text": "TRANSCRIPT // VOICE EVALUATION RECORD",
+        "coordinates": "54°54'57\"N 37°24'42\"E",
+        "lower_third_data": {
+          "title": "TRANSMISSION: FALSE ALARM",
+          "subtitle": "Spoken by Lt. Col. Petrov to Air Defence Duty General",
+          "coordinates": "Direct Encrypted Line 104",
+          "date_timestamp": "00:26:45 UTC // STATISTICAL CONFIDENCE: 50%",
+          "classification": "UNAUTHORISED PROTOCOL OVERRIDE"
+        },
+        "kinetic_caption_style": "editorial_karaoke"
+      }
+    },
+    {
+      "scene_id": 19,
+      "visual_style_type": "TACTICAL_MAP_MOTION",
+      "visual_pillar": "TACTICAL_MAP",
+      "estimated_duration_sec": 17.5,
+      "timestamp_marker": "12:27:50 AM | THE BALLISTIC COUNTDOWN",
+      "audio_text": "Eleven minutes. The computer was updating the ballistic trajectory in real time. If American missiles had truly launched from Montana, their thermonuclear warheads were already arcing through space, outside the atmosphere, traveling at four miles per second. (pausa: 2s) There was no defense. There was no interceptor.",
+      "overlay_recipe": {
+        "template": "tactical_hud",
+        "stamp_text": "WARHEAD SPEED: 7.2 KM/S // EXO-ATMOSPHERIC TRAJECTORY",
+        "coordinates": "70°00'00\"N 40°00'00\"W",
+        "lower_third_data": {
+          "title": "BALLISTIC FLIGHT PHASE: MIDCOURSE",
+          "subtitle": "Altitude: 1,200 km // Velocity: Mach 22",
+          "coordinates": "Exo-Atmospheric Ballistic Arc",
+          "date_timestamp": "ESTIMATED IMPACT COUNTDOWN: 11:00",
+          "classification": "TELEMETRY PROJECTION // NO DEFENSE"
+        },
+        "kinetic_caption_style": "terminal_typewriter"
+      }
+    },
+    {
+      "scene_id": 20,
+      "visual_style_type": "ANATOMY_ISOMETRIC",
+      "visual_pillar": "CAD_BLUEPRINT",
+      "estimated_duration_sec": 16.0,
+      "timestamp_marker": "12:28:40 AM | ORBITAL GEOMETRY OF KOSMOS-1383",
+      "audio_text": "While Petrov was sweating blood in the bunker, the real culprit was floating in total silence thirty thousand miles away. The autumn equinox had brought the Sun, the Soviet satellite, and the high-altitude cirrus clouds over North Dakota into a geometric alignment that occurred only once in a decade.",
+      "overlay_recipe": {
+        "template": "blueprint_notebook",
+        "stamp_text": "GEOMETRIC ALIGNMENT: EQUINOX ORBITAL PLANE",
+        "coordinates": "AUTUMN EQUINOX // SUN-CLOUD-SATELLITE",
+        "lower_third_data": {
+          "title": "ORBITAL ANOMALY: SPECULAR REFLECTION",
+          "subtitle": "Kosmos-1383 Infrared Sensor Angle vs Solar Ray Path",
+          "coordinates": "North Dakota High-Altitude Cirrus Clouds",
+          "date_timestamp": "26 SEP 1983 // 00:28 UTC",
+          "classification": "POST-INVESTIGATION SCIENTIFIC RECONSTRUCTION"
+        },
+        "kinetic_caption_style": "editorial_karaoke"
+      }
+    },
+    {
+      "scene_id": 21,
+      "visual_style_type": "ANATOMY_ISOMETRIC",
+      "visual_pillar": "CAD_BLUEPRINT",
+      "estimated_duration_sec": 15.5,
+      "timestamp_marker": "12:29:30 AM | THE INFRARED TELESCOPE SENSOR",
+      "audio_text": "The Soviet engineers had designed the Oko satellite to look at the edge of the Earth's horizon to avoid cloud reflections. But they had never tested the system against the blinding glint of autumn equinox sunlight bouncing off ice-crystal clouds. The computer was programmed to classify that exact intensity of light as one thing: rocket exhaust.",
+      "overlay_recipe": {
+        "template": "anatomy_mechanical",
+        "stamp_text": "SENSOR FLAW // PB-1 INFRARED DETECTOR MATRIX",
+        "coordinates": "OKB-41 SCIENTIFIC DOSSIER",
+        "lower_third_data": {
+          "title": "INFRARED SENSOR BLIND SPOT",
+          "subtitle": "Algorithm Failure: Ice Crystal Reflection vs Booster Plume",
+          "coordinates": "Lead-Sulfide (PbS) Photoconductive Sensor",
+          "date_timestamp": "WAVELENGTH: 2.7 MICRONS",
+          "classification": "CLASSIFIED DESIGN INADEQUACY"
+        },
+        "kinetic_caption_style": "terminal_typewriter"
+      }
+    },
+    {
+      "scene_id": 22,
+      "visual_style_type": "PSYCHOLOGICAL_PROFILE",
+      "visual_pillar": "HERO_AI_VIDEO",
+      "estimated_duration_sec": 16.5,
+      "timestamp_marker": "12:30:15 AM | PSYCHOLOGICAL PARALYSIS OF PROTOCOL",
+      "audio_text": "In Soviet society, thinking for yourself was dangerous. In the Soviet military, it was fatal. Petrov’s officers were trained from childhood that the Party and the Machine were supreme. To question the computer was not merely insubordination; it was psychological heresy.",
+      "overlay_recipe": {
+        "template": "lower_third",
+        "stamp_text": "MILITARY PSYCHOLOGY DOSSIER // V-PVO COMMAND",
+        "coordinates": "54°54'57\"N 37°24'42\"E",
+        "lower_third_data": {
+          "title": "SOVIET MILITARY DOCTRINE: OBEDIENCE",
+          "subtitle": "Institutional Conditioning vs Individual Discretion",
+          "coordinates": "Moscow Military District Political Directorate",
+          "date_timestamp": "CODE OF MILITARY JUSTICE: ARTICLE 64",
+          "classification": "EXECUTION PENALTY FOR INSUBORDINATION"
+        },
+        "kinetic_caption_style": "editorial_karaoke"
+      }
+    },
+    {
+      "scene_id": 23,
+      "visual_style_type": "HERO_AI_DUAL_SHOT",
+      "visual_pillar": "HERO_AI_VIDEO",
+      "estimated_duration_sec": 17.0,
+      "timestamp_marker": "12:31:00 AM | CINQ MISSILES DETECTED",
+      "audio_text": "On the main wall display, three meters wide, the giant illuminated letters flashed in blood red: 'РАКЕТНЫЙ УДАР'—MISSILE ATTACK. (som: sirene ensurdecedora) The acoustic pressure in the bunker was deafening. The klaxons were no longer a warning; they were a death march.",
+      "overlay_recipe": {
+        "template": "tactical_hud",
+        "stamp_text": "ALL-SECTOR CONFIRMATION // TOTAL WAR ALERT",
+        "coordinates": "54°54'57\"N 37°24'42\"E",
+        "lower_third_data": {
+          "title": "WALL DISPLAY: РАКЕТНЫЙ УДАР",
+          "subtitle": "Full Bunker Audio-Visual Emergency Override",
+          "coordinates": "Serpukhov-15 Central Command Board",
+          "date_timestamp": "26 SEP 1983 - 00:31:00 UTC",
+          "classification": "EMERGENCY WARHEAD RETALIATION PROTOCOL"
+        },
+        "kinetic_caption_style": "hormozi_pop"
+      }
+    },
+    {
+      "scene_id": 24,
+      "visual_style_type": "DECLASSIFIED_DOSSIER",
+      "visual_pillar": "ARCHIVAL_STILL_KINETIC",
+      "estimated_duration_sec": 15.5,
+      "timestamp_marker": "12:31:45 AM | DEFCON 1 REDIRECTION",
+      "audio_text": "Seven minutes until impact. The entire nuclear arsenal of the Soviet Union—eleven thousand strategic warheads—was now waiting for one single word from Petrov. If he said 'Attack', the apocalypse was locked in. If he said 'Glitch', he was betting all of human history.",
+      "overlay_recipe": {
+        "template": "declassified_dossier",
+        "stamp_text": "SOVIET ARSENAL: 11,000 STRATEGIC WARHEADS",
+        "coordinates": "54°54'57\"N 37°24'42\"E",
+        "lower_third_data": {
+          "title": "SOVIET NUCLEAR TRIAD INVENTORY",
+          "subtitle": "1,398 ICBM Silos // 941 SSBN Submarines // Long-Range Aviation",
+          "coordinates": "Strategic Rocket Forces Battle Order",
+          "date_timestamp": "ACTIVE YIELD: 4,500 MEGATONS",
+          "classification": "TOTAL PLANETARY ANNIHILATION CAPABILITY"
+        },
+        "kinetic_caption_style": "terminal_typewriter"
+      }
+    },
+    {
+      "scene_id": 25,
+      "visual_style_type": "HERO_AI_DUAL_SHOT",
+      "visual_pillar": "HERO_AI_VIDEO",
+      "estimated_duration_sec": 16.5,
+      "timestamp_marker": "12:32:30 AM | 120 PAIRS OF EYES",
+      "audio_text": "Five minutes. In the operations room, all typing stopped. One hundred and twenty men sat frozen in their swivel chairs, their eyes locked onto the back of Petrov's head. No one breathed. The only sound in the bunker was the rhythmic, metallic scrape of Petrov’s fingernails digging into the vinyl of his armrest.",
+      "overlay_recipe": {
+        "template": "tactical_hud",
+        "stamp_text": "T-MINUS 05:00 // IMPACT IMMINENT",
+        "coordinates": "54°54'57\"N 37°24'42\"E",
+        "lower_third_data": {
+          "title": "SERPUKHOV-15 OPERATIONS DECK",
+          "subtitle": "120 Military Technicians & Duty Operators",
+          "coordinates": "Main Underground Command Vault",
+          "date_timestamp": "26 SEP 1983 - 00:32:30 UTC",
+          "classification": "STATUS: PENDING LAUNCH ORDER"
+        },
+        "kinetic_caption_style": "editorial_karaoke"
+      }
+    },
+    {
+      "scene_id": 26,
+      "visual_style_type": "BUNKER_INTERCOM_DRAMA",
+      "visual_pillar": "HERO_AI_VIDEO",
+      "estimated_duration_sec": 15.5,
+      "timestamp_marker": "12:33:15 AM | GROUND RADAR CROSS-CHECK",
+      "audio_text": "Petrov grabbed the direct line to the ground radar network. (voz urgente: 'Pechora! Dnepr! Vocês veem alguma coisa subindo no horizonte?') (pausa: 2s) The ground radar network used colossal over-the-horizon antennas the size of football stadiums. If missiles were coming, they would be visible the moment they crested the curvature of the Earth.",
+      "overlay_recipe": {
+        "template": "tactical_hud",
+        "stamp_text": "GROUND RADAR INTERLINK // DNEPR-M PECHORA ARRAY",
+        "coordinates": "65°07'00\"N 57°14'00\"E",
+        "lower_third_data": {
+          "title": "DARYAL / DNEPR RADAR SITE PECHORA",
+          "subtitle": "Komi Republic // Over-the-Horizon Early Warning",
+          "coordinates": "65.1167° N, 57.2333° E",
+          "date_timestamp": "SEARCH FREQUENCY: 150-200 MHZ",
+          "classification": "GROUND RADAR CROSS-VERIFICATION"
+        },
+        "kinetic_caption_style": "terminal_typewriter"
+      }
+    },
+    {
+      "scene_id": 27,
+      "visual_style_type": "HERO_AI_DUAL_SHOT",
+      "visual_pillar": "HERO_AI_VIDEO",
+      "estimated_duration_sec": 16.0,
+      "timestamp_marker": "12:34:00 AM | HORIZON RADAR BLINDNESS",
+      "audio_text": "The answer came back over the radio: 'Negativo, Serpukhov. Não vemos alvos. O horizonte está limpo.' (pausa: 2s) But that was no comfort. Ground radars were physically blind until the last three minutes before impact. By the time ground radar confirmed the missiles... it would be too late to launch a counter-strike.",
+      "overlay_recipe": {
+        "template": "lower_third",
+        "stamp_text": "GROUND RADAR STATUS: ZERO ACQUISITION",
+        "coordinates": "54°54'57\"N 37°24'42\"E",
+        "lower_third_data": {
+          "title": "HORIZON RADAR BLIND SPOT",
+          "subtitle": "Radar Line-of-Sight Blocked by Earth Curvature",
+          "coordinates": "Target Reacquisition Window: 3 Minutes Remaining",
+          "date_timestamp": "00:34:00 UTC // DEADLINE EXPIRING",
+          "classification": "DECISION POINT: ZERO RETALIATION MARGIN"
+        },
+        "kinetic_caption_style": "editorial_karaoke"
+      }
+    },
+    {
+      "scene_id": 28,
+      "visual_style_type": "HERO_AI_DUAL_SHOT",
+      "visual_pillar": "HERO_AI_VIDEO",
+      "estimated_duration_sec": 17.5,
+      "timestamp_marker": "12:34:50 AM | THE LOGICAL AXIOM OF EXTINCTION",
+      "audio_text": "And in that silence, Petrov applied pure, unadulterated human logic. He told himself: 'If the Americans are going to start World War Three... they wouldn't launch five missiles. They would launch five thousand.' (pausa: 2s) Five missiles was not an attack. Five missiles was a mistake. Five missiles was a glitch.",
+      "overlay_recipe": {
+        "template": "lower_third",
+        "stamp_text": "LOGICAL DEDUCTION // THE PETROV AXIOM",
+        "coordinates": "54°54'57\"N 37°24'42\"E",
+        "lower_third_data": {
+          "title": "THE PETROV AXIOM",
+          "subtitle": "'A real attack starts with hundreds of warheads, not five.'",
+          "coordinates": "Deduction: Software Glitch // Hardware False Positive",
+          "date_timestamp": "CONFIDENCE LEVEL: UNVERIFIED CONVICTION",
+          "classification": "HUMAN COGNITION OVERRIDE"
+        },
+        "kinetic_caption_style": "hormozi_pop"
+      }
+    },
+    {
+      "scene_id": 29,
+      "visual_style_type": "TACTICAL_MAP_MOTION",
+      "visual_pillar": "TACTICAL_MAP",
+      "estimated_duration_sec": 16.0,
+      "timestamp_marker": "12:35:40 AM | TWO MINUTES TO EXTINCTION",
+      "audio_text": "Two minutes left. If Petrov was wrong, five American thermonuclear warheads were already ripping through the stratosphere above Moscow. The fireball of each W-78 warhead would be hotter than the core of the Sun. Ten million people in Moscow would be vaporized before their brains could register pain.",
+      "overlay_recipe": {
+        "template": "tactical_hud",
+        "stamp_text": "T-MINUS 01:00 // IMPACT RADIUS: MOSCOW CENTRAL",
+        "coordinates": "55°45'06\"N 37°37'04\"E",
+        "lower_third_data": {
+          "title": "BLAST YIELD ESTIMATE: 5 X 335 KT",
+          "subtitle": "Target: Moscow Command Centers & Kremlin",
+          "coordinates": "55.7558° N, 37.6173° E",
+          "date_timestamp": "PRODICTED CASUALTIES: 10,200,000",
+          "classification": "HYPOTHETICAL THERMONUCLEAR DETONATION"
+        },
+        "kinetic_caption_style": "terminal_typewriter"
+      }
+    },
+    {
+      "scene_id": 30,
+      "visual_style_type": "HERO_AI_DUAL_SHOT",
+      "visual_pillar": "HERO_AI_VIDEO",
+      "estimated_duration_sec": 18.0,
+      "timestamp_marker": "12:37:00 AM | T-MINUS ZERO: THE VOID",
+      "audio_text": "The digital clock reached zero. (som: bip final agudo) (pausa: 2s) Petrov closed his eyes. Every officer in the bunker held their breath, waiting for the ceiling to collapse into blinding radioactive white. Ten seconds passed. (pausa: 2s) Twenty seconds. Thirty seconds.",
+      "overlay_recipe": {
+        "template": "tactical_hud",
+        "stamp_text": "T-MINUS 00:00:00 // IMPACT SCHEDULE EXPIRED",
+        "coordinates": "54°54'57\"N 37°24'42\"E",
+        "lower_third_data": {
+          "title": "CALCULATED IMPACT TIME REACHED",
+          "subtitle": "No Seismic Anomaly // No Atmospheric Ionization",
+          "coordinates": "Moscow Defense Perimeter Seismic Stations",
+          "date_timestamp": "00:37:00 UTC // ZERO DETONATION",
+          "classification": "RADAR FAILURE CONFIRMED"
+        },
+        "kinetic_caption_style": "terminal_typewriter"
+      }
+    },
+    {
+      "scene_id": 31,
+      "visual_style_type": "HERO_AI_DUAL_SHOT",
+      "visual_pillar": "HERO_AI_VIDEO",
+      "estimated_duration_sec": 17.0,
+      "timestamp_marker": "12:37:15 AM | THE ACOUSTIC DECAY OF RELIEF",
+      "audio_text": "Nothing happened. The world was still there. Outside the bunker, the Russian pine trees were gently swaying in the autumn wind. In Moscow, ten million people were sleeping peacefully in their beds, completely oblivious to the fact that they had just been saved by one man.",
+      "overlay_recipe": {
+        "template": "lower_third",
+        "stamp_text": "SURFACE TELEMETRY // PEACEFUL STATUS",
+        "coordinates": "54°54'57\"N 37°24'42\"E",
+        "lower_third_data": {
+          "title": "SURFACE ATMOSPHERIC SENSORS",
+          "subtitle": "Moscow Oblast Pine Forest // Normal Baseline",
+          "coordinates": "Radiation Level: 0.12 μSv/h // Normal",
+          "date_timestamp": "26 SEP 1983 - 00:37:15 UTC",
+          "classification": "PLANETARY EXTINCTION AVERTED"
+        },
+        "kinetic_caption_style": "editorial_karaoke"
+      }
+    },
+    {
+      "scene_id": 32,
+      "visual_style_type": "HERO_AI_DUAL_SHOT",
+      "visual_pillar": "HERO_AI_VIDEO",
+      "estimated_duration_sec": 16.0,
+      "timestamp_marker": "12:38:00 AM | THE CATHARSIS OF DISOBEDIENCE",
+      "audio_text": "Petrov slumped back into his leather seat like an empty uniform. His legs were shaking so violently he could not stand up. Someone handed him a heavy faceted glass tumbler of tap water. When he raised it to his lips, his teeth chattered against the glass.",
+      "overlay_recipe": {
+        "template": "lower_third",
+        "stamp_text": "INCIDENT STATUS // CRISIS RESOLVED",
+        "coordinates": "54°54'57\"N 37°24'42\"E",
+        "lower_third_data": {
+          "title": "DUTY OFFICER AFTER-ACTION LOG",
+          "subtitle": "Lt. Col. Petrov // End of Crisis Window",
+          "coordinates": "Serpukhov-15 Operations Vault",
+          "date_timestamp": "00:38:00 UTC // WATCH RESUMES",
+          "classification": "CONFIDENTIAL LOG ENTRY"
+        },
+        "kinetic_caption_style": "editorial_karaoke"
+      }
+    },
+    {
+      "scene_id": 33,
+      "visual_style_type": "DECLASSIFIED_DOSSIER",
+      "visual_pillar": "ARCHIVAL_STILL_KINETIC",
+      "estimated_duration_sec": 17.0,
+      "timestamp_marker": "OCTOBER 1983 | THE SECRET SCIENTIFIC INQUEST",
+      "audio_text": "The secret scientific commission, chaired by General Yuri Votintsev, spent three weeks dissecting the computer tapes. Their findings were classified as state secrets of the highest order. The multi-billion-ruble Oko satellite system, the crowning glory of Soviet military aerospace, had been fooled by sunlight.",
+      "overlay_recipe": {
+        "template": "declassified_dossier",
+        "stamp_text": "STATE COMMISSION REPORT // TOP SECRET // EYE ONLY",
+        "coordinates": "55°45'06\"N 37°37'04\"E",
+        "lower_third_data": {
+          "title": "VOTINTSEV COMMISSION REPORT",
+          "subtitle": "Soviet Air Defence Technical Inquest into 26.09.1983",
+          "coordinates": "Moscow General Staff Archives",
+          "date_timestamp": "OCTOBER 1983 // CLASSIFIED 15 YEARS",
+          "classification": "TOP SECRET // STATE SECRETS ACT"
+        },
+        "kinetic_caption_style": "terminal_typewriter"
+      }
+    },
+    {
+      "scene_id": 34,
+      "visual_style_type": "ANATOMY_ISOMETRIC",
+      "visual_pillar": "CAD_BLUEPRINT",
+      "estimated_duration_sec": 16.5,
+      "timestamp_marker": "ANATOMY OF A GLITCH // THE SUN-CLOUD-SATELLITE TRINITY",
+      "audio_text": "The flaw was devastatingly simple. The Oko satellite software did not cross-reference multiple orbits. It treated any bright infrared cluster moving at ballistic velocity as an ICBM. Soviet engineers quietly rewrote the algorithm. But they could never admit their mistake without admitting that the system was broken.",
+      "overlay_recipe": {
+        "template": "anatomy_mechanical",
+        "stamp_text": "SOFTWARE PATCH // OKO FIRMWARE UPDATE 1984",
+        "coordinates": "OKB-41 AEROSPACE LAB",
+        "lower_third_data": {
+          "title": "ALGORITHM REVISION: GEOMETRIC FILTER",
+          "subtitle": "Specular Reflection Suppression Algorithm",
+          "coordinates": "Central Scientific Research Institute (TsNII-45)",
+          "date_timestamp": "DEPLOYED SPRING 1984",
+          "classification": "CONFIDENTIAL SYSTEM MODIFICATION"
+        },
+        "kinetic_caption_style": "terminal_typewriter"
+      }
+    },
+    {
+      "scene_id": 35,
+      "visual_style_type": "PSYCHOLOGICAL_PROFILE",
+      "visual_pillar": "HERO_AI_VIDEO",
+      "estimated_duration_sec": 16.0,
+      "timestamp_marker": "NOVEMBER 1983 | THE POLITICAL REPRIMAND",
+      "audio_text": "Stanislav Petrov did not receive a medal. He did not receive a bonus. Instead, he was subjected to brutal political interrogations by the KGB and his military superiors. Because honoring Petrov would mean admitting to the Politburo that the multi-billion-ruble early-warning system had failed.",
+      "overlay_recipe": {
+        "template": "lower_third",
+        "stamp_text": "KGB DISCIPLINARY PROCEEDING // FILE NO. 83-P",
+        "coordinates": "55°45'06\"N 37°37'04\"E",
+        "lower_third_data": {
+          "title": "OFFICIAL REPRIMAND: LT. COL. PETROV",
+          "subtitle": "Formal Charge: Improper Logbook Documentation",
+          "coordinates": "Air Defence Disciplinary Board // Moscow",
+          "date_timestamp": "NOVEMBER 1983",
+          "classification": "BURIED MILITARY RECORD"
+        },
+        "kinetic_caption_style": "editorial_karaoke"
+      }
+    },
+    {
+      "scene_id": 36,
+      "visual_style_type": "ARCHIVAL_KEN_BURNS",
+      "visual_pillar": "ARCHIVAL_STILL_KINETIC",
+      "estimated_duration_sec": 17.0,
+      "timestamp_marker": "1984 - 1993 | THE BURIED HERO",
+      "audio_text": "Petrov was quietly transferred to an obscure desk job. He took early retirement, suffered a nervous breakdown, and retreated into anonymity. When his beloved wife Raissa died of cancer, he didn’t even have enough money to buy her tombstone. The savior of the world was left to starve on a pension of two hundred dollars a month.",
+      "overlay_recipe": {
+        "template": "lower_third",
+        "stamp_text": "RETIREMENT DOSSIER // LT. COL. PETROV",
+        "coordinates": "55°58'00\"N 38°03'00\"E",
+        "lower_third_data": {
+          "title": "STANISLAV PETROV (1939 - 2017)",
+          "subtitle": "Early Retirement: 1984 // Pension: $200/month",
+          "coordinates": "Fryazino, Moscow Oblast, Russia",
+          "date_timestamp": "ANONYMOUS RETIREMENT PERIOD",
+          "classification": "CONFIDENTIAL VETERAN FILE"
+        },
+        "kinetic_caption_style": "editorial_karaoke"
+      }
+    },
+    {
+      "scene_id": 37,
+      "visual_style_type": "DECLASSIFIED_DOSSIER",
+      "visual_pillar": "ARCHIVAL_STILL_KINETIC",
+      "estimated_duration_sec": 16.5,
+      "timestamp_marker": "1998 | FIFTEEN YEARS OF SECRECY",
+      "audio_text": "For fifteen years, not a single human being outside the Soviet military hierarchy knew that World War Three had been avoided by a hair. It was only in 1998, with the collapse of the Soviet Union and the publication of General Votintsev’s memoirs, that the story leaked to the Western press.",
+      "overlay_recipe": {
+        "template": "declassified_dossier",
+        "stamp_text": "DECLASSIFIED // INTERNATIONAL DISCLOSURE 1998",
+        "coordinates": "55°45'06\"N 37°37'04\"E",
+        "lower_third_data": {
+          "title": "THE DECLASSIFICATION OF 1983",
+          "subtitle": "Memoirs of Col. Gen. Yuri Votintsev Published",
+          "coordinates": "Krasnaya Zvezda / International Media Reveal",
+          "date_timestamp": "1998 // 15 YEARS AFTER INCIDENT",
+          "classification": "DECLASSIFIED UNDER FREEDOM OF INFORMATION"
+        },
+        "kinetic_caption_style": "hormozi_pop"
+      }
+    },
+    {
+      "scene_id": 38,
+      "visual_style_type": "ARCHIVAL_KEN_BURNS",
+      "visual_pillar": "ARCHIVAL_STILL_KINETIC",
+      "estimated_duration_sec": 16.0,
+      "timestamp_marker": "2006 | THE APARTMENT IN FRYAZINO",
+      "audio_text": "When Western documentary crews finally found Petrov in 2006, they found a quiet, modest old man living in a tiny concrete apartment in Fryazino. His kitchen smelled of boiled potatoes. He had no microwave. He had no computer. The man who saved technological civilization did not even own an internet connection.",
+      "overlay_recipe": {
+        "template": "lower_third",
+        "stamp_text": "DOCUMENTARY ARCHIVE // FRYAZINO 2006",
+        "coordinates": "55°58'00\"N 38°03'00\"E",
+        "lower_third_data": {
+          "title": "STANISLAV PETROV IN RETIREMENT",
+          "subtitle": "Fryazino, Russia // Age 67",
+          "coordinates": "Small Municipal Concrete Apartment",
+          "date_timestamp": "DOCUMENTARY RECORDING: 2006",
+          "classification": "ORAL HISTORY ARCHIVE"
+        },
+        "kinetic_caption_style": "editorial_karaoke"
+      }
+    },
+    {
+      "scene_id": 39,
+      "visual_style_type": "DECLASSIFIED_DOSSIER",
+      "visual_pillar": "ARCHIVAL_STILL_KINETIC",
+      "estimated_duration_sec": 17.5,
+      "timestamp_marker": "THE UNITED NATIONS COMMENDATION",
+      "audio_text": "When the United Nations honored him in New York with the World Citizen Award, a journalist asked him: 'How does it feel to know you saved the entire human race?' Petrov looked at the cameras and answered with disarming humility: (pausa: 2s) 'I was not a hero. I was just in the right place at the right time. And I did my job.'",
+      "overlay_recipe": {
+        "template": "declassified_dossier",
+        "stamp_text": "UNITED NATIONS // WORLD CITIZEN COMMENDATION",
+        "coordinates": "40°45'00\"N 73°58'00\"W",
+        "lower_third_data": {
+          "title": "WORLD CITIZEN AWARD // UNITED NATIONS",
+          "subtitle": "Presented to Stanislav Petrov // New York City",
+          "coordinates": "UN Headquarters, Manhattan",
+          "date_timestamp": "CITATION: FOR PREVENTING NUCLEAR WAR",
+          "classification": "INTERNATIONAL TRIBUTE"
+        },
+        "kinetic_caption_style": "hormozi_pop"
+      }
+    },
+    {
+      "scene_id": 40,
+      "visual_style_type": "HERO_AI_DUAL_SHOT",
+      "visual_pillar": "HERO_AI_VIDEO",
+      "estimated_duration_sec": 18.5,
+      "timestamp_marker": "THE FINAL COGNITIVE HOOK",
+      "audio_text": "Stanislav Petrov passed away quietly in 2017 at the age of seventy-seven. His legacy is not etched in nuclear arsenals or supercomputers. His legacy is the fact that you and I are here to tell this story. (pausa: 2s) Humanity survived the Cold War not because our machines were infallible... but because one man had the courage to doubt them.",
+      "overlay_recipe": {
+        "template": "lower_third",
+        "stamp_text": "IN MEMORIAM // STANISLAV YEVGRAFOVICH PETROV (1939 - 2017)",
+        "coordinates": "EARTH // HUMAN CIVILIZATION",
+        "lower_third_data": {
+          "title": "IN MEMORIAM: STANISLAV PETROV",
+          "subtitle": "1939 - 2017 // 'The Man Who Saved The World'",
+          "coordinates": "Earth // 8 Billion Living Human Beings",
+          "date_timestamp": "DEDICATED TO HUMAN REASON OVER ALGORITHMIC MADNESS",
+          "classification": "THE DARKFACTORY ARCHIVE"
+        },
+        "kinetic_caption_style": "terminal_typewriter"
+      }
+    }
+  ]
+}

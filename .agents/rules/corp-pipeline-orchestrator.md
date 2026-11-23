@@ -1,3 +1,7 @@
+---
+trigger: always_on
+description: Permanent orchestration protocol for the Corp-Pipeline Master Orchestrator. Applies automatically to all tasks across 6 deterministic phases.
+---
 # Corp-Pipeline Master Orchestrator Protocol
 
 > **Operating Standard**: Corp-Pipeline  

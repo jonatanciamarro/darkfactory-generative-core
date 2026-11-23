@@ -78,6 +78,7 @@ class TestMCPToolsList:
         assert "flow_get_pending_scenes" in tool_names
         assert "flow_generate_scene" in tool_names
         assert "flow_sync_clips" in tool_names
+        assert "flow_sync_studio" in tool_names
 
         for t in tools:
             assert "description" in t
@@ -199,6 +200,38 @@ class TestMCPToolsExecution:
         data = json.loads(text_content)
         assert data["success"] is True
         assert data["scene_id"] == 1
+
+    def test_tool_flow_sync_studio_execution(self):
+        """Verifica a execução da ferramenta flow_sync_studio via JSON-RPC."""
+        from src.google_flow_bot import GoogleFlowSyncSummary
+
+        fake_summary = GoogleFlowSyncSummary(
+            project_url="https://flow.google.com/project/test-123",
+            total_tiles_found=5,
+            downloaded_clips=[{"index": 0, "file_path": "data/broll/flow_sync_01.mp4"}],
+            failed_clips=[],
+            success_rate=100.0,
+        )
+
+        with patch("src.google_flow_bot.GoogleFlowBot.execute_playwright_sync", return_value=fake_summary):
+            req = {
+                "jsonrpc": "2.0",
+                "id": 8,
+                "method": "tools/call",
+                "params": {
+                    "name": "flow_sync_studio",
+                    "arguments": {"max_clips": 5, "prefer_upscale": True},
+                },
+            }
+            resp = handle_jsonrpc_request(req)
+            assert resp is not None
+            result = resp["result"]
+            assert "content" in result
+            data = json.loads(result["content"][0]["text"])
+            assert data["success"] is True
+            assert data["total_tiles_found"] == 5
+            assert data["downloaded_count"] == 1
+            assert data["success_rate"] == 100.0
 
 
 class TestMCPErrorHandling:

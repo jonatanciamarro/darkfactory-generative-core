@@ -1,0 +1,70 @@
+{
+  "project_title": "The Classified Seconds That Almost Ended Humanity: Project Iceworm",
+  "overall_retention_score": 88.0,
+  "grade": "A",
+  "is_production_ready": true,
+  "first_minute_audit": {
+    "is_compliant": true,
+    "first_minute_score": 100.0,
+    "avg_stimulus_interval_sec": 4.0,
+    "has_dead_air": false,
+    "has_60s_rehook": true,
+    "has_exit_cue_risk": false,
+    "identified_issues": [],
+    "remediation_steps": []
+  },
+  "murch_editing_audit": {
+    "is_compliant": true,
+    "score": 100.0,
+    "emotion_preservation": 51.0,
+    "story_advancement": 23.0,
+    "rhythm_alignment": 10.0,
+    "eye_trace_continuity": 7.0,
+    "plane_compliance_2d": 5.0,
+    "space_continuity_3d": 4.0,
+    "notes": []
+  },
+  "cron_storytelling_audit": {
+    "is_compliant": true,
+    "score": 100.0,
+    "total_gaps_opened": 40,
+    "max_interval_without_gap_sec": 8.0,
+    "has_internal_stakes": true,
+    "cause_effect_score": 88.0,
+    "critical_drop_timestamps": [],
+    "recommendations": []
+  },
+  "viral_stepps_audit": {
+    "total_score": 90.2,
+    "social_currency": 9.5,
+    "triggers": 8.6,
+    "high_arousal_emotion": 9.5,
+    "public_visibility": 8.5,
+    "practical_value": 8.0,
+    "stories_trope": 9.0,
+    "primary_arousal_emotion": "dread",
+    "virality_tier": "blockbuster"
+  },
+  "hook_point_3s_compliant": false,
+  "total_duration_sec": 320.0,
+  "total_cuts": 79,
+  "mean_shot_length": 4.0,
+  "remediation_roadmap": [
+    "Hook Point 3s: Acelerar a abertura para exibir o elemento de choque visual nos primeiros 3 segundos.",
+    "Compress opening line to <= 15 crisp words so viewers grasp the stakes under 5s."
+  ],
+  "copy_clarity_audit": {
+    "passed": false,
+    "score": 70.0,
+    "opening_sentence": "At 12:15 AM on September 26, 1983, a red siren illuminated a top-secret Soviet bunker outside Moscow.",
+    "opening_word_count": 17,
+    "estimated_spoken_sec": 6.07,
+    "filler_buzzwords": [],
+    "issues": [
+      "Opening sentence is 17 words (~6.1s); exceeds 15-word / 5s clarity ceiling."
+    ],
+    "recommendations": [
+      "Compress opening line to <= 15 crisp words so viewers grasp the stakes under 5s."
+    ]
+  }
+}

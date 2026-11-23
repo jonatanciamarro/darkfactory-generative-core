@@ -57,6 +57,8 @@ if sys.platform.startswith("win"):
         logger.debug(f"RunningHub operation notice: {_rh_exc}")
 
 BASE_DIR: Path = Path(__file__).resolve().parent.parent.parent
+if str(BASE_DIR) not in sys.path:
+    sys.path.insert(0, str(BASE_DIR))
 load_dotenv(BASE_DIR / ".env", override=True)
 
 FINAL_VIDEOS_DIR: Path = BASE_DIR / "data" / "final" / "videos"
@@ -1645,9 +1647,9 @@ def run_factory_bot(
                         logger.error(f"🛑 [FATAL] {wf_err} (Workflow ID: {workflow_id})")
                         raise RunningHubWorkflowNotFoundError(workflow_id, wf_err)
 
-                # Detectar tela de login para orientar o usuário
+                # Detectar tela de login real para orientar o usuário (evitando falso-positivo com botões 'Entrar')
                 try:
-                    is_login = page.evaluate("() => document.body ? (document.body.innerText.includes('Faça login') || document.body.innerText.includes('Entrar') || window.location.href.includes('login')) : false")
+                    is_login = page.evaluate("() => window.location.href.includes('/login') || !!document.querySelector('.login-modal, .login-container, .ant-modal-content form input[type=\"password\"]')")
                     if is_login and step % 5 == 0:
                         logger.info(f"🔑 [Conta {account}] Aguardando login do usuário na janela do navegador... (step {step+1}/120)")
                 except Exception as _rh_exc:

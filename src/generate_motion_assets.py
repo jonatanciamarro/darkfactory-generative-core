@@ -76,11 +76,15 @@ class MotionAssetPipeline:
         broll_dir: Optional[Path | str] = None,
         dry_run: bool = False,
         force: bool = False,
+        enable_cinetic: bool = True,
+        enable_argon: bool = True,
     ) -> None:
         self.output_dir = Path(output_dir).resolve() if output_dir else MOTION_DIR.resolve()
         self.broll_dir = Path(broll_dir).resolve() if broll_dir else BROLL_DIR.resolve()
         self.dry_run = dry_run
         self.force = force
+        self.enable_cinetic = enable_cinetic
+        self.enable_argon = enable_argon
 
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self.broll_dir.mkdir(parents=True, exist_ok=True)
@@ -326,6 +330,8 @@ class MotionAssetPipeline:
             "hyperframes_rendered": 0,
             "photos_4k_upscaled": 0,
             "overlays_rendered": 0,
+            "cinetic_rendered": 0,
+            "argon_rendered": 0,
             "scenes_processed": len(scenes),
         }
 
@@ -368,12 +374,129 @@ class MotionAssetPipeline:
                 if ol_path and ol_path.is_file():
                     results["overlays_rendered"] += 1
 
+            # 5. Netflix Investigative Documentary Motion Engine (3 Canonic Archetypes) - ALWAYS ON
+            if self.enable_cinetic:
+                target_broll = self.broll_dir / f"scene_{s_id}.mp4"
+                if not target_broll.exists() or self.force:
+                    try:
+                        from src.video.netflix_investigative_motion import (
+                            NetflixInvestigativeMotionEngine,
+                            NetflixInvestigativeSceneDTO,
+                            MotionArchetype,
+                            DossierConfig,
+                            PinnedEvidenceItem,
+                            RedStringConnection,
+                        )
+                        inv_engine = NetflixInvestigativeMotionEngine(
+                            broll_dir=self.broll_dir,
+                            output_dir=self.output_dir,
+                            sfx_dir=DATA_DIR / "sfx",
+                        )
+                        # Rotate through the 3 canonic archetypes
+                        arch_idx = s_id % 3
+                        if arch_idx == 1:
+                            arch = MotionArchetype.TACTILE_CLASSIFIED_DOSSIER
+                        elif arch_idx == 2:
+                            arch = MotionArchetype.CORKBOARD_CONSPIRACY
+                        else:
+                            arch = MotionArchetype.NETFLIX_OSINT_DESKTOP
+
+                        dto = NetflixInvestigativeSceneDTO(
+                            scene_id=s_id,
+                            archetype=arch,
+                            duration_sec=dur,
+                            dossier_config=DossierConfig(
+                                case_number=f"CASE FILE NO. 1983-SOVIET // SCENE {s_id}",
+                                subject_title=s.get("timestamp_marker", "SERPUKHOV-15 COMMAND"),
+                                stamp_headline="INCIDENTE 1983-B",
+                                stamp_subtitle="ARQUIVO DESCLASSIFICADO // CONFIDENCIAL",
+                                pinned_photo_path=str(self.broll_dir / f"scene_{s_id}.jpg"),
+                            ),
+                            corkboard_items=[
+                                PinnedEvidenceItem(
+                                    item_id=f"photo_{s_id}",
+                                    title=s.get("timestamp_marker", f"SCENE {s_id}"),
+                                    item_type="photo",
+                                    image_path=str(self.broll_dir / f"scene_{s_id}.jpg"),
+                                    position_xy=(550, 480),
+                                ),
+                                PinnedEvidenceItem(
+                                    item_id=f"map_{s_id}",
+                                    title="TACTICAL RADAR",
+                                    item_type="map",
+                                    position_xy=(1050, 420),
+                                ),
+                                PinnedEvidenceItem(
+                                    item_id=f"note_{s_id}",
+                                    title="EVIDENCE NOTE",
+                                    item_type="note",
+                                    note_text="5 MISSILES IN FLIGHT // RETALIATION DELAY",
+                                    position_xy=(1450, 520),
+                                ),
+                            ],
+                            red_strings=[
+                                RedStringConnection(from_item_id=f"photo_{s_id}", to_item_id=f"map_{s_id}"),
+                                RedStringConnection(from_item_id=f"map_{s_id}", to_item_id=f"note_{s_id}"),
+                            ],
+                            mirror_to_broll=True,
+                        )
+                        c_path = inv_engine.render_scene_clip(dto)
+                        if c_path and c_path.is_file():
+                            results["cinetic_rendered"] += 1
+                    except Exception as exc:
+                        logger.warning(f"Netflix investigative motion skipped for scene {s_id}: {exc}")
+
+            # 6. Gemini 4 Argon Swiss-Telemetry Motion Engine - ALWAYS ON
+            if self.enable_argon:
+                target_argon = self.output_dir / f"argon_scene_{s_id}.mp4"
+                if not target_argon.exists() or self.force:
+                    try:
+                        from src.video.argon_documentary_motion import (
+                            ArgonMotionEngine,
+                            ArgonDocumentaryConfig,
+                            ArgonMotionArchetype,
+                        )
+                        argon_engine = ArgonMotionEngine(
+                            output_dir=self.output_dir,
+                            broll_dir=self.broll_dir,
+                        )
+                        arch_map = [
+                            ArgonMotionArchetype.RADAR_TELEMETRY,
+                            ArgonMotionArchetype.ZSPACE_BUNKER_PARALLAX,
+                            ArgonMotionArchetype.CLASSIFIED_DOSSIER_INVERSION,
+                            ArgonMotionArchetype.NETFLIX_OSINT_STAGE,
+                        ]
+                        arch = arch_map[s_id % 4]
+                        argon_cfg = ArgonDocumentaryConfig(
+                            scene_id=s_id,
+                            archetype=arch,
+                            title=s.get("title") or s.get("timestamp_marker") or f"SCENE {s_id}",
+                            subtitle=s.get("subtitle") or "SERPUKHOV-15 INCIDENT 1983",
+                            narrative_thesis=s.get("narration_pt", "")[:120] if s.get("narration_pt") else "Cold War Early Warning Incident.",
+                            telemetry_code=f"SERPUKHOV-15 // ACT {((s_id-1)//8)+1}",
+                            metrics={"DEFCON": "1", "CONFIDENCE": "99.8%", "RADAR": "+4.82σ"},
+                            archival_image_path=str(self.broll_dir / f"scene_{s_id}.jpg"),
+                            duration_sec=dur,
+                            fps=30,
+                        )
+                        a_res = argon_engine.render_scene_video(argon_cfg, output_path=target_argon, preview_only=self.dry_run)
+                        if a_res.video_path.is_file():
+                            results["argon_rendered"] += 1
+                            # Mirror to broll for video assembler
+                            broll_target = self.broll_dir / f"scene_{s_id}.mp4"
+                            if not broll_target.exists() or self.force:
+                                shutil.copy2(a_res.video_path, broll_target)
+                    except Exception as exc:
+                        logger.warning(f"Argon motion skipped for scene {s_id}: {exc}")
+
         logger.info(
             f"✅ Motion Asset Synthesis complete: "
             f"{results['maps_rendered']} maps, "
             f"{results['hyperframes_rendered']} blueprints, "
             f"{results['photos_4k_upscaled']} 4K stills, "
-            f"{results['overlays_rendered']} overlays."
+            f"{results['overlays_rendered']} overlays, "
+            f"{results['cinetic_rendered']} cinetic motion clips, "
+            f"{results['argon_rendered']} argon Swiss-telemetry clips."
         )
         return results
 

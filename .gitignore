@@ -40,14 +40,26 @@ google_flow_session/
 
 # Audio stems & raw
 data/audio/*.wav
+data/audio/*.mp3
 data/audio/*.raw
 data/audio/raw/
+data/audio/mastered/
 data/models/
 data/staging/
 data/sfx/**/*.wav
 data/sfx/**/*.mp3
 data/sfx/**/*.flac
 data/sfx/**/*.ogg
+data/broll/*.jpg
+data/broll/*.png
+data/broll/*.mp4
+data/final/motion_overlays/
+data/final/images_4k/
+data/raw/historical_photos/
+data/output/*.mp4
+data/output/*.srt
+data/output/shorts/
+data/output/timelines/
 data/sfx/**/*.mp4
 data/sfx/**/*.txt
 !data/sfx/sfx_manifest.json

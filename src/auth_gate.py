@@ -64,6 +64,10 @@ def is_google_flow_authenticated(page, context=None) -> bool:
     if "accounts.google.com" in url or "signin" in url:
         return False
 
+    # If still on landing/marketing 'about' page, definitely NOT authenticated
+    if "/about" in url:
+        return False
+
     # Check for authenticated indicators (e.g., flow project workspace, user profile, create prompt bar)
     try:
         # If sign-in button or landing page "Create with Google Flow" is present and visible, definitely NOT authenticated
@@ -85,6 +89,15 @@ def is_google_flow_authenticated(page, context=None) -> bool:
         if avatar and avatar.is_visible():
             return True
 
+        # Project tiles or project cards
+        projects = page.query_selector(
+            'a[aria-label*="Abrir projeto" i], a[href*="/project/"], '
+            'flow-grid-tile-container, flow-video-tile, flow-tile-container, '
+            'button:has-text("add Novo projeto"), button:has-text("Novo projeto")'
+        )
+        if projects and projects.is_visible():
+            return True
+
         # Project creation or prompt interface
         prompt_box = page.query_selector(
             'textarea[placeholder*="prompt" i], textarea[placeholder*="describe" i], '
@@ -95,7 +108,7 @@ def is_google_flow_authenticated(page, context=None) -> bool:
     except Exception as exc:
         logger.debug(f"Google Flow element query check: {exc}")
 
-    # Check context cookies only if no sign-in button or landing page button is visible
+    # Check context cookies only if no sign-in button or landing page button is visible and not on /about
     if context:
         try:
             # If on the public landing page with "Create with Google Flow", not authenticated
@@ -109,7 +122,7 @@ def is_google_flow_authenticated(page, context=None) -> bool:
                 and "google" in c.get("domain", "")
                 for c in cookies
             )
-            if has_sid and "flow.google.com" in url:
+            if has_sid and "flow.google.com" in url and "/about" not in url:
                 return True
         except Exception as exc:
             logger.debug(f"Google Flow cookies check: {exc}")
@@ -249,18 +262,7 @@ def check_google_flow_session(session_dir: Optional[Path] = None, headless: bool
         logger.warning("Google Flow session directory has no saved profile or storage state.")
         return False
 
-    # Fast verification if valid storage_state.json with Google session cookies exists
-    if state_file.exists():
-        try:
-            state_data = json.loads(state_file.read_text(encoding="utf-8"))
-            cookies = state_data.get("cookies", [])
-            for c in cookies:
-                if c.get("name") in ("SID", "__Secure-1PSID", "__Secure-3PSID") and "google" in c.get("domain", ""):
-                    return True
-        except Exception as exc:
-            logger.warning(f"Failed to read/parse Google Flow storage_state.json: {exc}")
-
-    logger.info("Checking Google Flow session validity...")
+    logger.info("Checking Google Flow session validity on live page...")
     try:
         with sync_playwright() as p:
             context = p.chromium.launch_persistent_context(
@@ -270,7 +272,7 @@ def check_google_flow_session(session_dir: Optional[Path] = None, headless: bool
             )
             page = context.new_page() if not context.pages else context.pages[0]
             page.goto(GOOGLE_FLOW_URL, wait_until="domcontentloaded", timeout=timeout_sec * 1000)
-            time.sleep(2)
+            time.sleep(3)
             auth = is_google_flow_authenticated(page, context=context)
             context.close()
             return auth
@@ -396,8 +398,9 @@ def interactive_login_google_flow(timeout_sec: int = 600) -> bool:
         except Exception as exc:
             logger.debug(f"wait_for_enter interrupted: {exc}")
 
-    enter_thread = threading.Thread(target=wait_for_enter, daemon=True)
-    enter_thread.start()
+    if sys.stdin and hasattr(sys.stdin, "isatty") and sys.stdin.isatty():
+        enter_thread = threading.Thread(target=wait_for_enter, daemon=True)
+        enter_thread.start()
 
     try:
         with sync_playwright() as p:
@@ -515,8 +518,9 @@ def interactive_login_runninghub(timeout_sec: int = 600) -> bool:
         except Exception as exc:
             logger.debug(f"wait_for_enter interrupted: {exc}")
 
-    enter_thread = threading.Thread(target=wait_for_enter, daemon=True)
-    enter_thread.start()
+    if sys.stdin and hasattr(sys.stdin, "isatty") and sys.stdin.isatty():
+        enter_thread = threading.Thread(target=wait_for_enter, daemon=True)
+        enter_thread.start()
 
     login_url = os.getenv("RUNNINGHUB_URL", "https://www.runninghub.ai/")
 
@@ -632,8 +636,9 @@ def interactive_login_flowmusic(timeout_sec: int = 600) -> bool:
         except Exception as exc:
             logger.debug(f"wait_for_enter interrupted: {exc}")
 
-    enter_thread = threading.Thread(target=wait_for_enter, daemon=True)
-    enter_thread.start()
+    if sys.stdin and hasattr(sys.stdin, "isatty") and sys.stdin.isatty():
+        enter_thread = threading.Thread(target=wait_for_enter, daemon=True)
+        enter_thread.start()
 
     state_file = FLOWMUSIC_SESSION_DIR / "storage_state.json"
 

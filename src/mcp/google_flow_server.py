@@ -144,6 +144,25 @@ def get_mcp_tools_definitions() -> List[Dict[str, Any]]:
                 "required": ["source_dir"],
             },
         },
+        {
+            "name": "flow_sync_studio",
+            "description": "Navega até o projeto ativo do Google Flow e sincroniza/baixa os takes de vídeo existentes na grade diretamente para data/broll/ em 1080p Aprimorada.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "max_clips": {
+                        "type": "integer",
+                        "default": 50,
+                        "description": "Número máximo de clipes a sincronizar da grade do estúdio.",
+                    },
+                    "prefer_upscale": {
+                        "type": "boolean",
+                        "default": True,
+                        "description": "Se verdadeiro, prioriza 1080p Aprimorada sobre 720p.",
+                    },
+                },
+            },
+        },
     ]
 
 
@@ -194,6 +213,26 @@ def execute_tool(tool_name: str, arguments: Dict[str, Any]) -> Dict[str, Any]:
 
         msg = f"✅ Ingestão concluída: {len(ingested)} clipes padronizados em '{target_dir}'. Arquivos: {[f.name for f in ingested]}"
         return {"content": [{"type": "text", "text": msg}]}
+
+    elif tool_name == "flow_sync_studio":
+        from src.google_flow_bot import GoogleFlowBot
+
+        max_clips = arguments.get("max_clips", 50)
+        prefer_upscale = arguments.get("prefer_upscale", True)
+
+        bot = GoogleFlowBot()
+        summary = bot.execute_playwright_sync(max_clips=max_clips, prefer_upscale=prefer_upscale)
+
+        res = {
+            "success": len(summary.downloaded_clips) > 0 or summary.total_tiles_found == 0,
+            "project_url": summary.project_url,
+            "total_tiles_found": summary.total_tiles_found,
+            "downloaded_count": len(summary.downloaded_clips),
+            "failed_count": len(summary.failed_clips),
+            "success_rate": summary.success_rate,
+            "downloaded_clips": summary.downloaded_clips,
+        }
+        return {"content": [{"type": "text", "text": json.dumps(res, indent=2)}]}
 
     elif tool_name == "flow_generate_scene":
         from src.google_flow_bot import GoogleFlowBot

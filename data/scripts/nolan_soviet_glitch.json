@@ -163,7 +163,8 @@
           "prompt": "Extreme macro close-up of glowing monochrome green CRT radar screen inside Serpukhov-15 bunker, five rising missile trajectory vectors flashing in Cyrillic, cigarette smoke drifting through anamorphic lens flare, Kodak Vision3 500T 5219 texture, IMAX 70mm --ar 16:9"
         }
       },
-      "verified_fact_note": "Oko satellite early-warning system triggered on 26 September 1983 at Serpukhov-15."
+      "verified_fact_note": "Oko satellite early-warning system triggered on 26 September 1983 at Serpukhov-15.",
+      "visual_pillar": "HERO_AI_VIDEO"
     },
     {
       "scene_id": 2,
@@ -215,7 +216,8 @@
           "prompt": "Extreme close-up of curved green phosphor cathode ray tube monitor, ballistic arc curving across northern latitudes, glowing scanlines, dust motes drifting in anamorphic horizontal lens flare, authentic 1983 Soviet hardware, Kodak Vision3 500T stock, IMAX 70mm aesthetic --ar 16:9"
         }
       },
-      "verified_fact_note": "The Oko system reported a single missile launch from the US East/Central coast before multiple alerts."
+      "verified_fact_note": "The Oko system reported a single missile launch from the US East/Central coast before multiple alerts.",
+      "visual_pillar": "TACTICAL_MAP"
     },
     {
       "scene_id": 3,
@@ -267,7 +269,8 @@
           "prompt": "Macro shot of rows of Soviet Bakelite toggle switches and red guarded missile confirmation push-buttons, brushed aluminum casing, Cyrillic stencils 'ПУСК', reflections of blinking red warning beacons, cinematic depth of field, IMAX 70mm --ar 16:9"
         }
       },
-      "verified_fact_note": "Petrov was a civilian-trained engineer who held the rank of lieutenant colonel."
+      "verified_fact_note": "Petrov was a civilian-trained engineer who held the rank of lieutenant colonel.",
+      "visual_pillar": "HERO_AI_VIDEO"
     },
     {
       "scene_id": 4,
@@ -319,7 +322,8 @@
           "prompt": "Close-up of military cartographer transparent glass war map, red and green grease pencil ballistic vectors, hand holding illuminated magnifying glass over Moscow coordinates, cigarette smoke hanging in warm spotlight, 35mm film grain, Hoyte van Hoytema aesthetic --ar 16:9"
         }
       },
-      "verified_fact_note": "ICBMs traveling polar routes took 25-30 minutes from US heartland to Soviet targets."
+      "verified_fact_note": "ICBMs traveling polar routes took 25-30 minutes from US heartland to Soviet targets.",
+      "visual_pillar": "TACTICAL_MAP"
     },
     {
       "scene_id": 5,
@@ -371,7 +375,8 @@
           "prompt": "Extreme macro shot of vintage heavy steel gooseneck military intercom microphone, chipped green paint, dust in microphone wire mesh, vibrating with loud sound waves under dim red emergency spotlight, cinematic depth of field, Kodak Vision3 500T 5219 texture --ar 16:9"
         }
       },
-      "verified_fact_note": "Petrov later recalled shouting at subordinates who were panicking and urging immediate launch authorization."
+      "verified_fact_note": "Petrov later recalled shouting at subordinates who were panicking and urging immediate launch authorization.",
+      "visual_pillar": "HERO_AI_VIDEO"
     },
     {
       "scene_id": 6,
@@ -423,7 +428,8 @@
           "prompt": "Extreme macro shot of cryogenically cooled infrared optical sensor lens array, gold reflective coating, hexagonal silicon sensor honeycomb grid, micro-circuitry reflecting starlight, hyper-detailed mechanical CAD aesthetic, cinematic 8k lighting --ar 16:9"
         }
       },
-      "verified_fact_note": "Kosmos-1383 was the primary Oko satellite on duty, placed in a Molniya orbit to observe US missile fields."
+      "verified_fact_note": "Kosmos-1383 was the primary Oko satellite on duty, placed in a Molniya orbit to observe US missile fields.",
+      "visual_pillar": "CAD_BLUEPRINT"
     },
     {
       "scene_id": 7,
@@ -475,7 +481,8 @@
           "prompt": "Cinematic tracking shot across Soviet control room ceiling, five large glass incandescent red alarm domes flashing in unison, painted stencil labels 'РАКЕТНЫЙ УДАР 1 2 3 4 5', dust shaking from ceiling rivets, anamorphic flare, authentic Cold War texture --ar 16:9"
         }
       },
-      "verified_fact_note": "The Oko system reported five missiles in total: first one, then four more in rapid succession."
+      "verified_fact_note": "The Oko system reported five missiles in total: first one, then four more in rapid succession.",
+      "visual_pillar": "HERO_AI_VIDEO"
     },
     {
       "scene_id": 8,
@@ -527,7 +534,8 @@
           "prompt": "Cinematic close-up of heavy Soviet crimson secure military telephone receiver resting in heavy chrome cradle, coiled rubber cord, red Cyrillic label 'ПРЯМАЯ СВЯЗЬ КРЕМЛЬ' (Direct Line Kremlin), shallow depth of field, dust particles in atmospheric volumetric spotlight --ar 16:9"
         }
       },
-      "verified_fact_note": "Soviet protocol gave duty officers strictly 20 minutes to process alerts and inform military leadership."
+      "verified_fact_note": "Soviet protocol gave duty officers strictly 20 minutes to process alerts and inform military leadership.",
+      "visual_pillar": "ARCHIVAL_STILL_KINETIC"
     },
     {
       "scene_id": 9,
@@ -579,7 +587,8 @@
           "prompt": "Macro close-up of Soviet military magnetic reel-to-reel audio tape deck spinning slowly, analog VU needle bouncing into red distortion zone, dust motes in tungsten spotlight, Cyrillic label 'МАГНИТОФОН МН-61', vintage Cold War audio forensics, 8k resolution --ar 16:9"
         }
       },
-      "verified_fact_note": "KAL 007 was shot down on 1 September 1983 with 269 fatalities, escalating US-Soviet tensions."
+      "verified_fact_note": "KAL 007 was shot down on 1 September 1983 with 269 fatalities, escalating US-Soviet tensions.",
+      "visual_pillar": "ARCHIVAL_STILL_KINETIC"
     },
     {
       "scene_id": 10,
@@ -631,7 +640,8 @@
           "prompt": "Extreme macro of crimson Soviet wax seal on folded diplomatic envelope, hammer and sickle crest pressed in wax, yellowed parchment texture, fountain pen signature, soft dramatic lighting, Kodak Vision3 500T 5219 texture --ar 16:9"
         }
       },
-      "verified_fact_note": "Andropov was bedridden with failing health during autumn 1983, convinced a US surprise attack was possible."
+      "verified_fact_note": "Andropov was bedridden with failing health during autumn 1983, convinced a US surprise attack was possible.",
+      "visual_pillar": "ARCHIVAL_STILL_KINETIC"
     },
     {
       "scene_id": 11,
@@ -683,7 +693,8 @@
           "prompt": "Extreme close-up of vintage Soviet Minox subminiature spy camera, knurled metal dials, tiny optical lens reflecting classified typewritten English documents, finger advancing film with mechanical click, cinematic macro photography, Kodak 2383 grade --ar 16:9"
         }
       },
-      "verified_fact_note": "Operation RYAN was an actual joint KGB-GRU intelligence program to monitor signs of surprise nuclear war."
+      "verified_fact_note": "Operation RYAN was an actual joint KGB-GRU intelligence program to monitor signs of surprise nuclear war.",
+      "visual_pillar": "ARCHIVAL_STILL_KINETIC"
     },
     {
       "scene_id": 12,
@@ -735,7 +746,8 @@
           "prompt": "Extreme macro of Soviet military chronometer, sweep second hand ticking rapidly across red highlighted zone marked '6 МИНУТ' (6 MINUTES), scratched glass crystal, brass bezel, reflection of military radar screen in background, cinematic lighting, photorealistic 8k --ar 16:9"
         }
       },
-      "verified_fact_note": "Pershing II deployment in West Germany reduced warning times to Moscow to approximately 6-8 minutes."
+      "verified_fact_note": "Pershing II deployment in West Germany reduced warning times to Moscow to approximately 6-8 minutes.",
+      "visual_pillar": "TACTICAL_MAP"
     },
     {
       "scene_id": 13,
@@ -787,7 +799,8 @@
           "prompt": "Extreme macro of Soviet telegraph paper tape feeding through mechanical punch machine, punched paper chads falling, Cyrillic capital letters typing in blue ink, industrial metallic machinery, warm tungsten rim lighting, Kodak Vision3 500T 5219 texture --ar 16:9"
         }
       },
-      "verified_fact_note": "Soviet military discipline strictly mandated following computer protocols without deviation."
+      "verified_fact_note": "Soviet military discipline strictly mandated following computer protocols without deviation.",
+      "visual_pillar": "ARCHIVAL_STILL_KINETIC"
     },
     {
       "scene_id": 14,
@@ -839,7 +852,8 @@
           "prompt": "Macro shot of lined clothbound Soviet logbook, fountain pen writing in blue ink Cyrillic cursive: 'Дежурный: подполковник Петров' (Duty Officer: Lt. Col. Petrov), date stamp 25.09.1983, shadow of officer hand passing across page, warm ambient lamplight, Kodak 2383 film look --ar 16:9"
         }
       },
-      "verified_fact_note": "Petrov later stated he was working an unscheduled shift as a last-minute replacement for an ill colleague."
+      "verified_fact_note": "Petrov later stated he was working an unscheduled shift as a last-minute replacement for an ill colleague.",
+      "visual_pillar": "HERO_AI_VIDEO"
     },
     {
       "scene_id": 15,
@@ -891,7 +905,8 @@
           "prompt": "Extreme macro of vintage 1980s Soviet computer mainframe racks, hundreds of glowing orange glass vacuum tubes and cathode indicators glowing in the dark, braided cloth cables, industrial metal framework, warm volumetric heat distortion, Kodak Vision3 500T 5219 texture --ar 16:9"
         }
       },
-      "verified_fact_note": "Serpukhov-15 was a secret bunker near the village of Kurilovo, south of Moscow."
+      "verified_fact_note": "Serpukhov-15 was a secret bunker near the village of Kurilovo, south of Moscow.",
+      "visual_pillar": "HERO_AI_VIDEO"
     },
     {
       "scene_id": 16,
@@ -943,7 +958,8 @@
           "prompt": "Microscopic macro shot of vintage Soviet magnetic core memory plane, tiny ferrite donut rings threaded with paper-thin enamel copper wires, soldering micro-details, macro lighting glinting on copper threads, photorealistic 8k, IMAX film grain --ar 16:9"
         }
       },
-      "verified_fact_note": "The M-10 supercomputer, designed by Mikhail Kartsev, powered the early-warning missile network."
+      "verified_fact_note": "The M-10 supercomputer, designed by Mikhail Kartsev, powered the early-warning missile network.",
+      "visual_pillar": "CAD_BLUEPRINT"
     },
     {
       "scene_id": 17,
@@ -995,7 +1011,8 @@
           "prompt": "Cinematic macro shot of tightly stretched black coiled telephone wire vibrating with electronic tension, drifting cigarette smoke illuminated by harsh crimson alarm beacon, scratched industrial bulkhead background, depth of field razor-thin, Kodak Vision3 500T 5219 texture --ar 16:9"
         }
       },
-      "verified_fact_note": "Petrov was directly on the telephone with the Soviet Air Defence command center during the alert."
+      "verified_fact_note": "Petrov was directly on the telephone with the Soviet Air Defence command center during the alert.",
+      "visual_pillar": "HERO_AI_VIDEO"
     },
     {
       "scene_id": 18,
@@ -1047,7 +1064,8 @@
           "prompt": "High angle shot of Soviet General Staff operations room in Moscow, generals in gold-braided uniforms frozen around red telephone console, wall-sized electronic map of the USSR glowing in background, dramatic cinematic lighting, authentic historical atmosphere --ar 16:9"
         }
       },
-      "verified_fact_note": "Petrov later admitted to BBC: 'I wasn't 100% sure. It was maybe fifty-fifty, but I refused to be the trigger.'"
+      "verified_fact_note": "Petrov later admitted to BBC: 'I wasn't 100% sure. It was maybe fifty-fifty, but I refused to be the trigger.'",
+      "visual_pillar": "HERO_AI_VIDEO"
     },
     {
       "scene_id": 19,
@@ -1099,7 +1117,8 @@
           "prompt": "Extreme macro of Soviet telecommunication relay rack, tiny copper contacts snapping together with mechanical sparks, numbers flipping on electromagnetic counters, dust illuminated by pulsing red alarm strobe, authentic 1983 hardware micro-details, cinematic depth of field --ar 16:9"
         }
       },
-      "verified_fact_note": "Minuteman III warheads travel at roughly 7-8 km/s in midcourse exo-atmospheric flight."
+      "verified_fact_note": "Minuteman III warheads travel at roughly 7-8 km/s in midcourse exo-atmospheric flight.",
+      "visual_pillar": "TACTICAL_MAP"
     },
     {
       "scene_id": 20,
@@ -1151,7 +1170,8 @@
           "prompt": "Extreme macro of green CRT phosphor grid, intense white saturation bloom spreading across pixel array, false target lock alert flashing in Cyrillic, scanlines flickering under electrical interference, authentic Cold War computer graphics, Kodak film texture --ar 16:9"
         }
       },
-      "verified_fact_note": "A rare alignment of sunlight on high cirrus clouds and the Oko satellite's Molniya orbit generated the false alert."
+      "verified_fact_note": "A rare alignment of sunlight on high cirrus clouds and the Oko satellite's Molniya orbit generated the false alert.",
+      "visual_pillar": "CAD_BLUEPRINT"
     },
     {
       "scene_id": 21,
@@ -1203,7 +1223,8 @@
           "prompt": "Cinematic thermal FLIR imaging view of massive rocket booster rocket exhaust, white-hot plasma column, heat distortion shock diamonds, false-color thermal gradient from black to incandescent white, 8k resolution, cinematic documentary footage aesthetic --ar 16:9"
         }
       },
-      "verified_fact_note": "The Oko system's software had not been programmed to filter out false alarms from sunlight bouncing off cloud tops."
+      "verified_fact_note": "The Oko system's software had not been programmed to filter out false alarms from sunlight bouncing off cloud tops.",
+      "visual_pillar": "CAD_BLUEPRINT"
     },
     {
       "scene_id": 22,
@@ -1255,7 +1276,8 @@
           "prompt": "Extreme macro of heavy wooden judge gavel resting on dark mahogany desk, red leather binder with gold Soviet crest, dramatic spotlight, dust motes floating in air, ominous legal dread atmosphere, 8k resolution --ar 16:9"
         }
       },
-      "verified_fact_note": "Soviet military training strictly discouraged independent judgment over algorithmic directives."
+      "verified_fact_note": "Soviet military training strictly discouraged independent judgment over algorithmic directives.",
+      "visual_pillar": "HERO_AI_VIDEO"
     },
     {
       "scene_id": 23,
@@ -1307,7 +1329,8 @@
           "prompt": "Slow motion macro shot of industrial cast-iron emergency alarm bell clapper striking brass gong, metal vibrations visible, paint flaking off gong rim with each impact, dust jumping from bell housing, cinematic high-speed photography, 8k resolution --ar 16:9"
         }
       },
-      "verified_fact_note": "The bunker's wall display literally lit up with the words 'РАКЕТНЫЙ УДАР' (Missile Attack) in bright red letters."
+      "verified_fact_note": "The bunker's wall display literally lit up with the words 'РАКЕТНЫЙ УДАР' (Missile Attack) in bright red letters.",
+      "visual_pillar": "HERO_AI_VIDEO"
     },
     {
       "scene_id": 24,
@@ -1359,7 +1382,8 @@
           "prompt": "Macro shot of two Soviet brass nuclear launch keys inserted into dual keyhole console, Cyrillic label 'ПУСК', hands in leather gloves hovering over keys ready for simultaneous turn, tension palpable, cinematic 8k --ar 16:9"
         }
       },
-      "verified_fact_note": "In 1983, the Soviet Union possessed approximately 11,000 deployed strategic nuclear warheads."
+      "verified_fact_note": "In 1983, the Soviet Union possessed approximately 11,000 deployed strategic nuclear warheads.",
+      "visual_pillar": "ARCHIVAL_STILL_KINETIC"
     },
     {
       "scene_id": 25,
@@ -1411,7 +1435,8 @@
           "prompt": "Extreme close-up of human hand digging into cracked black vinyl chair armrest, fingernails turning white with pressure, sweat glistening on knuckles, red alarm strobe pulse casting sharp shadow across texture, photorealistic 8k --ar 16:9"
         }
       },
-      "verified_fact_note": "Petrov later recounted that his subordinates turned completely silent, watching him in total stillness."
+      "verified_fact_note": "Petrov later recounted that his subordinates turned completely silent, watching him in total stillness.",
+      "visual_pillar": "HERO_AI_VIDEO"
     },
     {
       "scene_id": 26,
@@ -1463,7 +1488,8 @@
           "prompt": "Close-up of remote Soviet radar operator at Pechora station, vintage bakelite headphones on ears, speaking into metal radio microphone, green oscilloscope screen reflection dancing on his glasses, authentic Cold War electronics, 35mm film grain --ar 16:9"
         }
       },
-      "verified_fact_note": "Ground-based radar networks could only detect missiles after they cleared the Earth's horizon (last 3-5 mins)."
+      "verified_fact_note": "Ground-based radar networks could only detect missiles after they cleared the Earth's horizon (last 3-5 mins).",
+      "visual_pillar": "HERO_AI_VIDEO"
     },
     {
       "scene_id": 27,
@@ -1515,7 +1541,8 @@
           "prompt": "Top-down macro shot of round green CRT radar oscilloscope, bright green sweep line rotating smoothly at 30 RPM, empty dark screen with faint circular range rings, glass reflections of control room, subtle cathode glow, authentic 1983 vintage electronics --ar 16:9"
         }
       },
-      "verified_fact_note": "Ground radar officers reported no targets, but Petrov knew their range was limited by line-of-sight."
+      "verified_fact_note": "Ground radar officers reported no targets, but Petrov knew their range was limited by line-of-sight.",
+      "visual_pillar": "HERO_AI_VIDEO"
     },
     {
       "scene_id": 28,
@@ -1567,7 +1594,8 @@
           "prompt": "Cinematic macro shot of Soviet strategic strike map showing theoretical swarm of hundreds of red vectors crossing Europe, contrasted with single green radar terminal showing five lonely blips, dramatic lighting, grease pencil notes, historical documentary quality --ar 16:9"
         }
       },
-      "verified_fact_note": "Petrov later cited this exact logic: 'When people start a war, they don't begin with only five missiles.'"
+      "verified_fact_note": "Petrov later cited this exact logic: 'When people start a war, they don't begin with only five missiles.'",
+      "visual_pillar": "HERO_AI_VIDEO"
     },
     {
       "scene_id": 29,
@@ -1619,7 +1647,8 @@
           "prompt": "Extreme macro of Soviet orange Nixie tube display, wire mesh cathodes glowing brightly: '00:01:59' ticking to '00:01:58', glowing glass envelopes, warm orange filament glow reflecting on brushed aluminum chassis, authentic vintage technology, 8k --ar 16:9"
         }
       },
-      "verified_fact_note": "A 5-warhead nuclear strike on Moscow would have resulted in catastrophic mass casualties and retaliatory launch."
+      "verified_fact_note": "A 5-warhead nuclear strike on Moscow would have resulted in catastrophic mass casualties and retaliatory launch.",
+      "visual_pillar": "TACTICAL_MAP"
     },
     {
       "scene_id": 30,
@@ -1671,7 +1700,8 @@
           "prompt": "Cinematic shot of giant red illuminated wall board 'РАКЕТНЫЙ УДАР' flickering with electrical spark and shutting down into dark grey glass, amber emergency lights taking over, smoke clearing, sound of cooling metal relays clicking, IMAX 70mm realism --ar 16:9"
         }
       },
-      "verified_fact_note": "The scheduled impact time passed with no explosions and no detonations across the USSR."
+      "verified_fact_note": "The scheduled impact time passed with no explosions and no detonations across the USSR.",
+      "visual_pillar": "HERO_AI_VIDEO"
     },
     {
       "scene_id": 31,
@@ -1723,7 +1753,8 @@
           "prompt": "Cinematic low angle shot of weathered grey concrete ventilation shaft in grass, camouflage netting, warm air venting into cold night air creating faint steam, autumn leaves rustling on ground, cinematic documentary lighting, Kodak 2383 grade --ar 16:9"
         }
       },
-      "verified_fact_note": "The false alarm ended without any retaliatory launch orders ever being transmitted to Soviet silos."
+      "verified_fact_note": "The false alarm ended without any retaliatory launch orders ever being transmitted to Soviet silos.",
+      "visual_pillar": "HERO_AI_VIDEO"
     },
     {
       "scene_id": 32,
@@ -1775,7 +1806,8 @@
           "prompt": "Extreme macro of clear water droplets scattered across green-painted steel console surface, droplet reflecting blurred image of the officer's face above, beautiful cinematic specular highlights, photorealistic 8k, shallow depth of field --ar 16:9"
         }
       },
-      "verified_fact_note": "Petrov recalled draining a full glass of water, his hands trembling so hard that glass clattered against his teeth."
+      "verified_fact_note": "Petrov recalled draining a full glass of water, his hands trembling so hard that glass clattered against his teeth.",
+      "visual_pillar": "HERO_AI_VIDEO"
     },
     {
       "scene_id": 33,
@@ -1827,7 +1859,8 @@
           "prompt": "Extreme macro of Soviet technical report page with hand-drawn pen diagrams showing sun rays reflecting off high-altitude cloud tops into satellite sensor, Cyrillic handwritten annotations, red ink underlines, authentic yellowed document texture, 8k resolution --ar 16:9"
         }
       },
-      "verified_fact_note": "General Yuri Votintsev led the investigation that confirmed the solar reflection on high-altitude clouds."
+      "verified_fact_note": "General Yuri Votintsev led the investigation that confirmed the solar reflection on high-altitude clouds.",
+      "visual_pillar": "ARCHIVAL_STILL_KINETIC"
     },
     {
       "scene_id": 34,
@@ -1879,7 +1912,8 @@
           "prompt": "High-speed macro shot of rectangular cardboard Soviet punched cards flying through electronic card reader, perforations casting flickering light patterns, mechanical precision, warm vintage lighting, 8k --ar 16:9"
         }
       },
-      "verified_fact_note": "Soviet engineers were forced to rewrite the satellite software to cross-reference multiple sensor perspectives."
+      "verified_fact_note": "Soviet engineers were forced to rewrite the satellite software to cross-reference multiple sensor perspectives.",
+      "visual_pillar": "CAD_BLUEPRINT"
     },
     {
       "scene_id": 35,
@@ -1931,7 +1965,8 @@
           "prompt": "Macro close-up of typewritten Russian document with official red rubber stamp 'ВЗЫСКАНИЕ' (REPRIMAND), signature of presiding general, dust motes floating in dramatic ray of light, authentic paper texture --ar 16:9"
         }
       },
-      "verified_fact_note": "Petrov was reprimanded on technical grounds for not properly logging everything during the frantic 20 minutes."
+      "verified_fact_note": "Petrov was reprimanded on technical grounds for not properly logging everything during the frantic 20 minutes.",
+      "visual_pillar": "HERO_AI_VIDEO"
     },
     {
       "scene_id": 36,
@@ -1983,7 +2018,8 @@
           "prompt": "Extreme macro of small vintage black and white photograph in tarnished silver frame, young smiling Soviet officer with beautiful young woman in summer dress, edges worn, resting on lace tablecloth next to burning candle, warm intimate lighting, Kodak film aesthetic --ar 16:9"
         }
       },
-      "verified_fact_note": "Petrov retired early, lived in poverty in Fryazino near Moscow, and his wife passed away from cancer in 1997."
+      "verified_fact_note": "Petrov retired early, lived in poverty in Fryazino near Moscow, and his wife passed away from cancer in 1997.",
+      "visual_pillar": "ARCHIVAL_STILL_KINETIC"
     },
     {
       "scene_id": 37,
@@ -2035,7 +2071,8 @@
           "prompt": "Macro shot of open Russian hardbound book, chapter heading '26 сентября 1983 года' (September 26, 1983), finger tracing over printed paragraph describing Petrov's defiance, warm reading lamp, photorealistic 8k --ar 16:9"
         }
       },
-      "verified_fact_note": "The incident was kept completely secret until General Votintsev published his memoirs in 1998."
+      "verified_fact_note": "The incident was kept completely secret until General Votintsev published his memoirs in 1998.",
+      "visual_pillar": "ARCHIVAL_STILL_KINETIC"
     },
     {
       "scene_id": 38,
@@ -2087,7 +2124,8 @@
           "prompt": "Macro shot of vintage Soviet nickel-silver podstakannik tea glass holder with steaming black tea, small silver spoon, reflection of kitchen window in amber tea liquid, warm cozy documentary atmosphere --ar 16:9"
         }
       },
-      "verified_fact_note": "Petrov lived a quiet life in Fryazino, where international journalists and documentary filmmakers visited him."
+      "verified_fact_note": "Petrov lived a quiet life in Fryazino, where international journalists and documentary filmmakers visited him.",
+      "visual_pillar": "ARCHIVAL_STILL_KINETIC"
     },
     {
       "scene_id": 39,
@@ -2139,7 +2177,8 @@
           "prompt": "Extreme macro shot of heavy crystal globe award, engraved gilded lettering: 'To The Man Who Averted Nuclear War', prismatic light reflections dancing across glass facets, dramatic spotlighting, photorealistic 8k --ar 16:9"
         }
       },
-      "verified_fact_note": "Petrov was honored at the United Nations in 2006 by the Association of World Citizens."
+      "verified_fact_note": "Petrov was honored at the United Nations in 2006 by the Association of World Citizens.",
+      "visual_pillar": "ARCHIVAL_STILL_KINETIC"
     },
     {
       "scene_id": 40,
@@ -2191,7 +2230,8 @@
           "prompt": "Cinematic wide angle shot of abandoned Cold War Soviet control room, dust sheets covering consoles, solitary beam of daylight piercing through broken skylight onto empty leather command chair, poetic Tarkovsky nostalgia, 35mm film grain, fading slowly to black --ar 16:9"
         }
       },
-      "verified_fact_note": "Stanislav Petrov passed away on 19 May 2017 in Fryazino, Russia."
+      "verified_fact_note": "Stanislav Petrov passed away on 19 May 2017 in Fryazino, Russia.",
+      "visual_pillar": "HERO_AI_VIDEO"
     }
   ],
   "mode": "full",

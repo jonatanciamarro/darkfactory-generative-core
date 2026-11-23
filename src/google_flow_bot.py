@@ -49,6 +49,26 @@ class GoogleFlowCaptureResult:
     error_message: Optional[str] = None
 
 
+@dataclass
+class GoogleFlowTileMetadata:
+    """Metadados de um tile de vídeo extraído da grade do Google Flow."""
+    index: int
+    prompt_title: str
+    thumbnail_url: str = ""
+    tile_element_handle: Any = None
+    is_upscaled: bool = False
+
+
+@dataclass
+class GoogleFlowSyncSummary:
+    """Relatório da esteira de sincronização de takes existentes e novos."""
+    project_url: str
+    total_tiles_found: int
+    downloaded_clips: List[Dict[str, Any]]
+    failed_clips: List[Dict[str, Any]]
+    success_rate: float
+
+
 def get_download_resolution_selectors(prefer_upscale: bool = True) -> List[str]:
     """Retorna seletores ordenados por resolução. Por padrão, prioriza Upscale (1080p/4K) sobre 720p."""
     if prefer_upscale:
@@ -75,6 +95,8 @@ def get_download_resolution_selectors(prefer_upscale: bool = True) -> List[str]:
 def get_download_button_selectors() -> List[str]:
     """Retorna seletores resilientes para o botão de download no Google Flow."""
     return [
+        'button[aria-label*="Baixar mídia" i]',
+        'button[aria-label*="Fazer o download" i]',
         'button[aria-label*="Baixar" i]',
         'button[aria-label*="Download" i]',
         'button[data-tooltip*="Baixar" i]',
@@ -98,8 +120,14 @@ def get_download_button_selectors() -> List[str]:
 
 def get_card_selectors() -> List[str]:
     """Retorna seletores específicos de nós e cards de mídia gerados no Google Flow,
-    eliminando seletores genéricos como 'div[class*="item"]' que causam colisão com menus."""
+    incluindo Web Components Angular reais (<flow-grid-tile-container>, <flow-video-tile>)
+    e eliminando seletores genéricos como 'div[class*="item"]' que causam colisão com menus."""
     return [
+        'flow-grid-tile-container',
+        'flow-video-tile',
+        'flow-tile-container',
+        'img.thumbnail',
+        'img[alt*="Miniatura" i]',
         'div[data-card-id]',
         'div[data-testid*="card"]',
         'div[data-testid*="video"]',
@@ -328,14 +356,18 @@ class GoogleFlowBot:
     def get_studio_entrance_selectors() -> List[str]:
         """Returns candidate selectors for entering the Google Flow studio from the landing page."""
         return [
+            'a[aria-label*="Abrir projeto" i]',
+            'a[href*="/project/"]',
+            'button:has-text("add Novo projeto")',
+            'button:has-text("Novo projeto")',
+            'button:has-text("New project")',
+            'a:has-text("Abrir projeto")',
             'button:has-text("Create with Google Flow")',
             'a:has-text("Create with Google Flow")',
             'button:has-text("Try in Google Flow")',
             'a:has-text("Try in Google Flow")',
             'button:has-text("Try it now!")',
             'a:has-text("Try it now!")',
-            'button:has-text("Novo projeto")',
-            'button:has-text("New project")',
             'button:has-text("Criar")',
             'a:has-text("Criar")',
         ]
@@ -577,16 +609,27 @@ class GoogleFlowBot:
 
                 # 5. Await generation progress to complete (polling up to 180s)
                 logger.info(f"Awaiting Google Flow generation for model {model} (timeout=180s)...")
-                time.sleep(15)  # initial delay for rendering to start
+                time.sleep(10)  # initial delay for rendering to start
                 start_time = time.time()
+                render_started = False
                 while time.time() - start_time < 180:
                     time.sleep(5)
-                    has_percentage = page.evaluate('''() => {
+                    # Checar se geração está ativa (porcentagem, spinner, barra de progresso ou botão desabilitado)
+                    is_active = page.evaluate('''() => {
                         const all = Array.from(document.querySelectorAll('*'));
-                        return all.some(el => /\\d+%/.test(el.innerText || ''));
+                        const hasPercent = all.some(el => /\\b\\d{1,2}%\\b/.test(el.innerText || ''));
+                        const hasProgress = document.querySelector('mat-progress-bar, mat-spinner, [role="progressbar"]') !== null;
+                        const hasGeneratingText = all.some(el => /gerando|generating|processando/i.test(el.innerText || ''));
+                        return hasPercent || hasProgress || hasGeneratingText;
                     }''')
-                    if not has_percentage:
-                        logger.info("Google Flow generation 100% complete!")
+                    if is_active:
+                        render_started = True
+                        logger.info("Estado de geração ativo detectado no Google Flow...")
+                    elif render_started and not is_active:
+                        logger.info("Google Flow generation 100% complete (estado de render finalizado)!")
+                        break
+                    elif time.time() - start_time > 45 and not render_started:
+                        logger.info("Timeout de verificação inicial de render atingido. Prosseguindo para captura.")
                         break
 
                 time.sleep(4)
@@ -619,6 +662,154 @@ class GoogleFlowBot:
             logger.warning(f"Playwright Google Flow execution failed ({e}). Comuting to RunningHub MiniMax H3 fallback.")
 
         return False
+
+    def sync_existing_project_clips(
+        self,
+        page: Any,
+        max_clips: int = 50,
+        prefer_upscale: bool = True,
+    ) -> GoogleFlowSyncSummary:
+        """Sincroniza e baixa todos os takes de vídeo já gerados na grade do estúdio do Google Flow para data/broll/."""
+        project_url = getattr(page, "url", "https://flow.google.com")
+        logger.info(f"Iniciando varredura e sincronização de takes no Google Flow ({project_url})...")
+
+        tile_selectors = "flow-grid-tile-container, flow-video-tile, flow-tile-container"
+        try:
+            if hasattr(page, "wait_for_selector"):
+                page.wait_for_selector(tile_selectors, timeout=15000)
+        except Exception:
+            pass
+
+        tiles = page.query_selector_all(tile_selectors)
+        if not tiles and hasattr(page, "evaluate"):
+            try:
+                page.evaluate("() => window.scrollTo(0, document.body.scrollHeight / 2)")
+                time.sleep(2)
+                tiles = page.query_selector_all(tile_selectors)
+            except Exception:
+                pass
+
+        total_found = len(tiles)
+        logger.info(f"Total de tiles de mídia detectados na grade: {total_found}")
+
+        downloaded = []
+        failed = []
+
+        limit = min(total_found, max_clips) if max_clips > 0 else total_found
+        for i in range(limit):
+            current_tiles = page.query_selector_all(tile_selectors)
+            if i >= len(current_tiles):
+                break
+            tile = current_tiles[i]
+            aria_label = tile.get_attribute("aria-label") or f"flow_clip_{i+1}"
+            logger.info(f"Sincronizando tile [{i+1}/{limit}]: '{aria_label}'...")
+
+            try:
+                if hasattr(tile, "scroll_into_view_if_needed"):
+                    tile.scroll_into_view_if_needed()
+                time.sleep(1)
+                tile.click(force=True)
+                time.sleep(2)
+            except Exception as click_err:
+                logger.warning(f"Falha ao clicar no tile {i+1}: {click_err}")
+                failed.append({"index": i, "title": aria_label, "error": str(click_err)})
+                continue
+
+            target_filename = f"flow_sync_{i+1:02d}.mp4"
+            target_path = self.broll_dir / target_filename
+
+            capture_res = self.capturer.download_from_modal(page, target_path, prefer_upscale=prefer_upscale)
+            if capture_res.success and target_path.exists() and target_path.stat().st_size > 50000:
+                logger.info(f"✅ Tile {i+1} baixado com sucesso: {target_filename} ({target_path.stat().st_size} bytes)")
+                downloaded.append({
+                    "index": i,
+                    "title": aria_label,
+                    "file_path": str(target_path),
+                    "size_bytes": target_path.stat().st_size,
+                    "method": capture_res.method,
+                })
+            else:
+                logger.warning(f"❌ Falha ao baixar tile {i+1}: {capture_res.error_message or capture_res.method}")
+                failed.append({
+                    "index": i,
+                    "title": aria_label,
+                    "error": capture_res.error_message or capture_res.method,
+                })
+
+            # Fechar modal para retornar à grade (botão arrow_back, Concluir, Fechar ou Escape)
+            try:
+                back_btn = page.query_selector('button:has-text("arrow_back"), button:has-text("Concluir"), [aria-label*="Voltar" i], [aria-label*="Fechar" i], button[aria-label*="Close" i]')
+                if back_btn and back_btn.is_visible():
+                    back_btn.click()
+                elif hasattr(page, "keyboard"):
+                    page.keyboard.press("Escape")
+                time.sleep(1)
+            except Exception as close_err:
+                logger.debug(f"Aviso ao fechar modal: {close_err}")
+
+        success_rate = (len(downloaded) / limit * 100.0) if limit > 0 else 0.0
+        return GoogleFlowSyncSummary(
+            project_url=str(project_url),
+            total_tiles_found=total_found,
+            downloaded_clips=downloaded,
+            failed_clips=failed,
+            success_rate=round(success_rate, 1),
+        )
+
+    def execute_playwright_sync(
+        self,
+        max_clips: int = 50,
+        prefer_upscale: bool = True,
+    ) -> GoogleFlowSyncSummary:
+        """Abre sessão Playwright, navega até o projeto e executa a sincronização completa de clipes."""
+        state_file = self.session_dir / "storage_state.json"
+        has_profile = (self.session_dir / "Default").exists() or state_file.exists()
+        if not has_profile:
+            logger.error("Sessão persistente do Google Flow não encontrada.")
+            return GoogleFlowSyncSummary(
+                project_url="https://flow.google.com",
+                total_tiles_found=0,
+                downloaded_clips=[],
+                failed_clips=[{"error": "Session profile not found"}],
+                success_rate=0.0,
+            )
+
+        from playwright.sync_api import sync_playwright
+
+        with sync_playwright() as p:
+            launch_kwargs: Dict[str, Any] = {
+                "user_data_dir": str(self.session_dir),
+                "headless": True,
+                "args": ["--disable-blink-features=AutomationControlled"],
+            }
+            context = p.chromium.launch_persistent_context(**launch_kwargs)
+            if state_file.exists():
+                try:
+                    state_data = json.loads(state_file.read_text(encoding="utf-8"))
+                    cookies = state_data.get("cookies", [])
+                    if cookies:
+                        context.add_cookies(cookies)
+                except Exception as exc:
+                    logger.debug(f"Aviso ao injetar cookies: {exc}")
+
+            page = context.new_page() if not context.pages else context.pages[0]
+            flow_url = os.getenv("GOOGLE_FLOW_URL", "https://flow.google.com")
+            page.goto(flow_url, timeout=45000)
+            time.sleep(4)
+
+            # Entrar no estúdio
+            try:
+                joined_selectors = ", ".join(self.get_studio_entrance_selectors())
+                enter_btn = page.query_selector(joined_selectors)
+                if enter_btn and enter_btn.is_visible():
+                    enter_btn.click()
+                    time.sleep(5)
+            except Exception as e:
+                logger.debug(f"Aviso ao abrir projeto: {e}")
+
+            summary = self.sync_existing_project_clips(page, max_clips=max_clips, prefer_upscale=prefer_upscale)
+            context.close()
+            return summary
 
     def fallback_to_runninghub_or_procedural(
         self,
@@ -716,7 +907,17 @@ def main() -> None:
     parser.add_argument("--audit", action="store_true", help="Audit existing video inventory and GPU savings")
     parser.add_argument("--ingest-dir", type=str, default="", help="Ingest and standardize video clips from an external directory")
     parser.add_argument("--pending-only", action="store_true", help="Generate and dispatch only pending scenes missing from disk")
+    parser.add_argument("--sync-flow", action="store_true", help="Sync and download all existing clips from active Google Flow studio project into data/broll/")
+    parser.add_argument("--max-sync-clips", type=int, default=50, help="Maximum number of clips to sync from Google Flow (default: 50)")
     args = parser.parse_args()
+
+    # Sincronização direta do estúdio Google Flow
+    if args.sync_flow:
+        bot = GoogleFlowBot()
+        print(f"🎬 Iniciando sincronização automatizada dos clipes no estúdio do Google Flow (max: {args.max_sync_clips})...")
+        summary = bot.execute_playwright_sync(max_clips=args.max_sync_clips, prefer_upscale=True)
+        print(f"\n✅ Sincronização Google Flow concluída: {len(summary.downloaded_clips)}/{summary.total_tiles_found} takes baixados em data/broll/ ({summary.success_rate}% de sucesso).")
+        return
 
     # Ingestão opcional prévia
     if args.ingest_dir:
