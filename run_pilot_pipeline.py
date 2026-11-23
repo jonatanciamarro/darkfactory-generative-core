@@ -34,7 +34,12 @@ DRY_RUN_SUPPORTED = {"auth_gate.py", "google_flow_bot.py", "generate_motion_asse
 
 
 def run_script(script_name: str, dry_run: bool = False, extra_args: list = None) -> bool:
-    target = SRC_DIR / script_name
+    if script_name.startswith("src/"):
+        target = PROJECT_ROOT / script_name
+    elif (SRC_DIR / script_name).is_file():
+        target = SRC_DIR / script_name
+    else:
+        target = PROJECT_ROOT / script_name
     print(f"\n=======================================================")
     print(f"🎬 EXECUTING: {script_name}")
     print(f"=======================================================")
@@ -89,7 +94,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="DarkFactory Pilot Production Orchestrator")
     parser.add_argument(
         "--step",
-        choices=["auth", "direct", "research", "flow", "tts", "tts-local", "master", "sound", "motion", "video", "shorts", "qc", "boost", "publish", "all", "all-local"],
+        choices=["auth", "direct", "research", "flow", "tts", "tts-local", "master", "sound", "motion", "video", "shorts", "qc", "boost", "publish", "teaser", "all", "all-local"],
         default=None,
         help="Step to execute"
     )
@@ -209,6 +214,8 @@ def main() -> None:
             steps = ["youtube_algorithm_booster.py"]
         elif step_val == "publish":
             steps = ["youtube_publisher.py"]
+        elif step_val == "teaser":
+            steps = ["src/video/cinetic_teaser_assembler.py"]
         elif step_val in ("all", "all-local"):
             steps = [
                 "auth_gate.py",

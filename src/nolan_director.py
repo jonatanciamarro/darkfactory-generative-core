@@ -100,6 +100,14 @@ class NolanHistoryDirector:
 
     def __init__(self, researcher: Optional[WikipediaResearcher] = None):
         self.researcher = researcher or WikipediaResearcher()
+        try:
+            from src.video.cinematography_dop import CinematographyEngine
+            from src.video.color_psychology import ColorPsychologyEngine
+            self.dop_engine = CinematographyEngine()
+            self.color_engine = ColorPsychologyEngine()
+        except Exception:
+            self.dop_engine = None
+            self.color_engine = None
 
     def generate_packaging(self, topic: str, research: ResearchReport) -> Dict[str, Any]:
         """Generate high-impact YouTube packaging: logline, titles and IMAX thumbnail concept."""

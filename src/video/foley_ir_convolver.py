@@ -2,6 +2,7 @@
 
 Provides realistic room impulse response convolution for Soviet bunkers, archival vaults,
 and telemetry control rooms using O(N log N) FFT convolution on CPU.
+Includes pure NumPy fallback when SciPy is not installed.
 """
 
 from __future__ import annotations
@@ -13,7 +14,13 @@ from pathlib import Path
 from typing import Dict, Optional
 
 import numpy as np
-import scipy.signal
+
+try:
+    import scipy.signal
+    HAS_SCIPY = True
+except ImportError:
+    scipy = None  # type: ignore
+    HAS_SCIPY = False
 
 from src.video.foley_contracts import AcousticSpace
 
@@ -26,6 +33,33 @@ if sys.platform.startswith("win"):
         pass
 
 logger = logging.getLogger("darkfactory.video.foley_ir_convolver")
+
+
+def _fft_convolve(x: np.ndarray, h: np.ndarray) -> np.ndarray:
+    """Zero-dependency FFT convolution using pure NumPy."""
+    n_out = len(x) + len(h) - 1
+    n_fft = 1 << (n_out - 1).bit_length()
+    X = np.fft.rfft(x, n_fft)
+    H = np.fft.rfft(h, n_fft)
+    y = np.fft.irfft(X * H, n_fft)
+    return y[:n_out].astype(np.float32)
+
+
+def _lowpass_filter(sig: np.ndarray, cutoff_hz: float, sr: int) -> np.ndarray:
+    """Applies lowpass filtering using SciPy if available, otherwise 1-pole IIR in NumPy."""
+    if HAS_SCIPY:
+        b, a = scipy.signal.butter(2, min(cutoff_hz, sr * 0.49) / (sr / 2.0), btype="low")
+        return scipy.signal.lfilter(b, a, sig).astype(np.float32)
+    # 1-pole recursive lowpass filter fallback
+    rc = 1.0 / (2.0 * math.pi * max(100.0, cutoff_hz))
+    dt = 1.0 / sr
+    alpha = dt / (rc + dt)
+    out = np.empty_like(sig, dtype=np.float32)
+    y_prev = 0.0
+    for i in range(len(sig)):
+        y_prev = alpha * sig[i] + (1.0 - alpha) * y_prev
+        out[i] = y_prev
+    return out
 
 
 class FoleyIRConvolver:
@@ -53,9 +87,7 @@ class FoleyIRConvolver:
             diffuse = rng.normal(0.0, 1.0, size=n).astype(np.float32) * env
 
             # High-frequency damping (air absorption and concrete surface damping)
-            # 2-pole lowpass filter simulation via rolling average
-            b, a = scipy.signal.butter(2, 3500.0 / (sr / 2.0), btype="low")
-            diffuse_filtered = scipy.signal.lfilter(b, a, diffuse)
+            diffuse_filtered = _lowpass_filter(diffuse, 3500.0, sr)
 
             # Discrete early reflections (wall bounces at 14ms, 28ms, 45ms, 68ms)
             ir = diffuse_filtered * 0.65
@@ -74,8 +106,8 @@ class FoleyIRConvolver:
 
             rng = np.random.default_rng(1977)
             diffuse = rng.normal(0.0, 1.0, size=n).astype(np.float32) * env
-            b, a = scipy.signal.butter(2, 4500.0 / (sr / 2.0), btype="low")
-            ir = scipy.signal.lfilter(b, a, diffuse) * 0.70
+            diffuse_filtered = _lowpass_filter(diffuse, 4500.0, sr)
+            ir = diffuse_filtered * 0.70
 
             # Close wall reflections (4ms, 9ms, 17ms)
             for delay_s, gain in [(0.004, 0.55), (0.009, -0.35), (0.017, 0.20)]:
@@ -92,8 +124,8 @@ class FoleyIRConvolver:
 
             rng = np.random.default_rng(1984)
             diffuse = rng.normal(0.0, 1.0, size=n).astype(np.float32) * env
-            b, a = scipy.signal.butter(2, 5500.0 / (sr / 2.0), btype="low")
-            ir = scipy.signal.lfilter(b, a, diffuse) * 0.60
+            diffuse_filtered = _lowpass_filter(diffuse, 5500.0, sr)
+            ir = diffuse_filtered * 0.60
 
             # Subtle flutter reflections from console surfaces (7ms, 15ms, 23ms, 35ms)
             for delay_s, gain in [(0.007, 0.40), (0.015, -0.30), (0.023, 0.22), (0.035, -0.15)]:
@@ -140,8 +172,11 @@ class FoleyIRConvolver:
         wet_mix = max(0.0, min(1.0, float(wet_mix)))
         dry_mix = 1.0 - (wet_mix * 0.5)
 
-        # FFT convolution via SciPy: O(N log N)
-        convolved = scipy.signal.fftconvolve(mono_signal, ir, mode="full").astype(np.float32)
+        # FFT convolution via SciPy or NumPy fallback: O(N log N)
+        if HAS_SCIPY:
+            convolved = scipy.signal.fftconvolve(mono_signal, ir, mode="full").astype(np.float32)
+        else:
+            convolved = _fft_convolve(mono_signal, ir)
 
         # Truncar cauda excessiva para evitar latência desnecessária (> 2.0s após final)
         max_len = len(mono_signal) + int(self.sample_rate * 0.90)

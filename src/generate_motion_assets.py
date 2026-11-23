@@ -29,6 +29,7 @@ if hasattr(sys.stdout, "reconfigure"):
     except Exception:
         pass
 
+from src.video.motion_router import UnifiedMotionOrchestrator, MotionArchetype
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("MotionAssetGenerator")
 
@@ -87,6 +88,12 @@ class MotionAssetPipeline:
         self.enable_argon = enable_argon
 
         self.output_dir.mkdir(parents=True, exist_ok=True)
+        self.router = UnifiedMotionOrchestrator(
+            output_dir=self.output_dir,
+            broll_dir=self.broll_dir,
+            dry_run=self.dry_run,
+            force=self.force,
+        )
         self.broll_dir.mkdir(parents=True, exist_ok=True)
         MAPS_DIR.mkdir(parents=True, exist_ok=True)
         IMAGES_4K_DIR.mkdir(parents=True, exist_ok=True)
@@ -337,157 +344,35 @@ class MotionAssetPipeline:
 
         for s in scenes:
             s_id = s.get("scene_id", 0)
-            style = s.get("visual_style_type", "HERO_AI_DUAL_SHOT")
             dur = float(s.get("estimated_duration_sec", 6.0))
 
-            # 1. Maps
-            if style == "TACTICAL_MAP_MOTION":
-                map_path = self.generate_tactical_map_for_scene(s, duration_sec=min(dur, 8.0))
-                if map_path and map_path.is_file():
-                    results["maps_rendered"] += 1
-                    # Ensure renderer finds it in broll
-                    target_broll = self.broll_dir / f"scene_{s_id}.mp4"
-                    if not target_broll.exists() or self.force:
-                        shutil.copy2(map_path, target_broll)
-
-            # 2. Isometric blueprints & declassified dossiers
-            elif style in ("ANATOMY_ISOMETRIC", "DECLASSIFIED_DOSSIER") or "blueprint" in style.lower():
-                hf_path = self.generate_hyperframes_clip_for_scene(s, duration_sec=min(dur, 8.0))
-                if hf_path and hf_path.is_file():
-                    results["hyperframes_rendered"] += 1
-                    target_broll = self.broll_dir / f"scene_{s_id}.mp4"
-                    if not target_broll.exists() or self.force:
-                        shutil.copy2(hf_path, target_broll)
-
-            # 3. Archival Stills 4K Upscale
-            elif style == "ARCHIVAL_KEN_BURNS" or "archival" in style.lower():
-                img_path = self.generate_4k_archival_photo_for_scene(s)
-                if img_path and img_path.is_file():
-                    results["photos_4k_upscaled"] += 1
-                    target_broll_img = self.broll_dir / f"scene_{s_id}.jpg"
-                    if not target_broll_img.exists() or self.force:
-                        shutil.copy2(img_path, target_broll_img)
-
-            # 4. Overlays (stamps, HUDs, lower-thirds)
+            # 1. Overlays (stamps, HUDs, lower-thirds)
             if s.get("overlay_recipe"):
                 ol_path = self.generate_tactical_overlay_stamp_for_scene(s)
                 if ol_path and ol_path.is_file():
                     results["overlays_rendered"] += 1
 
-            # 5. Netflix Investigative Documentary Motion Engine (3 Canonic Archetypes) - ALWAYS ON
-            if self.enable_cinetic:
-                target_broll = self.broll_dir / f"scene_{s_id}.mp4"
-                if not target_broll.exists() or self.force:
-                    try:
-                        from src.video.netflix_investigative_motion import (
-                            NetflixInvestigativeMotionEngine,
-                            NetflixInvestigativeSceneDTO,
-                            MotionArchetype,
-                            DossierConfig,
-                            PinnedEvidenceItem,
-                            RedStringConnection,
-                        )
-                        inv_engine = NetflixInvestigativeMotionEngine(
-                            broll_dir=self.broll_dir,
-                            output_dir=self.output_dir,
-                            sfx_dir=DATA_DIR / "sfx",
-                        )
-                        # Rotate through the 3 canonic archetypes
-                        arch_idx = s_id % 3
-                        if arch_idx == 1:
-                            arch = MotionArchetype.TACTILE_CLASSIFIED_DOSSIER
-                        elif arch_idx == 2:
-                            arch = MotionArchetype.CORKBOARD_CONSPIRACY
-                        else:
-                            arch = MotionArchetype.NETFLIX_OSINT_DESKTOP
+            # 2. Unified Motion Orchestration (Deterministic Zero-Collision Dispatch)
+            arch = self.router.resolve_archetype_for_scene(s)
+            rendered_motion = self.router.render_scene_motion(s, mirror_to_broll=True)
+            if rendered_motion and rendered_motion.is_file():
+                if "MAP" in arch.value:
+                    results["maps_rendered"] += 1
+                elif "CAD" in arch.value or "HYPERFRAMES" in arch.value:
+                    results["hyperframes_rendered"] += 1
+                elif "SEEDVR" in arch.value or "ARCHIVAL" in arch.value:
+                    results["photos_4k_upscaled"] += 1
+                elif "ARGON" in arch.value:
+                    results["argon_rendered"] += 1
+                elif "CINETIC" in arch.value or "NETFLIX" in arch.value:
+                    results["cinetic_rendered"] += 1
 
-                        dto = NetflixInvestigativeSceneDTO(
-                            scene_id=s_id,
-                            archetype=arch,
-                            duration_sec=dur,
-                            dossier_config=DossierConfig(
-                                case_number=f"CASE FILE NO. 1983-SOVIET // SCENE {s_id}",
-                                subject_title=s.get("timestamp_marker", "SERPUKHOV-15 COMMAND"),
-                                stamp_headline="INCIDENTE 1983-B",
-                                stamp_subtitle="ARQUIVO DESCLASSIFICADO // CONFIDENCIAL",
-                                pinned_photo_path=str(self.broll_dir / f"scene_{s_id}.jpg"),
-                            ),
-                            corkboard_items=[
-                                PinnedEvidenceItem(
-                                    item_id=f"photo_{s_id}",
-                                    title=s.get("timestamp_marker", f"SCENE {s_id}"),
-                                    item_type="photo",
-                                    image_path=str(self.broll_dir / f"scene_{s_id}.jpg"),
-                                    position_xy=(550, 480),
-                                ),
-                                PinnedEvidenceItem(
-                                    item_id=f"map_{s_id}",
-                                    title="TACTICAL RADAR",
-                                    item_type="map",
-                                    position_xy=(1050, 420),
-                                ),
-                                PinnedEvidenceItem(
-                                    item_id=f"note_{s_id}",
-                                    title="EVIDENCE NOTE",
-                                    item_type="note",
-                                    note_text="5 MISSILES IN FLIGHT // RETALIATION DELAY",
-                                    position_xy=(1450, 520),
-                                ),
-                            ],
-                            red_strings=[
-                                RedStringConnection(from_item_id=f"photo_{s_id}", to_item_id=f"map_{s_id}"),
-                                RedStringConnection(from_item_id=f"map_{s_id}", to_item_id=f"note_{s_id}"),
-                            ],
-                            mirror_to_broll=True,
-                        )
-                        c_path = inv_engine.render_scene_clip(dto)
-                        if c_path and c_path.is_file():
-                            results["cinetic_rendered"] += 1
-                    except Exception as exc:
-                        logger.warning(f"Netflix investigative motion skipped for scene {s_id}: {exc}")
-
-            # 6. Gemini 4 Argon Swiss-Telemetry Motion Engine - ALWAYS ON
-            if self.enable_argon:
-                target_argon = self.output_dir / f"argon_scene_{s_id}.mp4"
-                if not target_argon.exists() or self.force:
-                    try:
-                        from src.video.argon_documentary_motion import (
-                            ArgonMotionEngine,
-                            ArgonDocumentaryConfig,
-                            ArgonMotionArchetype,
-                        )
-                        argon_engine = ArgonMotionEngine(
-                            output_dir=self.output_dir,
-                            broll_dir=self.broll_dir,
-                        )
-                        arch_map = [
-                            ArgonMotionArchetype.RADAR_TELEMETRY,
-                            ArgonMotionArchetype.ZSPACE_BUNKER_PARALLAX,
-                            ArgonMotionArchetype.CLASSIFIED_DOSSIER_INVERSION,
-                            ArgonMotionArchetype.NETFLIX_OSINT_STAGE,
-                        ]
-                        arch = arch_map[s_id % 4]
-                        argon_cfg = ArgonDocumentaryConfig(
-                            scene_id=s_id,
-                            archetype=arch,
-                            title=s.get("title") or s.get("timestamp_marker") or f"SCENE {s_id}",
-                            subtitle=s.get("subtitle") or "SERPUKHOV-15 INCIDENT 1983",
-                            narrative_thesis=s.get("narration_pt", "")[:120] if s.get("narration_pt") else "Cold War Early Warning Incident.",
-                            telemetry_code=f"SERPUKHOV-15 // ACT {((s_id-1)//8)+1}",
-                            metrics={"DEFCON": "1", "CONFIDENCE": "99.8%", "RADAR": "+4.82σ"},
-                            archival_image_path=str(self.broll_dir / f"scene_{s_id}.jpg"),
-                            duration_sec=dur,
-                            fps=30,
-                        )
-                        a_res = argon_engine.render_scene_video(argon_cfg, output_path=target_argon, preview_only=self.dry_run)
-                        if a_res.video_path.is_file():
-                            results["argon_rendered"] += 1
-                            # Mirror to broll for video assembler
-                            broll_target = self.broll_dir / f"scene_{s_id}.mp4"
-                            if not broll_target.exists() or self.force:
-                                shutil.copy2(a_res.video_path, broll_target)
-                    except Exception as exc:
-                        logger.warning(f"Argon motion skipped for scene {s_id}: {exc}")
+            # 3. Direct Archival Photo check if styled as archival
+            style = s.get("visual_style_type", "")
+            if (style == "ARCHIVAL_KEN_BURNS" or "archival" in str(style).lower()) and results["photos_4k_upscaled"] == 0:
+                img_path = self.generate_4k_archival_photo_for_scene(s)
+                if img_path and img_path.is_file():
+                    results["photos_4k_upscaled"] += 1
 
         logger.info(
             f"✅ Motion Asset Synthesis complete: "
