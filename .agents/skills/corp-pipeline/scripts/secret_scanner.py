@@ -9,7 +9,6 @@ import os
 import re
 import sys
 from pathlib import Path
-from typing import Dict, List, Tuple
 
 # High-confidence signature patterns for enterprise secrets
 SECRET_PATTERNS = [
@@ -28,18 +27,21 @@ SECRET_PATTERNS = [
 IGNORE_DIRS = {
     ".git", ".venv", "venv", "node_modules", "__pycache__",
     ".pytest_cache", "dist", "build", "target", "bin", "obj", ".idea", ".vscode",
-    "chrome_session", "data"
+    "chrome_session", "data", "models"
 }
 
 IGNORE_EXTENSIONS = {
     ".png", ".jpg", ".jpeg", ".gif", ".ico", ".pdf", ".zip", ".tar", ".gz",
-    ".exe", ".dll", ".so", ".dylib", ".pyc", ".lock", ".svg", ".woff", ".woff2"
+    ".exe", ".dll", ".so", ".dylib", ".pyc", ".lock", ".svg", ".woff", ".woff2",
+    ".onnx", ".bin", ".pt", ".pth", ".safetensors", ".mp4", ".mp3", ".wav"
 }
 
 
-def scan_file(file_path: Path) -> List[Tuple[str, int, str]]:
+def scan_file(file_path: Path) -> list[tuple[str, int, str]]:
     findings = []
     try:
+        if file_path.stat().st_size > 1_000_000:
+            return findings
         content = file_path.read_text(encoding="utf-8", errors="ignore")
     except Exception:
         return findings
@@ -62,7 +64,7 @@ def scan_file(file_path: Path) -> List[Tuple[str, int, str]]:
     return findings
 
 
-def scan_directory(target_dir: Path) -> Dict[str, List[Tuple[str, int, str]]]:
+def scan_directory(target_dir: Path) -> dict[str, list[tuple[str, int, str]]]:
     all_findings = {}
     for root, dirs, files in os.walk(target_dir):
         # Exclude ignored directories in-place

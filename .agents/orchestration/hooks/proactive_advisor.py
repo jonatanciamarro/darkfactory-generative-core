@@ -35,6 +35,10 @@ def run_proactive_advisor_hook() -> None:
         raw_input_data = {}
 
     root = get_workspace_root()
+    venv_site = root / 'venv' / 'Lib' / 'site-packages'
+    if venv_site.exists():
+        import site
+        site.addsitedir(str(venv_site))
     src_dir = str(root / "src")
     if src_dir not in sys.path:
         sys.path.insert(0, src_dir)

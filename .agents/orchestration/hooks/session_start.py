@@ -36,6 +36,10 @@ def run_session_start_hook() -> None:
         pass
 
     root = get_workspace_root()
+    venv_site = root / 'venv' / 'Lib' / 'site-packages'
+    if venv_site.exists():
+        import site
+        site.addsitedir(str(venv_site))
     state_file = root / "state.md"
 
     # Extract high-level summary from state.md if present

@@ -28,16 +28,29 @@ if hasattr(sys.stderr, "reconfigure"):
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 SRC_DIR = PROJECT_ROOT / "src"
-PYTHON_EXE = sys.executable
 
-DRY_RUN_SUPPORTED = {"auth_gate.py", "google_flow_bot.py", "generate_motion_assets.py", "generate_pilot_audio.py", "render_pilot_video.py"}
+# Auto-resolve virtual environment Python if available
+_venv_python = PROJECT_ROOT / "venv" / "Scripts" / "python.exe"
+if _venv_python.exists():
+    PYTHON_EXE = str(_venv_python)
+else:
+    PYTHON_EXE = sys.executable
+
+DRY_RUN_SUPPORTED = {
+    "auth_gate.py",
+    "google_flow_bot.py",
+    "generate_motion_assets.py",
+    "generate_pilot_audio.py",
+    "render_pilot_video.py",
+    "youtube_publisher.py",
+}
 
 
-def run_script(script_name: str, dry_run: bool = False, extra_args: list = None) -> bool:
+def run_script(script_name: str, dry_run: bool = False, extra_args: list | None = None) -> bool:
     target = SRC_DIR / script_name
-    print(f"\n=======================================================")
+    print("\n=======================================================")
     print(f"🎬 EXECUTING: {script_name}")
-    print(f"=======================================================")
+    print("=======================================================")
     cmd = [PYTHON_EXE, "-u", str(target)]
     if dry_run and script_name in DRY_RUN_SUPPORTED:
         cmd.append("--dry-run")
@@ -239,6 +252,15 @@ def main() -> None:
                 if dc.exists():
                     extra.extend(["--research-dossier", str(dc)])
                     break
+        if s == "generate_pilot_audio.py" and (args.step in ("tts-local", "all-local")):
+            extra.extend(["--engine", "kokoro"])
+        if s == "youtube_publisher.py":
+            video_file = PROJECT_ROOT / "data" / "output" / "the_1983_soviet_glitch_final_1080p.mp4"
+            pub_title = args.topic or "The 1983 Glitch: 20 Minutes to Armageddon"
+            extra.extend([
+                "--video", str(video_file),
+                "--title", pub_title,
+            ])
         if s == "youtube_compliance_qc.py":
             video_file = PROJECT_ROOT / "data" / "output" / "the_1983_soviet_glitch_final_1080p.mp4"
             extra.extend([
@@ -278,7 +300,7 @@ def main() -> None:
                 except Exception as ex:
                     print(f"⚠️ Warning reading story audit: {ex}")
 
-    print(f"\n🎉 ALL STEPS COMPLETED SUCCESSFULLY!")
+    print("\n🎉 ALL STEPS COMPLETED SUCCESSFULLY!")
     print(f"Output video ready at: {PROJECT_ROOT / 'data' / 'output' / 'the_1983_soviet_glitch_final_1080p.mp4'}")
 
 

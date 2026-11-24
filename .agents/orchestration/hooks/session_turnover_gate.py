@@ -27,6 +27,10 @@ def get_workspace_root() -> Path:
 
 def run_session_turnover_gate_hook() -> None:
     root = get_workspace_root()
+    venv_site = root / 'venv' / 'Lib' / 'site-packages'
+    if venv_site.exists():
+        import site
+        site.addsitedir(str(venv_site))
 
     try:
         proc = subprocess.run(

@@ -8,12 +8,10 @@ Processes raw CosyVoice 3 (or fallback) audio files:
 """
 import json
 import logging
-import os
 import shutil
 import subprocess
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional
 
 # Force UTF-8 on Windows
 if hasattr(sys.stdout, "reconfigure"):
@@ -155,7 +153,7 @@ def format_srt_time(seconds: float) -> str:
     return f"{hours:02d}:{minutes:02d}:{secs:02d},{millis:03d}"
 
 
-def generate_synchronized_subtitles(scenes_data: List[Dict], durations: List[float], output_srt: Path) -> str:
+def generate_synchronized_subtitles(scenes_data: list[dict], durations: list[float], output_srt: Path) -> str:
     """Generate professional documentary SRT subtitles split cleanly by semantic pauses."""
     srt_entries = []
     current_time = 0.0
@@ -213,9 +211,9 @@ def main() -> None:
     ffmpeg_bin = get_ffmpeg_binary()
     logger.info(f"Using FFmpeg binary: {ffmpeg_bin}")
 
-    script_path = SCRIPTS_DIR / "pilot_soviet_glitch.json"
+    script_path = SCRIPTS_DIR / "nolan_soviet_glitch.json"
     if not script_path.exists():
-        script_path = SCRIPTS_DIR / "nolan_soviet_glitch.json"
+        script_path = SCRIPTS_DIR / "pilot_soviet_glitch.json"
     if not script_path.exists():
         candidates = list(SCRIPTS_DIR.glob("*soviet_glitch.json"))
         if candidates:
@@ -230,6 +228,7 @@ def main() -> None:
     # If not, fall back to existing scene_*.mp3 in data/audio/
     mastered_files = []
     durations = []
+    processed_scenes = []
 
     for scene in scenes:
         s_id = scene["scene_id"]
@@ -249,8 +248,8 @@ def main() -> None:
                 break
 
         if not chosen_input:
-            logger.warning(f"No audio file found for scene {s_id}. Checked: {[str(x) for x in raw_candidates]}")
-            continue
+            logger.error(f"Missing audio file for scene {s_id}. Checked: {[str(x) for x in raw_candidates]}")
+            raise RuntimeError(f"Missing audio file for scene {s_id}. Halting to prevent subtitle drift.")
 
         mastered_out = MASTERED_AUDIO_DIR / f"scene_{s_id}_mastered.mp3"
         if check_is_already_normalized(ffmpeg_bin, chosen_input):
@@ -268,7 +267,10 @@ def main() -> None:
             dur = get_audio_duration(ffmpeg_bin, mastered_out)
             mastered_files.append(mastered_out)
             durations.append(dur)
+            processed_scenes.append(scene)
             logger.info(f"Scene {s_id}: Duration = {dur:.2f}s | Saved: {mastered_out.name}")
+        else:
+            raise RuntimeError(f"Failed to master audio for scene {s_id}.")
 
     if not mastered_files:
         logger.error("No audio files could be mastered. Please provide raw audio files or run generate_pilot_audio.py.")
@@ -277,8 +279,7 @@ def main() -> None:
     # Concatenate all mastered scenes into full pilot audio
     concat_list_file = MASTERED_AUDIO_DIR / "concat_list.txt"
     with open(concat_list_file, "w", encoding="utf-8") as f:
-        for m in mastered_files:
-            f.write(f"file '{m.resolve().as_posix()}'\n")
+        f.writelines(f"file '{m.resolve().as_posix()}'\n" for m in mastered_files)
 
     full_mastered = MASTERED_AUDIO_DIR / "pilot_intro_full_mastered.mp3"
     concat_cmd = [
@@ -298,7 +299,7 @@ def main() -> None:
 
     # Generate calibrated SRT subtitles
     output_srt = SUBS_DIR / "pilot_intro_mastered.srt"
-    srt_content = generate_synchronized_subtitles(scenes[:len(durations)], durations, output_srt)
+    srt_content = generate_synchronized_subtitles(processed_scenes, durations, output_srt)
     logger.info(f"Synchronized subtitles saved to: {output_srt}")
     print("\n--- Calibrated Subtitles ---")
     print(srt_content.strip())
