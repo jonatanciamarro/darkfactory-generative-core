@@ -4,36 +4,36 @@
   "facts": [],
   "media_assets": [
     {
-      "title": "Interview with Lars-Göran Petrov (Entombed) – Dragon Breath Fanzine No. 3 – 1999",
-      "url": "https://archive.org/details/entombed_202601",
+      "title": "The Ten O'Clock News on KTVU Fox 2 : KTVU : April 4, 2016 10:00pm-11:01pm PDT",
+      "url": "https://archive.org/details/KTVU_20160405_050000_The_Ten_OClock_News_on_KTVU_Fox_2",
       "license_name": "publicdomain",
       "source": "internet_archive",
       "local_path": null
     },
     {
-      "title": "KTVU Mornings on 2 at 9am : KTVU : March 29, 2016 9:00am-10:01am PDT",
-      "url": "https://archive.org/details/KTVU_20160329_160000_KTVU_Mornings_on_2_at_9am",
+      "title": "EmpLemon (COMPLETE YouTube Channel Mirror/Archive)",
+      "url": "https://archive.org/details/emplemon-complete-archive-youtube",
       "license_name": "publicdomain",
       "source": "internet_archive",
       "local_path": null
     },
     {
-      "title": "РИК \"Россия 24\" : RUSSIA24 : January 15, 2023 11:30am-12:01pm MSK",
-      "url": "https://archive.org/details/RUSSIA24_20230115_083000_RIK_Rossiya_24",
+      "title": "ABC World News : KGO : April 2, 2016 5:30pm-6:01pm PDT",
+      "url": "https://archive.org/details/KGO_20160403_003000_ABC_World_News",
       "license_name": "publicdomain",
       "source": "internet_archive",
       "local_path": null
     },
     {
-      "title": "60 Minutes : WUSA : November 1, 2015 7:30pm-8:31pm EST",
-      "url": "https://archive.org/details/WUSA_20151102_003000_60_Minutes",
+      "title": "NoticieroTelemundo 48 Primera Edicion : KSTS : March 29, 2016 6:00am-7:01am PDT",
+      "url": "https://archive.org/details/KSTS_20160329_130000_NoticieroTelemundo_48_Primera_Edicion",
       "license_name": "publicdomain",
       "source": "internet_archive",
       "local_path": null
     },
     {
-      "title": "Вести. Дежурная часть : RUSSIA24 : November 15, 2026 6:22am-7:00am MSK",
-      "url": "https://archive.org/details/RUSSIA24_20261115_032200_Vesti._Dezhurnaya_chast",
+      "title": "Чрезвычайное происшествие : NTV : August 19, 2025 1:25pm-2:01pm MSK",
+      "url": "https://archive.org/details/NTV_20250819_102500_Chrezvichainoe_proisshestvie",
       "license_name": "publicdomain",
       "source": "internet_archive",
       "local_path": null
@@ -46,18 +46,25 @@
       "local_path": null
     },
     {
-      "title": "РИК \"Россия 24\" : RUSSIA24 : September 26, 2023 5:00am-5:31am MSK",
-      "url": "https://archive.org/details/RUSSIA24_20230926_020000_RIK_Rossiya_24",
+      "title": "Вести : RUSSIA1 : October 2, 2026 3:00am-3:30am MSK",
+      "url": "https://archive.org/details/RUSSIA1_20261002_000000_Vesti",
+      "license_name": "publicdomain",
+      "source": "internet_archive",
+      "local_path": null
+    },
+    {
+      "title": "Вести. Дежурная часть : RUSSIA24 : November 15, 2026 6:22am-7:00am MSK",
+      "url": "https://archive.org/details/RUSSIA24_20261115_032200_Vesti._Dezhurnaya_chast",
       "license_name": "publicdomain",
       "source": "internet_archive",
       "local_path": null
     }
   ],
   "cache_files": [
-    "E:/projcts/darkfactory/data/raw/research_cache/stanislav_petrov_internet_archive.json",
-    "E:/projcts/darkfactory/data/raw/research_cache/stanislav_petrov_nasa.json"
+    "C:/Users/WDAGUtilityAccount/Downloads/Nova pasta (2)/darkfactory-generative-core/data/raw/research_cache/stanislav_petrov_internet_archive.json",
+    "C:/Users/WDAGUtilityAccount/Downloads/Nova pasta (2)/darkfactory-generative-core/data/raw/research_cache/stanislav_petrov_nasa.json"
   ],
-  "output_file": "E:/projcts/darkfactory/data/processed/research_dossiers/stanislav_petrov.json",
+  "output_file": "C:/Users/WDAGUtilityAccount/Downloads/Nova pasta (2)/darkfactory-generative-core/data/processed/research_dossiers/stanislav_petrov.json",
   "used_local_fallback": false,
-  "generated_at": "2026-11-17T03:03:33.251840+00:00"
+  "generated_at": "2026-11-23T23:43:12.596667+00:00"
 }

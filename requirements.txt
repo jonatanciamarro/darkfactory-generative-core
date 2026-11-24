@@ -29,3 +29,5 @@ pypdf>=4.0.0
 scenedetect>=0.6.0
 opentimelineio>=0.17.0
 google-genai>=1.0.0
+# Corporate Software Engineer Enterprise Framework & Orquestrador Corp-Pipeline
+-e ../../Nova pasta/corporate-engineer

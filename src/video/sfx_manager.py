@@ -13,18 +13,15 @@ import re
 import sys
 import wave
 from pathlib import Path
-from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field
-
-from src.video.ffmpeg_processor import decode_audio_pcm_mono
 
 # Reconfigure stdout/stderr to UTF-8 on Windows consoles (ADR-01)
 if sys.platform.startswith("win"):
     try:
         sys.stdout.reconfigure(encoding="utf-8")
         sys.stderr.reconfigure(encoding="utf-8")
-    except Exception:
+    except Exception:  # noqa: BLE001, S110
         pass
 
 logger = logging.getLogger("darkfactory.video.sfx_manager")
@@ -60,9 +57,9 @@ class SFXItem(BaseModel):
     format: str = "wav"
     duration_sec: float = 0.0
     sample_rate: int = 44100
-    tags: List[str] = Field(default_factory=list)
+    tags: list[str] = Field(default_factory=list)
     origin_pack: str = "unknown"
-    absolute_path: Optional[str] = None
+    absolute_path: str | None = None
 
     def matches(self, query: str) -> bool:
         """Check whether the item matches a search query against id, name, category, or tags."""
@@ -78,8 +75,8 @@ class SFXCatalog(BaseModel):
     """Data model representing the entire indexed SFX catalog."""
 
     total_count: int = 0
-    categories: Dict[str, int] = Field(default_factory=dict)
-    items: List[SFXItem] = Field(default_factory=list)
+    categories: dict[str, int] = Field(default_factory=dict)
+    items: list[SFXItem] = Field(default_factory=list)
 
 
 def _slugify(text: str) -> str:
@@ -99,12 +96,12 @@ def _safe_path_str(p: Path) -> str:
 class SFXManager:
     """Manages ingestion, manifest caching, and retrieval of sound effects."""
 
-    def __init__(self, sfx_dir: Optional[Path | str] = None) -> None:
+    def __init__(self, sfx_dir: Path | str | None = None) -> None:
         self.sfx_dir = Path(sfx_dir).resolve() if sfx_dir else DEFAULT_SFX_DIR.resolve()
         self.manifest_path = self.sfx_dir / MANIFEST_FILENAME
-        self._catalog: Optional[SFXCatalog] = None
+        self._catalog: SFXCatalog | None = None
 
-    def _infer_category_and_tags(self, relative_path: str, filename: str) -> tuple[str, str, List[str]]:
+    def _infer_category_and_tags(self, relative_path: str, filename: str) -> tuple[str, str, list[str]]:
         """Infer category, subcategory, and semantic tags from path and filename."""
         path_lower = relative_path.replace("\\", "/").lower()
         file_lower = filename.lower()
@@ -130,13 +127,13 @@ class SFXManager:
         else:
             assigned_subcategory = _slugify(assigned_category)
 
-        return assigned_category, assigned_subcategory, sorted(list(tags))
+        return assigned_category, assigned_subcategory, sorted(tags)
 
     def scan_and_build_manifest(self) -> SFXCatalog:
         """Scan directory recursively, register audio files, and write manifest JSON."""
         self.sfx_dir.mkdir(parents=True, exist_ok=True)
-        items: List[SFXItem] = []
-        categories: Dict[str, int] = {}
+        items: list[SFXItem] = []
+        categories: dict[str, int] = {}
         supported_exts = {".wav", ".mp3", ".ogg", ".flac"}
 
         for root, _, files in os.walk(self.sfx_dir):
@@ -148,7 +145,7 @@ class SFXManager:
                 abs_file = Path(root) / file
                 try:
                     rel_path = abs_file.relative_to(self.sfx_dir).as_posix()
-                except Exception:
+                except Exception:  # noqa: BLE001
                     rel_path = abs_file.name
 
                 category, subcategory, tags = self._infer_category_and_tags(rel_path, file)
@@ -170,7 +167,7 @@ class SFXManager:
                             sr = wf.getframerate()
                             frames = wf.getnframes()
                             duration = round(frames / float(sr), 3)
-                    except Exception:
+                    except Exception:  # noqa: BLE001
                         duration = 0.5
                 else:
                     duration = 1.0
@@ -215,20 +212,20 @@ class SFXManager:
                     data = json.load(f)
                 self._catalog = SFXCatalog.model_validate(data)
                 return self._catalog
-            except Exception as exc:
+            except Exception as exc:  # noqa: BLE001
                 logger.warning(f"Error loading {self.manifest_path}: {exc}. Rebuilding...")
 
         return self.scan_and_build_manifest()
 
     def search(
         self,
-        query: Optional[str] = None,
-        category: Optional[str] = None,
+        query: str | None = None,
+        category: str | None = None,
         limit: int = 50,
-    ) -> List[SFXItem]:
+    ) -> list[SFXItem]:
         """Search sound effects by text query and/or category."""
         catalog = self.load_catalog()
-        results: List[SFXItem] = []
+        results: list[SFXItem] = []
 
         for item in catalog.items:
             if category and item.category != category and item.subcategory != category:
@@ -241,22 +238,40 @@ class SFXManager:
 
         return results
 
-    def find_best_match(self, query: str, category: Optional[str] = None) -> Optional[SFXItem]:
+    def find_best_match(self, query: str, category: str | None = None) -> SFXItem | None:
         """Find the single most relevant SFX for a given query/keyword."""
         matches = self.search(query=query, category=category, limit=5)
         return matches[0] if matches else None
 
-    def get_audio_path(self, item_or_id: SFXItem | str) -> Optional[Path]:
+    def get_audio_path(self, item_or_id: SFXItem | str) -> Path | None:
         """Resolve absolute path to the audio file."""
         if isinstance(item_or_id, SFXItem):
             if item_or_id.absolute_path and Path(item_or_id.absolute_path).is_file():
                 return Path(item_or_id.absolute_path)
             cand = self.sfx_dir / item_or_id.relative_path
-            return cand if cand.is_file() else None
+            if cand.is_file():
+                return cand
+            gen_dir = self.sfx_dir / "generated_foley"
+            if gen_dir.is_dir():
+                for tag in item_or_id.tags:
+                    if len(tag) > 3:
+                        for f in sorted(gen_dir.glob("*.wav")):
+                            if tag in f.stem.lower():
+                                return f
+            return None
 
         catalog = self.load_catalog()
         for item in catalog.items:
             if item.id == item_or_id:
                 cand = self.sfx_dir / item.relative_path
-                return cand if cand.is_file() else None
+                if cand.is_file():
+                    return cand
+                gen_dir = self.sfx_dir / "generated_foley"
+                if gen_dir.is_dir():
+                    for tag in item.tags:
+                        if len(tag) > 3:
+                            for f in sorted(gen_dir.glob("*.wav")):
+                                if tag in f.stem.lower():
+                                    return f
+                return None
         return None
