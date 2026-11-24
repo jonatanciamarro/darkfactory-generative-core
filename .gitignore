@@ -79,3 +79,7 @@ data/broll/*.mov
 
 # Reference Books & PDFs
 livros/
+
+# Local Junctions and Model Caches
+/orchestration/
+/models/

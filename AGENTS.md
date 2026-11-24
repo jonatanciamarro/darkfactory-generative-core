@@ -1,4 +1,4 @@
-# DarkFactory — Autonomous Meta-Orchestrator Protocol (Orquestrador Mestre Corporativo)
+﻿# DarkFactory — Autonomous Meta-Orchestrator Protocol (Orquestrador Mestre Corporativo)
 
 @[Contexto do Projeto](PROJECT_CONTEXT.md)
 
@@ -84,9 +84,12 @@ O framework `corporate-engineer` está instalado no ambiente virtual (`venv\Scri
 | **Execução Cirúrgica de Testes** | `venv\Scripts\corporate-engineer test-surgical` | Execução dos testes afetados pelo git diff |
 | **PR 1-Clique Pré-Preenchido** | `venv\Scripts\corporate-engineer pr-link` | Gera URL para abertura automática de PR no GitHub |
 | **MCP Enterprise Hub** | `venv\Scripts\corporate-engineer mcp hub-list` | Catálogo e pools de servidores MCP corporativos |
+| **Gemini LoRA DarkFactory (ADR-020)** | `venv\Scripts\corporate-engineer lora [generate|validate|export]` | Geração sintética, validação AST e exportação Vertex AI SFT para motion & tool calling |
+| **Antecipação Proativa (IMP-0025)** | `venv\Scripts\corporate-engineer anticipate <prompt>` | Motor tático de antecipação 2 passos à frente e blast radius |
 
 ---
 
 ### Transparência Operacional
 Ao executar ações no projeto, identifique brevemente a rota corporativa:
 `🎯 Orquestrador: [Skill: <nome> | Agente: <nome> | Ferramenta: <nome>]`
+

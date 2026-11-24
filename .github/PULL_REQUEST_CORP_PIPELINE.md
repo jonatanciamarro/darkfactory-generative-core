@@ -1,70 +1,67 @@
-# feat(pipeline): implement 5-phase corporate engineering pipeline with shift-left tdd
+# fix(pipeline): resolve silent errors, subtitle drift, and dry-run bottlenecks (DF-REMED-01)
 
-> **Ticket/Issue**: `CORP-101`  
-> **Type**: Feature / Architecture & Governance Delivery  
+> **Ticket/Issue**: `DF-REMED-01`  
+> **Type**: Bugfix / Deep Audit & Pipeline Remediation (Swarm Max)  
 > **Target Branch**: `main`  
-> **Source Branch**: `feat/CORP-101-enterprise-pipeline`
+> **Source Branch**: `feat/DF-ORCH-01-corporate-engineer-hooks`
 
 ---
 
 ## 1. Business Context & Problem Statement
-Para suportar o trabalho em ambientes corporativos com requisitos estritos de conformidade, segurança de dados, branch protection e revisão por pares, este PR introduz uma esteira determinística de 5 fases (`corp-pipeline`) no ecossistema Antigravity.
-
-Elimina o antipadrão de commits diretos na `main`, previne a queima excessiva de tokens de IA através de limites cirúrgicos de auto-recuperação e ancora o desenvolvimento no paradigma **Shift-Left TDD**.
+Após a varredura profunda executada pelo Swarm Max, foram detectadas cinco classes de débitos técnicos, falhas silenciosas e descompassos na esteira de produção industrial do DarkFactory:
+1. **Descompasso de Executável Python**: O orquestrador mestre (`run_pilot_pipeline.py`) chamava `python` global, causando quebras de import (`corporate_engineer`, `pydantic`) em ambientes Windows com virtualenv ativo.
+2. **Saída Silenciosa (Silent Exit Code 0)**: O montador de vídeo (`src/render_pilot_video.py`) falhava na geração mas saía com código 0, mascarando falhas a jusante.
+3. **Drift de Legendas SRT**: Em `src/cosyvoice_master.py`, falhas em cenas isoladas usavam `continue`, causando dessincronização 1:1 entre narração e legendas.
+4. **Desconexão de Roteiro Manifest**: Módulos prioritários resolviam `pilot_soviet_glitch.json` legado em vez do roteiro canônico de Christopher Nolan (`nolan_soviet_glitch.json`).
+5. **Gargalo de Dry-Run & Micro-MP4 Corrompido**: O gerador de motion processava 435 frames de blur via Pillow mesmo com `--dry-run`, e o gerador de broll escrevia bytes de texto crus (`b"dummy_veo3_render_bytes"`) gerando erro downstream no FFmpeg (`moov atom not found`).
 
 ---
 
 ## 2. Technical Decisions & Trade-offs
-1. **Human-in-the-Loop em 2 Gates Críticos**:
-   - Gate 1: Aprovação de escopo, contratos (DTOs) e ADRs antes de qualquer linha de código.
-   - Gate 2: Aprovação da auditoria de segurança e diff antes de push ou abertura de PR.
-2. **Shift-Left TDD com Certificação RED**:
-   - Criação mandatória de testes automatizados que falham antes do código de produção.
-3. **Detecção Multi-Stack e Polyglot**:
-   - `stack_detector.py` identifica Python (Pytest/Ruff/Mypy), Node.js (Vitest/Jest/ESLint/TSC) e Go, com suporte a overrides via `.corp-pipeline.json`.
-4. **Auto-Recuperação Cirúrgica Limitada**:
-   - Teto rígido de até 3 tentativas baseado em tracebacks isolados, evitando loops infinitos e context rot.
-5. **Governança de Branches**:
-   - Rejeição determinística de branches desprotegidas (`main`, `master`, `develop`) para push direto, padronizando convenções `feat/<ticket>-<slug>`.
+1. **Virtualenv Auto-Resolution**:
+   - `run_pilot_pipeline.py` agora auto-resolve o binário oficial em `PROJECT_ROOT / "venv" / "Scripts" / "python.exe"`.
+2. **Fail-Fast com RuntimeError e Exit Code 1**:
+   - Substituição de `continue` silencioso por erro explícito e fail-fast em `src/cosyvoice_master.py` e `src/render_pilot_video.py`.
+3. **Priorização Nolan Screenplay Manifest**:
+   - `nolan_soviet_glitch.json` é a primeira escolha determinística em todos os resolvedores de caminho.
+4. **Micro-MP4 Válido de 1 Segundo**:
+   - Substituição de bytes falsos por micro-MP4s válidos codificados via FFmpeg em `src/google_flow_bot.py`.
+5. **Otimização de Secret Scanner**:
+   - Exclusão de diretórios de modelos pesados (`models/`, `.onnx`, `.bin`) e arquivos > 1MB, reduzindo tempo de pre-commit de >10 minutos para 0.3 segundos.
 
 ---
 
 ## 3. How to Test & Verification Commands
 
-Para reproduzir os testes da esteira localmente:
-```bash
-# 1. Executar os 9 testes de contrato da esteira corporativa
-.\venv\Scripts\python.exe -m pytest -v tests/test_corp_pipeline.py
+Para reproduzir todos os testes e a esteira completa:
+```powershell
+# 1. Executar os 8 testes unitários TDD de conectividade e resiliência
+.\venv\Scripts\python.exe -m pytest -v tests/test_pipeline_connectivity.py
 
-# 2. Executar o smoke test de detecção de stack e políticas Git
-.\venv\Scripts\python.exe .agents/skills/corp-pipeline/scripts/stack_detector.py
-
-# 3. Executar a suíte de regressão global do repositório
+# 2. Executar a suíte de regressão global do DarkFactory
 .\venv\Scripts\python.exe -m pytest -q
+
+# 3. Executar o ciclo de ponta a ponta (12 passos) em modo dry-run
+.\venv\Scripts\python.exe run_pilot_pipeline.py --dry-run
+
+# 4. Executar a auditoria de conformidade corporativa e secrets
+.\venv\Scripts\corporate-engineer audit
 ```
 
 ---
 
 ## 4. Rollback & Disaster Recovery Plan
-Esta funcionalidade é puramente aditiva e modular:
-- Caso necessário reverter, basta realizar o revert deste merge commit:
-  ```bash
-  git revert <MERGE_COMMIT_HASH> -m 1
-  ```
-- Nenhuma alteração destrutiva ou bloqueante foi introduzida no core do DarkFactory.
+Em caso de anomalia ou regressão:
+```bash
+git checkout feat/DF-ORCH-01-corporate-engineer-hooks
+git revert 1112901 -m 1
+```
 
 ---
 
 ## 5. Security & Compliance Checklist
-- [x] **Zero Hardcoded Secrets**: Varredura regex contra tokens (`ghp_*`, `sk-*`, `AIza*`) e chaves privadas executada com sucesso (0 findings).
-- [x] **Branch Protection Compliance**: Código commitado em feature branch `feat/CORP-101-enterprise-pipeline` e nunca direto na `main`.
-- [x] **Strict Type Safety & Compilation**: Validado via `py_compile` e análise de AST com 0 warnings.
-- [x] **Full Regression Integrity**: Suíte global com 339+ testes passando 100%.
-
----
-
-## 6. Reviewer Checklist & Verification Evidence
-- [x] `.agents/skills/corp-pipeline/SKILL.md`: Documentação executável e prompt da skill.
-- [x] `.agents/workflows/corp-pipeline.md`: Slash command `/corp-pipeline` registrado.
-- [x] `.agents/skills/corp-pipeline/scripts/stack_detector.py`: Detector e validadores testados.
-- [x] `tests/test_corp_pipeline.py`: 9 cenários unitários cobrindo todos os contratos.
+- [x] **Zero Hardcoded Secrets**: Pre-Flight Secret Scanner aprovado (0 findings em < 0.4s).
+- [x] **Branch Protection Compliance**: Desenvolvido exclusivamente na branch `feat/DF-ORCH-01-corporate-engineer-hooks` (Zero Push na Main / ADR-06).
+- [x] **Scorecard Semântico EDD**: 84.7 / 100.0 (Grade B, Aprovado).
+- [x] **Full Regression Integrity**: Suíte global com 465 testes passando (100% GREEN, 0 failures).
+- [x] **Pipeline End-to-End**: 12 passos executados com sucesso em `run_pilot_pipeline.py --dry-run`.

@@ -18,9 +18,9 @@ import json
 import logging
 import os
 import uuid
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 logger = logging.getLogger("darkfactory.video.otio_exporter")
 
@@ -61,14 +61,14 @@ class UniversalTimelineExporter:
 
     @staticmethod
     def build_beat_markers(
-        beat_timestamps: List[float],
+        beat_timestamps: list[float],
         label_prefix: str = "BEAT",
         color: str = "CYAN",
         max_markers: int = 120,
-    ) -> List[TimelineMarker]:
+    ) -> list[TimelineMarker]:
         """Convert extracted audio beat timestamps into OTIO timeline markers."""
-        markers: List[TimelineMarker] = []
-        for idx, ts in enumerate(sorted(set(round(float(t), 3) for t in beat_timestamps if t >= 0.0))[:max_markers], start=1):
+        markers: list[TimelineMarker] = []
+        for idx, ts in enumerate(sorted({round(float(t), 3) for t in beat_timestamps if t >= 0.0})[:max_markers], start=1):
             markers.append(
                 TimelineMarker(
                     name=f"{label_prefix}_{idx:03d}",
@@ -81,15 +81,15 @@ class UniversalTimelineExporter:
 
     @staticmethod
     def _align_clips_to_beats(
-        clips: List[TimelineClipRef],
-        beat_timestamps: List[float],
+        clips: list[TimelineClipRef],
+        beat_timestamps: list[float],
         tolerance_sec: float = 0.18,
-    ) -> List[TimelineClipRef]:
+    ) -> list[TimelineClipRef]:
         """Nudge overlay clip offsets gently onto the nearest musical transient."""
         if not clips or not beat_timestamps:
             return clips
         sorted_beats = sorted(float(b) for b in beat_timestamps)
-        aligned: List[TimelineClipRef] = []
+        aligned: list[TimelineClipRef] = []
         for clip in clips:
             nearest = min(sorted_beats, key=lambda b: abs(b - clip.start_offset_sec))
             new_offset = nearest if abs(nearest - clip.start_offset_sec) <= tolerance_sec else clip.start_offset_sec
@@ -107,11 +107,11 @@ class UniversalTimelineExporter:
 
     @staticmethod
     def apply_jl_cut_offsets(
-        video_clips: List[TimelineClipRef],
-        audio_clips: List[TimelineClipRef],
-    ) -> tuple[List[TimelineClipRef], List[TimelineClipRef]]:
+        video_clips: list[TimelineClipRef],
+        audio_clips: list[TimelineClipRef],
+    ) -> tuple[list[TimelineClipRef], list[TimelineClipRef]]:
         """Compute J-cut (audio lead) and L-cut (audio tail) split edits across V1 and A1."""
-        adj_video: List[TimelineClipRef] = [
+        adj_video: list[TimelineClipRef] = [
             TimelineClipRef(
                 name=v.name,
                 media_path=v.media_path,
@@ -124,7 +124,7 @@ class UniversalTimelineExporter:
             )
             for v in video_clips
         ]
-        adj_audio: List[TimelineClipRef] = []
+        adj_audio: list[TimelineClipRef] = []
         for idx, a_clip in enumerate(audio_clips):
             v_match = video_clips[idx] if idx < len(video_clips) else None
             lead = max(0.0, float(v_match.audio_lead_sec if v_match else 0.0), float(a_clip.audio_lead_sec))
@@ -150,20 +150,20 @@ class UniversalTimelineExporter:
     def build_timeline_json(
         self,
         timeline_name: str,
-        video_clips: List[TimelineClipRef],
-        audio_narration_clips: Optional[List[TimelineClipRef]] = None,
-        audio_music_clips: Optional[List[TimelineClipRef]] = None,
-        audio_sfx_clips: Optional[List[TimelineClipRef]] = None,
-        markers: Optional[List[TimelineMarker]] = None,
-        overlay_clips: Optional[List[TimelineClipRef]] = None,
-        beat_timestamps: Optional[List[float]] = None,
+        video_clips: list[TimelineClipRef],
+        audio_narration_clips: list[TimelineClipRef] | None = None,
+        audio_music_clips: list[TimelineClipRef] | None = None,
+        audio_sfx_clips: list[TimelineClipRef] | None = None,
+        markers: list[TimelineMarker] | None = None,
+        overlay_clips: list[TimelineClipRef] | None = None,
+        beat_timestamps: list[float] | None = None,
         align_overlays_to_beats: bool = False,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Monta o dicionário estruturado estritamente compatível com a especificação OTIO 1.0.
         Garante funcionamento mesmo se a biblioteca C++ não estiver presente.
         """
-        tracks_data: List[Dict[str, Any]] = []
+        tracks_data: list[dict[str, Any]] = []
         resolved_overlays = (
             self._align_clips_to_beats(overlay_clips, beat_timestamps or [])
             if (overlay_clips and align_overlays_to_beats and beat_timestamps)
@@ -230,7 +230,7 @@ class UniversalTimelineExporter:
         # 5. Marcadores Globais de Linha do Tempo (Capítulos YouTube / Beats)
         otio_markers = []
         for m in merged_markers:
-            frame_pos = int(round(m.timecode_sec * self.fps))
+            frame_pos = round(m.timecode_sec * self.fps)
             otio_markers.append({
                 "OTIO_SCHEMA": "Marker.2",
                 "name": m.name,
@@ -266,10 +266,10 @@ class UniversalTimelineExporter:
         }
         return otio_doc
 
-    def _create_otio_clip_dict(self, clip: TimelineClipRef) -> Dict[str, Any]:
+    def _create_otio_clip_dict(self, clip: TimelineClipRef) -> dict[str, Any]:
         """Cria a representação de um clipe no schema OTIO."""
-        duration_frames = int(round(clip.duration_sec * self.fps))
-        start_frame = int(round(clip.start_offset_sec * self.fps))
+        duration_frames = round(clip.duration_sec * self.fps)
+        start_frame = round(clip.start_offset_sec * self.fps)
 
         media_url = Path(clip.media_path).as_uri() if Path(clip.media_path).is_absolute() else f"file:///{clip.media_path}"
 
@@ -296,13 +296,13 @@ class UniversalTimelineExporter:
         self,
         name: str,
         kind: Any,
-        clips: List[TimelineClipRef],
+        clips: list[TimelineClipRef],
     ) -> Any:
         """Constroi uma Track nativa opentimelineio preservando caminhos relativos."""
         track = otio.schema.Track(name=name, kind=kind)
         for c in clips:
-            clip_dur = otio.opentime.RationalTime(int(round(c.duration_sec * self.fps)), self.fps)
-            start_rt = otio.opentime.RationalTime(int(round(c.start_offset_sec * self.fps)), self.fps)
+            clip_dur = otio.opentime.RationalTime(round(c.duration_sec * self.fps), self.fps)
+            start_rt = otio.opentime.RationalTime(round(c.start_offset_sec * self.fps), self.fps)
             target_url = Path(c.media_path).resolve().as_uri()
             track.append(
                 otio.schema.Clip(
@@ -317,13 +317,13 @@ class UniversalTimelineExporter:
         self,
         output_path: str | Path,
         timeline_name: str,
-        video_clips: List[TimelineClipRef],
-        audio_narration_clips: Optional[List[TimelineClipRef]] = None,
-        audio_music_clips: Optional[List[TimelineClipRef]] = None,
-        audio_sfx_clips: Optional[List[TimelineClipRef]] = None,
-        markers: Optional[List[TimelineMarker]] = None,
-        overlay_clips: Optional[List[TimelineClipRef]] = None,
-        beat_timestamps: Optional[List[float]] = None,
+        video_clips: list[TimelineClipRef],
+        audio_narration_clips: list[TimelineClipRef] | None = None,
+        audio_music_clips: list[TimelineClipRef] | None = None,
+        audio_sfx_clips: list[TimelineClipRef] | None = None,
+        markers: list[TimelineMarker] | None = None,
+        overlay_clips: list[TimelineClipRef] | None = None,
+        beat_timestamps: list[float] | None = None,
         align_overlays_to_beats: bool = False,
     ) -> Path:
         """
@@ -353,7 +353,7 @@ class UniversalTimelineExporter:
                     )
                 if audio_narration_clips:
                     timeline.tracks.append(
-                        self._build_otio_lib_track("A1_Voiceover", otio.schema.TrackKind.Audio, audio_narration_clips)
+                        self._build_otio_lib_track("A1_Voiceover_EBUR128", otio.schema.TrackKind.Audio, audio_narration_clips)
                     )
                 if audio_music_clips:
                     timeline.tracks.append(
@@ -366,7 +366,7 @@ class UniversalTimelineExporter:
 
                 # Markers
                 for m in merged_markers:
-                    m_time = otio.opentime.RationalTime(int(round(m.timecode_sec * self.fps)), self.fps)
+                    m_time = otio.opentime.RationalTime(round(m.timecode_sec * self.fps), self.fps)
                     marker_obj = otio.schema.Marker(
                         name=m.name,
                         color=getattr(otio.schema.MarkerColor, m.color.upper(), otio.schema.MarkerColor.RED),
@@ -378,7 +378,7 @@ class UniversalTimelineExporter:
                 otio.adapters.write_to_file(timeline, str(out_file))
                 logger.info(f"Timeline OTIO exportada com sucesso via opentimelineio: {out_file.name}")
                 return out_file
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001
                 logger.warning(f"Export via lib otio falhou ({e}), utilizando gerador de schema padrão.")
 
         # Fallback JSON padrão OTIO Schema 1.0 (compatibilidade total e universal)

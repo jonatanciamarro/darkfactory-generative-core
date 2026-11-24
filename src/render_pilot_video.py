@@ -15,13 +15,12 @@ Renders and stitches the complete pilot documentary video:
 """
 import json
 import logging
-import os
 import shutil
 import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 # Force UTF-8 on Windows
 if hasattr(sys.stdout, "reconfigure"):
@@ -71,7 +70,9 @@ def ensure_cinematic_lut() -> Path:
     lut_path = LUTS_DIR / "cold_war_documentary.cube"
     if not lut_path.exists():
         try:
-            from scripts.tools.generate_cinematic_lut import create_historical_documentary_lut
+            from scripts.tools.generate_cinematic_lut import (
+                create_historical_documentary_lut,
+            )
             create_historical_documentary_lut(lut_path)
             logger.info(f"Generated missing 3D LUT at {lut_path}")
         except Exception as e:
@@ -98,7 +99,7 @@ def create_procedural_broll_image(
     image_path: Path,
     scene_id: int,
     scene_title: str,
-    scene_info: Optional[Dict[str, Any]] = None,
+    scene_info: dict[str, Any] | None = None,
 ) -> None:
     """Generates an atmospheric dark Cold War documentary plate with tactical grid and telemetry."""
     from PIL import Image, ImageDraw
@@ -158,7 +159,7 @@ def create_procedural_broll_image(
     logger.info(f"Generated procedural cinematic plate: {image_path.name}")
 
 
-def get_shot_candidates(scene_id: int) -> tuple[List[Path], List[Path]]:
+def get_shot_candidates(scene_id: int) -> tuple[list[Path], list[Path]]:
     """Return prioritized lists of candidate video files for Shot A (drama) and Shot B (macro)."""
     shot_a_candidates = [
         BROLL_DIR / f"cena {scene_id}.mp4",
@@ -191,7 +192,7 @@ def render_scene_video(
     is_first: bool = False,
     is_last: bool = False,
     transition_sec: float = 0.15,
-    scene_info: Optional[Dict[str, Any]] = None,
+    scene_info: dict[str, Any] | None = None,
     allow_procedural_fallback: bool = False,
 ) -> bool:
     """Renders a scene clip with adaptive speed-matching, overlays, and micro-transitions.
@@ -319,7 +320,10 @@ def render_scene_video(
     # Apply Tactical Overlay (HUD, Lower-Third, or DECLASSIFIED stamp)
     if scene_info and scene_info.get("overlay_recipe"):
         try:
-            from src.video.tactical_graphics import TacticalGraphicsEngine, LowerThirdData
+            from src.video.tactical_graphics import (
+                LowerThirdData,
+                TacticalGraphicsEngine,
+            )
             tg = TacticalGraphicsEngine(default_width=1920, default_height=1080)
             overlay_cfg = scene_info["overlay_recipe"]
             template = overlay_cfg.get("template", "tactical_hud")
@@ -373,15 +377,15 @@ def render_scene_video(
 
 def render_single_clip(
     ffmpeg_bin: str,
-    clip_candidates: List[Path],
-    fallback_img_candidates: List[Path],
+    clip_candidates: list[Path],
+    fallback_img_candidates: list[Path],
     scene_id: int,
     duration: float,
     output_mp4: Path,
     is_first: bool = False,
     is_last: bool = False,
     transition_sec: float = 0.15,
-    scene_info: Optional[Dict[str, Any]] = None,
+    scene_info: dict[str, Any] | None = None,
     allow_procedural_fallback: bool = False,
 ) -> bool:
     """Renders a single video clip or image with adaptive speed-matching and micro-transitions."""
@@ -481,9 +485,9 @@ def render_single_clip(
 
 def assemble_final_video(
     ffmpeg_bin: str,
-    scene_videos: List[Path],
+    scene_videos: list[Path],
     audio_file: Path,
-    srt_file: Optional[Path],
+    srt_file: Path | None,
     output_video: Path,
     apply_lut: bool = True,
     apply_letterbox: bool = True,
@@ -493,8 +497,7 @@ def assemble_final_video(
     """Concatenates scene clips, applies 3D LUT grade & 2.39:1 letterbox, muxes audio and optionally burns subtitles."""
     concat_list = OUTPUT_DIR / "video_concat_list.txt"
     with open(concat_list, "w", encoding="utf-8") as f:
-        for v in scene_videos:
-            f.write(f"file '{v.resolve().as_posix()}'\n")
+        f.writelines(f"file '{v.resolve().as_posix()}'\n" for v in scene_videos)
 
     temp_stitched = OUTPUT_DIR / "temp_stitched.mp4"
     cmd_concat = [
@@ -516,7 +519,7 @@ def assemble_final_video(
     # 1. Historical Documentary Color Grade (CinematicColorGrader with Kodak 2383 / Film Grain)
     if apply_lut:
         try:
-            from src.video.cinematic_color import CinematicColorGrader, FilmLookProfile
+            from src.video.cinematic_color import CinematicColorGrader
             grader = CinematicColorGrader(ffmpeg_bin=ffmpeg_bin)
             lut_path = ensure_cinematic_lut()
             lut_arg = lut_path if lut_path.is_file() else None
@@ -615,9 +618,9 @@ def main() -> None:
     # Ensure LUT is ready
     ensure_cinematic_lut()
 
-    script_path = SCRIPTS_DIR / "pilot_soviet_glitch.json"
+    script_path = SCRIPTS_DIR / "nolan_soviet_glitch.json"
     if not script_path.exists():
-        script_path = SCRIPTS_DIR / "nolan_soviet_glitch.json"
+        script_path = SCRIPTS_DIR / "pilot_soviet_glitch.json"
     if not script_path.exists():
         candidates = list(SCRIPTS_DIR.glob("*soviet_glitch.json"))
         if candidates:
@@ -709,7 +712,11 @@ def main() -> None:
 
     # Universal OpenTimelineIO (.otio) Multi-Track Export
     try:
-        from src.video.otio_exporter import UniversalTimelineExporter, TimelineClipRef, TimelineMarker
+        from src.video.otio_exporter import (
+            TimelineClipRef,
+            TimelineMarker,
+            UniversalTimelineExporter,
+        )
 
         timeline_exporter = UniversalTimelineExporter(fps=30)
         v1_clips = []
@@ -808,20 +815,23 @@ def main() -> None:
             concat_list.unlink()
 
         size_mb = final_output.stat().st_size / (1024 * 1024)
-        print(f"\n=======================================================")
-        print(f"🎉 PILOT MASTER VIDEO COMPLETE!")
+        print("\n=======================================================")
+        print("🎉 PILOT MASTER VIDEO COMPLETE!")
         print(f"   Output File: {final_output}")
         print(f"   Size: {size_mb:.2f} MB")
-        print(f"   Resolution: 1920x1080 (2.39:1 Anamorphic Scope Letterbox)")
-        print(f"   Color Grade: Cold War Kodak 2383 Bleach-Bypass 3D LUT")
-        print(f"   Transitions: Micro Dip-to-Black (0.15s) Between Scenes")
-        print(f"   Sound Design: Procedural Sub-Bass Braam Impact + Heartbeat + Sirens")
+        print("   Resolution: 1920x1080 (2.39:1 Anamorphic Scope Letterbox)")
+        print("   Color Grade: Cold War Kodak 2383 Bleach-Bypass 3D LUT")
+        print("   Transitions: Micro Dip-to-Black (0.15s) Between Scenes")
+        print("   Sound Design: Procedural Sub-Bass Braam Impact + Heartbeat + Sirens")
         if args.burn_subtitles:
-            print(f"   Master Type: Burned-in Broadcast Typography")
+            print("   Master Type: Burned-in Broadcast Typography")
         else:
-            print(f"   Master Type: Clean Master 1080p (Native YouTube .SRT Subtitles via Player CC)")
+            print("   Master Type: Clean Master 1080p (Native YouTube .SRT Subtitles via Player CC)")
             print(f"   Caption File: {OUTPUT_DIR / 'the_1983_soviet_glitch_final_1080p.srt'}")
-        print(f"=======================================================\n")
+        print("=======================================================\n")
+    else:
+        logger.error(f"❌ Final video assembly failed! Output file {final_output} was not created.")
+        sys.exit(1)
 
 
 if __name__ == "__main__":

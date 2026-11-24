@@ -14,12 +14,11 @@ from __future__ import annotations
 import argparse
 import json
 import logging
-import os
 import shutil
 import sys
 import time
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 # Force UTF-8 encoding on Windows consoles (ADR-01)
 if hasattr(sys.stdout, "reconfigure"):
@@ -44,7 +43,7 @@ MAPS_DIR = MOTION_DIR / "maps"
 IMAGES_4K_DIR = DATA_DIR / "final" / "images_4k"
 
 
-def resolve_script_path(specified_path: Optional[str] = None) -> Path:
+def resolve_script_path(specified_path: str | None = None) -> Path:
     """Find the best screenplay manifest to process."""
     if specified_path:
         p = Path(specified_path).resolve()
@@ -52,9 +51,9 @@ def resolve_script_path(specified_path: Optional[str] = None) -> Path:
             return p
 
     candidates = [
-        SCRIPTS_DIR / "pilot_soviet_glitch.json",
         SCRIPTS_DIR / "nolan_soviet_glitch.json",
         SCRIPTS_DIR / "nolan_soviet_glitch_teaser.json",
+        SCRIPTS_DIR / "pilot_soviet_glitch.json",
     ]
     for c in candidates:
         if c.is_file():
@@ -72,8 +71,8 @@ class MotionAssetPipeline:
 
     def __init__(
         self,
-        output_dir: Optional[Path | str] = None,
-        broll_dir: Optional[Path | str] = None,
+        output_dir: Path | str | None = None,
+        broll_dir: Path | str | None = None,
         dry_run: bool = False,
         force: bool = False,
         enable_cinetic: bool = True,
@@ -94,9 +93,9 @@ class MotionAssetPipeline:
 
     def generate_tactical_map_for_scene(
         self,
-        scene: Dict[str, Any],
+        scene: dict[str, Any],
         duration_sec: float = 4.5,
-    ) -> Optional[Path]:
+    ) -> Path | None:
         """Renders an animated tactical vector map for a scene."""
         scene_id = scene.get("scene_id", 1)
         map_out = MAPS_DIR / f"tactical_map_scene_{scene_id}.mp4"
@@ -147,9 +146,9 @@ class MotionAssetPipeline:
 
     def generate_hyperframes_clip_for_scene(
         self,
-        scene: Dict[str, Any],
+        scene: dict[str, Any],
         duration_sec: float = 5.0,
-    ) -> Optional[Path]:
+    ) -> Path | None:
         """Renders an animated isometric CAD blueprint or declassified dossier."""
         scene_id = scene.get("scene_id", 1)
         style = scene.get("visual_style_type", "ANATOMY_ISOMETRIC")
@@ -195,8 +194,8 @@ class MotionAssetPipeline:
 
     def generate_4k_archival_photo_for_scene(
         self,
-        scene: Dict[str, Any],
-    ) -> Optional[Path]:
+        scene: dict[str, Any],
+    ) -> Path | None:
         """Produces a 4K UHD upscaled historical photograph for Ken Burns camera moves."""
         scene_id = scene.get("scene_id", 1)
         target_4k = IMAGES_4K_DIR / f"scene_{scene_id}_archival_4k.jpg"
@@ -256,8 +255,8 @@ class MotionAssetPipeline:
 
     def generate_tactical_overlay_stamp_for_scene(
         self,
-        scene: Dict[str, Any],
-    ) -> Optional[Path]:
+        scene: dict[str, Any],
+    ) -> Path | None:
         """Pre-renders PNG transparent tactical graphic overlay for a scene."""
         scene_id = scene.get("scene_id", 1)
         recipe = scene.get("overlay_recipe")
@@ -271,7 +270,10 @@ class MotionAssetPipeline:
             return out_png
 
         try:
-            from src.video.tactical_graphics import TacticalGraphicsEngine, LowerThirdData
+            from src.video.tactical_graphics import (
+                LowerThirdData,
+                TacticalGraphicsEngine,
+            )
 
             tg = TacticalGraphicsEngine(default_width=1920, default_height=1080)
             template = recipe.get("template", "tactical_hud")
@@ -311,12 +313,12 @@ class MotionAssetPipeline:
 
         return None
 
-    def process_all_scenes(self, script_path: Path, limit: int = 0) -> Dict[str, Any]:
+    def process_all_scenes(self, script_path: Path, limit: int = 0) -> dict[str, Any]:
         """Iterates through all scenes in screenplay manifest and synthesizes required assets."""
         with open(script_path, "r", encoding="utf-8") as f:
             script_data = json.load(f)
 
-        scenes: List[Dict[str, Any]] = script_data.get("scenes", [])
+        scenes: list[dict[str, Any]] = script_data.get("scenes", [])
         if limit > 0:
             scenes = scenes[:limit]
 
@@ -339,6 +341,22 @@ class MotionAssetPipeline:
             s_id = s.get("scene_id", 0)
             style = s.get("visual_style_type", "HERO_AI_DUAL_SHOT")
             dur = float(s.get("estimated_duration_sec", 6.0))
+
+            if self.dry_run:
+                logger.info(f"[DRY-RUN] Simulating motion assets for Scene {s_id} ({style})")
+                if style == "TACTICAL_MAP_MOTION":
+                    results["maps_rendered"] += 1
+                elif style in ("ANATOMY_ISOMETRIC", "DECLASSIFIED_DOSSIER") or "blueprint" in style.lower():
+                    results["hyperframes_rendered"] += 1
+                elif style == "ARCHIVAL_KEN_BURNS" or "archival" in style.lower():
+                    results["photos_4k_upscaled"] += 1
+                if s.get("overlay_recipe"):
+                    results["overlays_rendered"] += 1
+                if self.enable_cinetic:
+                    results["cinetic_rendered"] += 1
+                if self.enable_argon:
+                    results["argon_rendered"] += 1
+                continue
 
             # 1. Maps
             if style == "TACTICAL_MAP_MOTION":
@@ -380,10 +398,10 @@ class MotionAssetPipeline:
                 if not target_broll.exists() or self.force:
                     try:
                         from src.video.netflix_investigative_motion import (
+                            DossierConfig,
+                            MotionArchetype,
                             NetflixInvestigativeMotionEngine,
                             NetflixInvestigativeSceneDTO,
-                            MotionArchetype,
-                            DossierConfig,
                             PinnedEvidenceItem,
                             RedStringConnection,
                         )
@@ -452,9 +470,9 @@ class MotionAssetPipeline:
                 if not target_argon.exists() or self.force:
                     try:
                         from src.video.argon_documentary_motion import (
-                            ArgonMotionEngine,
                             ArgonDocumentaryConfig,
                             ArgonMotionArchetype,
+                            ArgonMotionEngine,
                         )
                         argon_engine = ArgonMotionEngine(
                             output_dir=self.output_dir,

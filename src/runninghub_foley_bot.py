@@ -18,17 +18,12 @@ Automates Foley and sound design generation for DarkFactory historical documenta
 from __future__ import annotations
 
 import argparse
-import io
 import json
 import logging
-import math
 import os
-import struct
 import sys
 import time
-import wave
 from pathlib import Path
-from typing import Optional
 
 # ADR-01: Windows UTF-8 stdout/stderr
 if hasattr(sys.stdout, "reconfigure"):
@@ -58,87 +53,41 @@ def generate_free_tactical_foley(
     sample_rate: int = 44100
 ) -> Path:
     """
-    Synthesizes authentic Cold War military bunker sound design:
-    - 50Hz USSR power grid / CRT flyback monitor electromagnetic hum with odd harmonics.
-    - Stochastic Poisson Geiger counter clicks (simulating radiation sensor anomaly).
-    - Heavy Bakelite telephone pick-up and cradle contact clack.
-    - Tactile industrial spring-loaded toggle switch clank.
-    - Pulsating emergency alarm siren wail (low volume, distant chamber reverb).
+    Synthesizes authentic Cold War military bunker sound design via FoleyLibrary and HybridFoleyEngine.
+    Eliminates crude mathematical sine synthesis (ADR-09 Zero-Sines Guarantee), delegating
+    to curated CC0 SFX assets with IR impulse response convolution:
+    - Radar / teletype / Geiger sensor telemetry.
+    - Tactile industrial switches, declassified stamp slams, and whoosh transitions.
+    - Sub-bass tension swells and bunker emergency acoustics.
     """
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    num_samples = int(sample_rate * duration)
+    from src.video.foley_library import FoleyCue, FoleyLibrary
 
-    import numpy as np
+    library = FoleyLibrary()
+    # High-tension tactical bunker cues across the timeline
+    cues = [
+        FoleyCue(sfx_name="sub_riser", timestamp_sec=0.2, gain_db=-5.0, pan=0.0),
+        FoleyCue(sfx_name="stamp_slam", timestamp_sec=1.5, gain_db=-4.0, pan=-0.1),
+        FoleyCue(sfx_name="teletype_burst", timestamp_sec=5.0, gain_db=-8.0, pan=0.2),
+        FoleyCue(sfx_name="radar_ping", timestamp_sec=12.0, gain_db=-6.0, pan=-0.2),
+        FoleyCue(sfx_name="teletype_burst", timestamp_sec=14.0, gain_db=-8.0, pan=0.1),
+        FoleyCue(sfx_name="stamp_slam", timestamp_sec=20.0, gain_db=-4.0, pan=0.0),
+        FoleyCue(sfx_name="whoosh_subtle", timestamp_sec=28.0, gain_db=-6.0, pan=0.15),
+        FoleyCue(sfx_name="radar_ping", timestamp_sec=35.0, gain_db=-6.0, pan=-0.15),
+        FoleyCue(sfx_name="sub_riser", timestamp_sec=max(0.0, duration - 5.0), gain_db=-5.0, pan=0.0),
+    ]
+    # Filter cues that fit within requested duration
+    valid_cues = [c for c in cues if c.timestamp_sec < duration]
+    res = library.build_foley_stem(
+        cues=valid_cues,
+        total_duration_sec=duration,
+        output_wav_path=output_path,
+        sample_rate=sample_rate,
+    )
+    if not res.success or not output_path.is_file():
+        raise RuntimeError(f"FoleyLibrary failed to build tactical foley stem: {res.error}")
 
-    t = np.linspace(0, duration, num_samples, endpoint=False)
-
-    # 1. 50Hz CRT / Power Grid Electromagnetic Hum (50Hz, 100Hz, 150Hz)
-    hum_50 = 0.08 * np.sin(2.0 * np.pi * 50.0 * t)
-    hum_100 = 0.04 * np.sin(2.0 * np.pi * 100.0 * t)
-    hum_150 = 0.02 * np.sin(2.0 * np.pi * 150.0 * t)
-    # Subtle CRT high-frequency flyback line hum (15.625 kHz)
-    crt_flyback = 0.015 * np.sin(2.0 * np.pi * 15625.0 * t)
-    hum = hum_50 + hum_100 + hum_150 + crt_flyback
-
-    # 2. Stochastic Poisson Geiger Counter Clicks (avg 18 clicks per second)
-    clicks = np.zeros(num_samples)
-    click_prob = 18.0 / sample_rate
-    click_indices = np.where(np.random.rand(num_samples) < click_prob)[0]
-    click_len = int(sample_rate * 0.0015)  # 1.5ms pulse
-    for idx in click_indices:
-        if idx + click_len < num_samples:
-            pulse = np.random.uniform(0.15, 0.45) * np.exp(-np.linspace(0, 12, click_len))
-            clicks[idx:idx + click_len] += pulse
-
-    # 3. Tactile Industrial Toggle Switch Throw at 1.5s, 14.0s, 28.0s
-    switch_track = np.zeros(num_samples)
-    switch_times = [1.5, 14.0, 28.0]
-    switch_dur = int(sample_rate * 0.08)
-    for st in switch_times:
-        s_idx = int(st * sample_rate)
-        if s_idx + switch_dur < num_samples:
-            s_t = np.linspace(0, 0.08, switch_dur)
-            click_thud = 0.6 * np.exp(-s_t * 60.0) * np.sin(2.0 * np.pi * 220.0 * s_t)
-            metallic_ping = 0.3 * np.exp(-s_t * 30.0) * np.sin(2.0 * np.pi * 1850.0 * s_t)
-            switch_track[s_idx:s_idx + switch_dur] += (click_thud + metallic_ping)
-
-    # 4. Distant Muffled Emergency Bunker Siren (wavering 320Hz to 480Hz)
-    siren_mod = 0.5 * (1.0 + np.sin(2.0 * np.pi * 0.25 * t))
-    siren_freq = 340.0 + 120.0 * siren_mod
-    siren_phase = 2.0 * np.pi * np.cumsum(siren_freq) / sample_rate
-    # Muffled low-pass filter simulation
-    siren = 0.09 * siren_mod * np.sin(siren_phase)
-
-    # 5. Room Tone & Air Handler White Noise (deep concrete chamber)
-    room_tone = 0.02 * np.random.normal(0, 1, num_samples)
-
-    # Composite mix
-    composite = hum + clicks + switch_track + siren + room_tone
-
-    # Normalize to -3 dBFS
-    max_val = np.max(np.abs(composite))
-    if max_val > 0.001:
-        composite = (composite / max_val) * 0.72
-
-    # Stereo widening
-    left_channel = composite
-    right_shift = int(sample_rate * 0.008)  # 8ms offset
-    right_channel = np.roll(composite, right_shift)
-    right_channel[:right_shift] = 0
-
-    left_16 = np.int16(left_channel * 32767)
-    right_16 = np.int16(right_channel * 32767)
-    stereo = np.empty((num_samples * 2,), dtype=np.int16)
-    stereo[0::2] = left_16
-    stereo[1::2] = right_16
-
-    with wave.open(str(output_path), "wb") as wf:
-        wf.setnchannels(2)
-        wf.setsampwidth(2)
-        wf.setframerate(sample_rate)
-        wf.writeframes(stereo.tobytes())
-
-    logger.info(f"Generated Free Tactical Foley: {output_path.name} ({duration:.1f}s, Geiger + CRT + Switches)")
+    logger.info(f"Generated High-Fidelity Tactical Foley via FoleyLibrary: {output_path.name} ({duration:.1f}s, {res.cues_applied} cues)")
     return output_path
 
 
@@ -159,14 +108,14 @@ def get_browser_launch_kwargs() -> dict:
 class RunningHubFoleyBot:
     """Automates RunningHub MMAudio Foley generation with stealth session and free fallback."""
 
-    def __init__(self, session_dir: Optional[Path] = None):
+    def __init__(self, session_dir: Path | None = None):
         self.session_dir = session_dir or SESSION_DIR
         self.session_dir.mkdir(parents=True, exist_ok=True)
 
     def generate_foley(
         self,
         output_path: Path,
-        prompt: Optional[str] = None,
+        prompt: str | None = None,
         duration: float = 45.0,
         mode: str = "auto",
         headed: bool = False
@@ -233,7 +182,7 @@ class RunningHubFoleyBot:
                 scenes = data.get("scenes", [])
                 if scenes:
                     return scenes[0].get("mmaudio_prompt", DEFAULT_FOLEY_PROMPT)
-            except Exception:
+            except Exception:  # noqa: BLE001, S110
                 pass
         return DEFAULT_FOLEY_PROMPT
 
@@ -307,7 +256,7 @@ class RunningHubFoleyBot:
                                 captured_audio["bytes"] = body
                                 captured_audio["url"] = res.url
                                 logger.info(f"🎧 [Rede] Foley capturado: {len(body)} bytes ({res.url[:70]})")
-                    except Exception:
+                    except Exception:  # noqa: BLE001, S110
                         pass
 
                 page.on("response", on_foley_response)
@@ -334,10 +283,12 @@ class RunningHubFoleyBot:
                                 output_path.write_bytes(captured_audio["bytes"])
                                 logger.info(f"✅ Foley saved from network stream: {output_path.name}")
                                 try:
-                                    from src.factory.runninghub_bot import cancel_runninghub_task
+                                    from src.factory.runninghub_bot import (
+                                        cancel_runninghub_task,
+                                    )
                                     logger.info("🛑 Cancelando workflow MMAudio no RunningHub para economizar créditos GPU...")
                                     cancel_runninghub_task(page)
-                                except Exception as exc:
+                                except Exception as exc:  # noqa: BLE001
                                     logger.debug(f"Aviso ao cancelar MMAudio: {exc}")
                                 context.close()
                                 return True
@@ -350,10 +301,12 @@ class RunningHubFoleyBot:
                                     urllib.request.urlretrieve(src, str(output_path))
                                     logger.info(f"✅ Foley salvo via URL: {output_path.name}")
                                     try:
-                                        from src.factory.runninghub_bot import cancel_runninghub_task
+                                        from src.factory.runninghub_bot import (
+                                            cancel_runninghub_task,
+                                        )
                                         logger.info("🛑 Cancelando workflow MMAudio no RunningHub para economizar créditos GPU...")
                                         cancel_runninghub_task(page)
-                                    except Exception as exc:
+                                    except Exception as exc:  # noqa: BLE001
                                         logger.debug(f"Aviso ao cancelar MMAudio: {exc}")
                                     context.close()
                                     return True
@@ -361,7 +314,7 @@ class RunningHubFoleyBot:
                 context.close()
                 return False
 
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             logger.warning(f"RunningHub MMAudio automation error: {e}. Falling back to free foley engine.")
             return False
 

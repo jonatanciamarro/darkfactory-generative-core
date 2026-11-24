@@ -1,47 +1,78 @@
 #!/usr/bin/env python3
-"""Hook for pre-invocation to generate and print pull request links for current branch."""
+"""
+pr_link_generator.py - Antigravity Lifecycle Hook for Automatic Pre-Filled GitHub PR Links.
+Executes on PreInvocation, PostToolUse or direct invocation, detecting active feature branches
+and injecting the 1-click GitHub PR URL with pre-filled title and body.
+Contract: Reads JSON on stdin, outputs valid protojson on stdout.
+"""
 
+import json
 import sys
 from pathlib import Path
 
 
 def get_workspace_root() -> Path:
-    current = Path(__file__).resolve()
+    """Resolve repository workspace root from cwd or script location."""
+    current = Path.cwd().resolve()
+    if current.name == ".agents":
+        return current.parent
     for parent in [current] + list(current.parents):
-        if (parent / ".git").exists() or (parent / "pyproject.toml").exists() or (parent / "state.md").exists():
+        if (parent / "state.md").exists() or (parent / ".git").exists():
             return parent
-    return Path.cwd()
+    return current
 
 
 def run_pr_link_hook() -> None:
+    # Read stdin safely if piped
+    try:
+        if not sys.stdin.isatty():
+            raw_input = sys.stdin.read()
+            if raw_input.strip():
+                _ = json.loads(raw_input)
+    except (json.JSONDecodeError, OSError):
+        pass
+
     root = get_workspace_root()
 
-    # Try importing from local hook dir or sys.path
-    hook_dir = str(Path(__file__).parent.resolve())
-    if hook_dir not in sys.path:
-        sys.path.insert(0, hook_dir)
-
+    # Ensure src is in python path
     src_dir = str(root / "src")
     if src_dir not in sys.path:
         sys.path.insert(0, src_dir)
 
     try:
-        try:
-            from corporate_engineer.git_utils import generate_pr_url, get_current_branch
-        except ImportError:
-            from git_utils import generate_pr_url, get_current_branch
+        from corporate_engineer.git_utils import generate_pr_url, get_current_branch
 
         branch = get_current_branch(root)
         # Only inject if on a feature or fix branch
         if branch.startswith(("feat/", "fix/", "chore/", "refactor/")):
-            pr_url = generate_pr_url(root)
-            if pr_url:
-                print(
-                    f"\n🔗 [CORP-PIPELINE PR]: Sincronize sua branch e crie o Pull Request em:\n   👉 {pr_url}\n"
-                )
-    except Exception:
-        # Hooks must never crash the main process
-        pass
+            info = generate_pr_url(repo_path=root, branch=branch, ensure_pushed=True)
+            push_status = "✅ Sincronizado no origin" if info.get("pushed") else "⚠️  Local apenas"
+            msg = (
+                "🔗 [HOOK / PRE-FILLED GITHUB PR LINK ACTIVE]\n"
+                f"• Branch: {info['branch']} ➔ {info['base']}\n"
+                f"• Ticket: {info['ticket_id']}\n"
+                f"• Título da PR: {info['title']}\n"
+                f"• Push Status: {push_status}\n"
+                f"• 1-Click URL: {info['url']}\n"
+                "• Invariante Mandatória Always-On: O push da branch para o remote origin (git push -u origin <branch>) "
+                "deve SEMPRE ocorrer antes de gerar ou fornecer a URL ao usuário, garantindo que o link do GitHub nunca abra em 404."
+            )
+            output = {
+                "injectSteps": [
+                    {
+                        "systemMessage": {
+                            "systemMessage": msg
+                        }
+                    }
+                ]
+            }
+        else:
+            output = {}
+    except Exception as e:  # noqa: BLE001
+        output = {"error": str(e)}
+
+    sys.stdout.write(json.dumps(output, ensure_ascii=False))
+    sys.stdout.flush()
 
 
 if __name__ == "__main__":

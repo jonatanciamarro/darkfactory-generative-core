@@ -1,17 +1,48 @@
-{
+﻿{
   "corp-pipeline-orchestrator": {
     "enabled": true,
     "SessionStart": [
       {
         "type": "command",
-        "command": "python .agents/orchestration/hooks/session_start.py",
+        "command": "python orchestration/hooks/session_start.py",
         "timeout": 15
       }
     ],
     "PreInvocation": [
       {
         "type": "command",
-        "command": "python .agents/orchestration/hooks/pr_link_generator.py",
+        "command": "python orchestration/hooks/proactive_advisor.py",
+        "timeout": 15
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "write_file|edit_file",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python orchestration/hooks/pre_tool_security_guard.py",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "write_file|edit_file",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python orchestration/hooks/post_tool_auto_healer.py",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "type": "command",
+        "command": "python orchestration/hooks/session_turnover_gate.py",
         "timeout": 15
       }
     ]
