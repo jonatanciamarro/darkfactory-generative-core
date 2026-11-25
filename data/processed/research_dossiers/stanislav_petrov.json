@@ -4,36 +4,36 @@
   "facts": [],
   "media_assets": [
     {
-      "title": "Interview with Lars-Göran Petrov (Entombed) – Dragon Breath Fanzine No. 3 – 1999",
-      "url": "https://archive.org/details/entombed_202601",
+      "title": "The Ten O'Clock News on KTVU Fox 2 : KTVU : April 27, 2016 10:00pm-11:01pm PDT",
+      "url": "https://archive.org/details/KTVU_20160428_050000_The_Ten_OClock_News_on_KTVU_Fox_2",
       "license_name": "publicdomain",
       "source": "internet_archive",
       "local_path": null
     },
     {
-      "title": "KTVU Mornings on 2 at 9am : KTVU : March 29, 2016 9:00am-10:01am PDT",
-      "url": "https://archive.org/details/KTVU_20160329_160000_KTVU_Mornings_on_2_at_9am",
+      "title": "NoticieroTelemundo 48 Primera Edicion : KSTS : November 16, 2015 6:00am-7:01am PST",
+      "url": "https://archive.org/details/KSTS_20151116_140000_NoticieroTelemundo_48_Primera_Edicion",
       "license_name": "publicdomain",
       "source": "internet_archive",
       "local_path": null
     },
     {
-      "title": "РИК \"Россия 24\" : RUSSIA24 : January 15, 2023 11:30am-12:01pm MSK",
-      "url": "https://archive.org/details/RUSSIA24_20230115_083000_RIK_Rossiya_24",
+      "title": "NoticieroTelemundo 48 Primera Edicion : KSTS : April 4, 2016 6:00am-7:01am PDT",
+      "url": "https://archive.org/details/KSTS_20160404_130000_NoticieroTelemundo_48_Primera_Edicion",
       "license_name": "publicdomain",
       "source": "internet_archive",
       "local_path": null
     },
     {
-      "title": "60 Minutes : WUSA : November 1, 2015 7:30pm-8:31pm EST",
-      "url": "https://archive.org/details/WUSA_20151102_003000_60_Minutes",
+      "title": "KRON 4 Evening News : KRON : May 10, 2016 5:00pm-7:01pm PDT",
+      "url": "https://archive.org/details/KRON_20160511_000000_KRON_4_Evening_News",
       "license_name": "publicdomain",
       "source": "internet_archive",
       "local_path": null
     },
     {
-      "title": "Вести. Дежурная часть : RUSSIA24 : November 15, 2026 6:22am-7:00am MSK",
-      "url": "https://archive.org/details/RUSSIA24_20261115_032200_Vesti._Dezhurnaya_chast",
+      "title": "ABC7 News on KOFY 7PM : KOFY : April 2, 2016 7:00pm-7:31pm PDT",
+      "url": "https://archive.org/details/KOFY_20160403_020000_ABC7_News_on_KOFY_7PM",
       "license_name": "publicdomain",
       "source": "internet_archive",
       "local_path": null
@@ -46,8 +46,8 @@
       "local_path": null
     },
     {
-      "title": "РИК \"Россия 24\" : RUSSIA24 : September 26, 2023 5:00am-5:31am MSK",
-      "url": "https://archive.org/details/RUSSIA24_20230926_020000_RIK_Rossiya_24",
+      "title": "Вести. Дежурная часть : RUSSIA24 : May 29, 2022 10:21am-11:02am MSK",
+      "url": "https://archive.org/details/RUSSIA24_20220529_072100_Vesti._Dezhurnaya_chast",
       "license_name": "publicdomain",
       "source": "internet_archive",
       "local_path": null
@@ -59,5 +59,5 @@
   ],
   "output_file": "E:/projcts/darkfactory/data/processed/research_dossiers/stanislav_petrov.json",
   "used_local_fallback": false,
-  "generated_at": "2026-11-17T03:03:33.251840+00:00"
+  "generated_at": "2026-11-25T20:32:55.240292+00:00"
 }
