@@ -41,6 +41,7 @@ Este catálogo preserva ideias e melhorias identificadas pelo **Corp-Pipeline Ma
 | `IMP-0013` | Contratos Fortemente Tipados Pydantic v2 nos Retornos de `ai_engine_suite.py` | `QUALITY` | Média (M) | `PROPOSED` | `2026-11-20` |
 | `IMP-0014` | Redução da Complexidade Ciclomática e Modularização de `StoryValidator` | `ARCHITECTURE` | Média (M) | `PROPOSED` | `2026-11-20` |
 | `IMP-0015` | Integração do DAG Orchestrator com Checkpoints de Recuperação no `run_pilot_pipeline.py` | `RELIABILITY` | Média (M) | `PROPOSED` | `2026-11-20` |
+| `IMP-0016` | Portabilidade, CI/CD & Hardening de Portfólio (`DF-GH-01`: Blocos A–D) | `ARCHITECTURE` | Média (M) | `SAVED_NOT_APPROVED` | `2026-11-26` |
 
 ---
 
@@ -154,4 +155,19 @@ Este catálogo preserva ideias e melhorias identificadas pelo **Corp-Pipeline Ma
 - **Solução Proposta**: Persistir checkpoints granulares de estado por nó do DAG com reexecução idempotente.
 - **Benefícios Esperados**: Zero retrabalho em etapas custosas (render de vídeo e warp vocal).
 - **Componentes Afetados**: `run_pilot_pipeline.py`, `src/video/cinematic_pipeline.py`.
+- **Complexidade**: Média (M).
+
+---
+
+### 🔹 IMP-0016: Portabilidade, CI/CD & Hardening de Portfólio (`DF-GH-01`: Blocos A–D)
+- **Categoria**: `ARCHITECTURE` | `QUALITY`
+- **Status**: `SAVED_NOT_APPROVED`
+- **Data de Descoberta**: 2026-11-26
+- **Problema / Limitação Atual**: `requirements.txt` referencia path local externo (`-e ../../Nova pasta/corporate-engineer`), não há workflow CI em `.github/workflows/`, `README.md` está dessincronizado (77 vs 465 testes), `tests/test_pipeline_connectivity.py` usa asserções frágeis com `inspect.getsource`, `run_pilot_pipeline.py` assume Windows para o `venv` e `src/dashboard/app.py` usa `allow_origins=["*"]` com `allow_credentials=True`.
+- **Solução Proposta**:
+  - **Bloco A**: Remover `-e ../../Nova pasta/corporate-engineer` de `requirements.txt`, criar `requirements-dev.txt` (`ruff`, `mypy`, `pytest-timeout`) e `pyproject.toml`.
+  - **Bloco B**: Adicionar `.github/workflows/ci.yml` com lint (`ruff`), `mypy`, `secret_scanner.py` e `pytest -m "not slow"`.
+  - **Bloco C**: Sincronizar `README.md` (465+ testes, guia `--dry-run`) e adicionar regras preventivas de binários no `.gitignore`.
+  - **Bloco D**: Refatorar `tests/test_pipeline_connectivity.py` para testes comportamentais, resolver `venv` multiplataforma em `run_pilot_pipeline.py` e restringir CORS em `src/dashboard/app.py`.
+- **Componentes Afetados**: `requirements.txt`, `requirements-dev.txt`, `pyproject.toml`, `.github/workflows/ci.yml`, `README.md`, `.gitignore`, `tests/test_pipeline_connectivity.py`, `run_pilot_pipeline.py`, `src/dashboard/app.py`.
 - **Complexidade**: Média (M).
